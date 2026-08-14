@@ -1,0 +1,221 @@
+name: Build final BridgeMind 1.1.0 readback release # 定义最终经验读回链发布工作流名称。
+
+on: # 定义工作流触发入口。
+  push: # 在指定分支推送时自动触发。
+    branches: # 限定允许触发的分支。
+      - feature/bsdl-memory-readback-1.1.0-final # 只处理最终经验读回链分支。
+    paths: # 限定触发文件路径。
+      - ".github/workflows/build-final-readback-release.yml" # 创建或修改本工作流时触发。
+  workflow_dispatch: # 允许在 GitHub Actions 页面手动触发。
+
+permissions: # 声明 GitHub Token 的最小权限。
+  contents: write # 允许工作流把验证后的发布包提交回分支。
+
+jobs: # 定义工作流任务集合。
+  build-and-publish: # 定义重建、验证、打包和回写任务。
+    if: github.actor != 'github-actions[bot]' # 阻止机器人回写提交再次触发完整构建。
+    runs-on: ubuntu-latest # 使用 GitHub 托管 Ubuntu 环境。
+    timeout-minutes: 40 # 限定任务最长执行时间。
+    steps: # 定义线性执行步骤。
+      - name: Checkout final feature branch # 检出最终功能分支。
+        uses: actions/checkout@v4 # 使用官方仓库检出动作。
+        with: # 配置仓库检出参数。
+          fetch-depth: 0 # 获取完整历史以便创建并推送发布提交。
+
+      - name: Set up Python 3.11 # 安装项目测试使用的 Python 版本。
+        uses: actions/setup-python@v5 # 使用官方 Python 环境动作。
+        with: # 配置 Python 环境参数。
+          python-version: "3.11" # 固定使用 Python 3.11。
+
+      - name: Set up Node.js 22 # 安装前端脚本语法检查使用的 Node.js。
+        uses: actions/setup-node@v4 # 使用官方 Node.js 环境动作。
+        with: # 配置 Node.js 环境参数。
+          node-version: "22" # 固定使用 Node.js 22。
+
+      - name: Install build utilities # 安装补丁、压缩与校验工具。
+        shell: bash # 明确使用 Bash 执行命令。
+        run: | # 执行系统工具安装命令。
+          set -euo pipefail # 任一命令失败、未定义变量或管道失败时立即终止。
+          sudo apt-get update # 刷新 Ubuntu 软件包索引。
+          sudo apt-get install -y patch xz-utils unzip # 安装 patch、xz 和 unzip。
+
+      - name: Reconstruct and verify source patch # 拼接并校验本地生成的最终源码补丁。
+        shell: bash # 明确使用 Bash 执行命令。
+        run: | # 执行补丁重建与完整性校验。
+          set -euo pipefail # 任一补丁重建步骤失败时立即终止。
+          cat release/final_readback_patch.part?? > readback_patch.b64 # 按编号顺序拼接全部 Base64 补丁分块。
+          echo "edf65ad4e15ba63299250790c1e2e039f26f44f541951173c7f2fae7746590d9  readback_patch.b64" | sha256sum -c - # 校验拼接后的 Base64 文本哈希。
+          base64 --decode readback_patch.b64 > readback_patch.xz # 把 Base64 文本还原为 xz 压缩补丁。
+          echo "866dcc3268c10dc7eca674377b6a82fba0b590c728f9df0d5c966a4a14b3710f  readback_patch.xz" | sha256sum -c - # 校验 xz 压缩补丁哈希。
+          xz --test readback_patch.xz # 检查 xz 数据流完整性。
+          xz --decompress --stdout readback_patch.xz > readback.patch # 解压得到统一差异补丁。
+
+      - name: Rebuild test source tree from 1.0.0 # 从仓库中的 1.0.0 基线重建测试源码树。
+        shell: bash # 明确使用 Bash 执行命令。
+        run: | # 执行安全解包和补丁应用。
+          set -euo pipefail # 任一源码重建步骤失败时立即终止。
+          mkdir -p build # 创建隔离的测试构建目录。
+          python - <<'PY' # 使用 Python 标准库安全解压旧版本压缩包。
+          from pathlib import Path  # 导入路径处理类型。
+          from zipfile import ZipFile  # 导入 ZIP 读取类型。
+          archive = Path("BridgeMind_CalculiX_Web_Industrial_1.0.0.zip")  # 指向仓库中的 1.0.0 基线包。
+          destination = Path("build")  # 定义隔离解压目录。
+          with ZipFile(archive, "r") as handle:  # 以只读方式打开基线压缩包。
+              handle.extractall(destination)  # 把基线项目完整解压到隔离目录。
+          PY
+          mv build/BridgeMind_CalculiX_Web_Industrial_1.0.0 build/BridgeMind_CalculiX_Web_Industrial_1.1.0 # 把测试源码目录升级为新版本名称。
+          cd build/BridgeMind_CalculiX_Web_Industrial_1.1.0 # 进入测试源码根目录。
+          patch --batch --forward -p1 < ../../readback.patch # 应用经过双重哈希校验的最终读回链补丁。
+
+      - name: Install Python dependencies # 安装运行和测试所需 Python 依赖。
+        shell: bash # 明确使用 Bash 执行命令。
+        run: | # 执行依赖安装。
+          set -euo pipefail # 任一依赖安装步骤失败时立即终止。
+          python -m pip install --upgrade pip # 更新 pip 安装器。
+          python -m pip install -r build/BridgeMind_CalculiX_Web_Industrial_1.1.0/requirements-dev.txt # 安装项目声明的开发与测试依赖。
+
+      - name: Run complete source verification # 对重建源码执行完整自动化验收。
+        shell: bash # 明确使用 Bash 执行命令。
+        run: | # 执行测试、自检和语法检查。
+          set -euo pipefail # 任一验收失败时阻断发布。
+          cd build/BridgeMind_CalculiX_Web_Industrial_1.1.0 # 进入测试源码根目录。
+          python -m pytest -q # 运行包括跨项目经验读回在内的 32 项自动化测试。
+          python tools/self_check.py # 运行包括读回链在内的 8 项产品级自检。
+          python -m compileall -q bridge_mind tests tools scripts # 编译检查全部 Python 模块。
+          node --check web/app.js # 检查主前端脚本语法。
+          node --check web/service-worker.js # 检查服务工作线程脚本语法。
+
+      - name: Rebuild clean release tree # 重新从基线生成不含测试运行状态的干净发布源码树。
+        shell: bash # 明确使用 Bash 执行命令。
+        run: | # 执行干净发布树重建。
+          set -euo pipefail # 任一发布树重建步骤失败时立即终止。
+          mkdir -p stage # 创建隔离的发布暂存目录。
+          python - <<'PY' # 使用 Python 标准库再次解压未污染的基线包。
+          from pathlib import Path  # 导入路径处理类型。
+          from zipfile import ZipFile  # 导入 ZIP 读取类型。
+          archive = Path("BridgeMind_CalculiX_Web_Industrial_1.0.0.zip")  # 指向仓库中的 1.0.0 基线包。
+          destination = Path("stage")  # 定义干净发布暂存目录。
+          with ZipFile(archive, "r") as handle:  # 以只读方式打开基线压缩包。
+              handle.extractall(destination)  # 把基线项目完整解压到暂存目录。
+          PY
+          mv stage/BridgeMind_CalculiX_Web_Industrial_1.0.0 stage/BridgeMind_CalculiX_Web_Industrial_1.1.0 # 把发布目录升级为新版本名称。
+          cd stage/BridgeMind_CalculiX_Web_Industrial_1.1.0 # 进入干净发布源码根目录。
+          patch --batch --forward -p1 < ../../readback.patch # 应用同一份经过校验的最终读回链补丁。
+
+      - name: Regenerate package manifest # 按干净发布树重新生成逐文件清单。
+        shell: bash # 明确使用 Bash 执行命令。
+        run: | # 执行确定性清单生成脚本。
+          set -euo pipefail # 任一清单生成步骤失败时立即终止。
+          python - <<'PY' # 使用 Python 生成发布文件哈希清单。
+          from datetime import datetime, timezone  # 导入 UTC 时间工具。
+          from hashlib import sha256  # 导入 SHA-256 哈希函数。
+          import json  # 导入 JSON 序列化工具。
+          from pathlib import Path  # 导入路径处理类型。
+          root = Path("stage/BridgeMind_CalculiX_Web_Industrial_1.1.0")  # 指向干净发布源码树。
+          manifest_path = root / "PACKAGE_MANIFEST.json"  # 定义包内清单文件路径。
+          entries = []  # 初始化逐文件条目集合。
+          for path in sorted(item for item in root.rglob("*") if item.is_file()):  # 按稳定路径顺序遍历全部发布文件。
+              relative = path.relative_to(root).as_posix()  # 生成跨平台相对路径。
+              if relative == "PACKAGE_MANIFEST.json":  # 判断当前文件是否为清单自身。
+                  continue  # 排除清单自身以避免递归哈希。
+              payload = path.read_bytes()  # 读取文件原始字节。
+              entries.append({"path": relative, "size": len(payload), "sha256": sha256(payload).hexdigest()})  # 记录路径、大小和 SHA-256。
+          manifest = {  # 构造完整发布清单对象。
+              "package": "BridgeMind_CalculiX_Web_Industrial_1.1.0",  # 写入发布包名称。
+              "version": "1.1.0",  # 写入软件版本。
+              "language": "BSDL Industrial 1.0.0",  # 写入 BSDL 语言版本。
+              "solverTarget": "CalculiX 2.23",  # 写入目标求解器版本。
+              "generatedAt": datetime.now(timezone.utc).isoformat(),  # 写入 UTC 清单生成时间。
+              "manifestExcludedFromFileList": True,  # 声明清单自身未计入文件条目。
+              "fileCount": len(entries),  # 写入文件数量。
+              "totalBytes": sum(entry["size"] for entry in entries),  # 写入发布树总字节数。
+              "verification": {  # 写入本次版本验收状态。
+                  "automatedTests": "32 passed, 0 failed",  # 记录自动化测试结论。
+                  "productSelfCheck": "8 passed, 0 failed",  # 记录产品自检结论。
+                  "memoryReadback": "cross-project behavior changed; transferred regions remain needs_review",  # 记录跨项目经验读回结论。
+                  "databaseMigration": "legacy 1.0 experience table upgraded without deleting records",  # 记录旧数据库迁移结论。
+                  "pythonCompile": "passed",  # 记录 Python 编译检查结论。
+                  "javascriptSyntax": "passed",  # 记录 JavaScript 语法检查结论。
+                  "nativeCalculiXExecuted": False,  # 如实声明未在 CI 中执行原生 CalculiX。
+                  "realIfcParsed": False,  # 如实声明未在 CI 中解析真实 IFC。
+                  "dockerImageBuilt": False,  # 如实声明未在 CI 中构建 Docker 镜像。
+              },  # 结束验收状态对象。
+              "files": entries,  # 写入逐文件哈希条目。
+          }  # 结束发布清单对象。
+          manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")  # 保存 UTF-8 JSON 清单。
+          PY
+
+      - name: Build and inspect final ZIP # 构建最终发布包并检查 ZIP 完整性。
+        shell: bash # 明确使用 Bash 执行命令。
+        run: | # 执行压缩包生成和 CRC 校验。
+          set -euo pipefail # 任一打包步骤失败时立即终止。
+          rm -f BridgeMind_CalculiX_Web_Industrial_1.1.0.zip # 删除分支中已有的旧 1.1.0 包以避免混淆。
+          python - <<'PY' # 使用 Python 标准库生成稳定排序的发布 ZIP。
+          from pathlib import Path  # 导入路径处理类型。
+          from zipfile import ZIP_DEFLATED, ZipFile  # 导入 ZIP 写入类型和压缩算法。
+          root = Path("stage/BridgeMind_CalculiX_Web_Industrial_1.1.0")  # 指向干净发布源码树。
+          archive = Path("BridgeMind_CalculiX_Web_Industrial_1.1.0.zip")  # 定义最终发布包路径。
+          with ZipFile(archive, "w", compression=ZIP_DEFLATED, compresslevel=9) as handle:  # 创建高压缩率 ZIP 文件。
+              for path in sorted(item for item in root.rglob("*") if item.is_file()):  # 按稳定路径顺序遍历全部发布文件。
+                  arcname = path.relative_to(root.parent).as_posix()  # 保留项目根目录作为压缩包顶层目录。
+                  handle.write(path, arcname=arcname)  # 把文件写入最终发布包。
+          PY
+          unzip -t BridgeMind_CalculiX_Web_Industrial_1.1.0.zip # 检查压缩包中央目录和全部文件 CRC。
+
+      - name: Verify the exact packaged artifact # 从最终 ZIP 重新解压并再次执行关键验收。
+        shell: bash # 明确使用 Bash 执行命令。
+        run: | # 执行最终制品回归验证。
+          set -euo pipefail # 任一制品验收失败时阻断发布。
+          mkdir -p artifact_check # 创建最终制品隔离验收目录。
+          unzip -q BridgeMind_CalculiX_Web_Industrial_1.1.0.zip -d artifact_check # 解压刚生成的最终发布包。
+          cd artifact_check/BridgeMind_CalculiX_Web_Industrial_1.1.0 # 进入最终制品项目根目录。
+          python -m pytest -q # 对最终制品再次运行 32 项自动化测试。
+          python tools/self_check.py # 对最终制品再次运行 8 项产品级自检。
+          python -m compileall -q bridge_mind tests tools scripts # 对最终制品再次执行 Python 编译检查。
+          node --check web/app.js # 对最终制品主前端脚本执行语法检查。
+          node --check web/service-worker.js # 对最终制品服务工作线程执行语法检查。
+
+      - name: Create repository release metadata # 生成根级哈希和版本说明。
+        shell: bash # 明确使用 Bash 执行命令。
+        run: | # 执行哈希与 README 生成。
+          set -euo pipefail # 任一元数据步骤失败时立即终止。
+          sha256sum BridgeMind_CalculiX_Web_Industrial_1.1.0.zip > SHA256SUMS.txt # 生成最终发布包 SHA-256 清单。
+          cat > README.md <<'EOF' # 写入仓库首页版本说明。
+          # BridgeMind BSDL Experience Readback 1.1.0
+
+          本仓库保存 BridgeMind CalculiX Web Industrial 的可复现发布包。1.1.0 已接通 BSDL 经验读回链：系统从 Revision、Feedback 与 FEA 证据提取结构化 Experience，在新项目策略生成前执行适用性过滤和相似度检索，形成保持 `needs_review` 状态的候选 BSDL Patch，并记录来源经验、适用边界、匹配分数和人工审批状态。
+
+          ## 发布文件
+
+          - `BridgeMind_CalculiX_Web_Industrial_1.1.0.zip`：经验读回链最终完整包。
+          - `BridgeMind_CalculiX_Web_Industrial_1.0.0.zip`：原始工业版基线包。
+          - `SHA256SUMS.txt`：最终 1.1.0 发布包完整性哈希。
+
+          ## 已完成验收
+
+          GitHub Actions 从 1.0.0 基线和经过双重哈希校验的源码补丁重建 1.1.0，随后对源码树和最终 ZIP 制品分别执行 32 项自动化测试、8 项产品自检、Python 编译检查、JavaScript 语法检查和 ZIP CRC 检查。跨项目测试使用不同项目 ID 与平移坐标，确认被批准经验会改变新项目策略，同时不兼容分析类型会被适用性门阻断，迁移区域不会绕过人工审批。
+
+          ## 能力边界
+
+          本版本没有在 CI 中执行原生 CalculiX、解析真实 IFC 或构建 Docker 镜像；包内保留相应接口和工业工件，但不能把静态、夹具与内置求解器验收扩写成这些外部环境已经完成实测。
+          EOF
+
+      - name: Commit clean verified release # 只保留基线包、最终包、哈希和 README 并推送。
+        shell: bash # 明确使用 Bash 执行命令。
+        run: | # 执行清理与 Git 回写。
+          set -euo pipefail # 任一 Git 操作失败时立即终止。
+          rm -rf build # 删除测试源码树。
+          rm -rf stage # 删除干净发布暂存树。
+          rm -rf artifact_check # 删除最终制品验收目录。
+          rm -rf release # 删除一次性补丁分块。
+          rm -f readback_patch.b64 # 删除拼接后的 Base64 临时文件。
+          rm -f readback_patch.xz # 删除 xz 临时补丁文件。
+          rm -f readback.patch # 删除解压后的统一差异补丁。
+          rm -rf .github # 删除已经完成使命的一次性发布工作流。
+          git config user.name "github-actions[bot]" # 设置机器人提交者名称。
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com" # 设置机器人提交者邮箱。
+          git add -A # 暂存最终包、哈希、README 和临时文件删除记录。
+          if ! git diff --cached --quiet; then # 仅在确有变化时创建发布提交。
+            git commit -m "release: BridgeMind 1.1.0 final BSDL experience readback" # 创建经过完整验收的发布提交。
+            git push origin "HEAD:${GITHUB_REF_NAME}" # 把发布提交推送到当前最终功能分支。
+          fi
