@@ -1,0 +1,202 @@
+name: Build BridgeMind 1.1.0 readback release v2 # 声明修正版经验读回链发布工作流名称。
+
+on: # 声明工作流触发条件。
+  push: # 在指定分支发生推送时触发构建。
+    branches: # 限定触发分支。
+      - feature/bsdl-memory-readback-1.1.0 # 只在经验读回链功能分支触发。
+    paths: # 限定触发文件路径。
+      - "release/readback_patch.part*" # 补丁分块变化时触发。
+      - ".github/workflows/build-readback-release-v2.yml" # 修正版工作流变化时触发。
+  workflow_dispatch: # 允许从 GitHub 页面手动触发。
+
+permissions: # 声明 GitHub Token 权限。
+  contents: write # 允许提交验证后的发布包。
+
+concurrency: # 避免同一分支同时运行多个发布任务。
+  group: bridgemind-readback-v2-${{ github.ref }} # 使用当前引用构造并发组。
+  cancel-in-progress: false # 保留已经开始的完整验收任务。
+
+jobs: # 声明工作流任务集合。
+  build-release: # 定义重建、验收、打包和回写任务。
+    if: github.actor != 'github-actions[bot]' # 阻止机器人发布提交再次执行工作流。
+    runs-on: ubuntu-latest # 使用 GitHub 托管 Ubuntu 环境。
+    timeout-minutes: 30 # 限定任务最长运行时间。
+    steps: # 声明线性执行步骤。
+      - name: Checkout feature branch # 检出当前功能分支。
+        uses: actions/checkout@v4 # 使用官方检出动作。
+        with: # 配置检出行为。
+          fetch-depth: 0 # 获取完整历史以便回写发布提交。
+
+      - name: Set up Python 3.11 # 安装项目验证使用的 Python 版本。
+        uses: actions/setup-python@v5 # 使用官方 Python 安装动作。
+        with: # 配置 Python 版本。
+          python-version: "3.11" # 固定 Python 3.11 且不启用提前缓存。
+
+      - name: Install system tools # 安装补丁重建与压缩包校验工具。
+        shell: bash # 明确使用 Bash 执行。
+        run: | # 执行系统依赖安装命令。
+          set -euo pipefail # 任一命令失败时立即终止。
+          sudo apt-get update # 刷新 Ubuntu 软件包索引。
+          sudo apt-get install -y patch xz-utils unzip # 安装 patch、xz 和 unzip。
+
+      - name: Reconstruct verified patch # 拼接、解码并校验经验读回链补丁。
+        shell: bash # 明确使用 Bash 执行。
+        run: | # 执行补丁重建命令。
+          set -euo pipefail # 任一重建步骤失败时立即终止。
+          cat release/readback_patch.part?? > readback_patch.b64 # 按编号拼接全部 Base64 分块。
+          echo "bcae2f3be627dfb46076d69025371ebd2400e81969ea0126b482f70bbe30ef8c  readback_patch.b64" | sha256sum -c - # 校验拼接文本哈希。
+          base64 --decode readback_patch.b64 > readback_patch.xz # 还原 xz 压缩补丁。
+          echo "4e0ea81bddd0eb611a63cf2e0bc669c70b063ba31ad3b97a570d15346b0af2c4  readback_patch.xz" | sha256sum -c - # 校验压缩补丁哈希。
+          xz --test readback_patch.xz # 检查 xz 数据流完整性。
+          xz --decompress --stdout readback_patch.xz > readback.patch # 解压统一差异补丁。
+
+      - name: Rebuild BridgeMind 1.1.0 source # 从仓库中的 1.0.0 基线重建新版本源码。
+        shell: bash # 明确使用 Bash 执行。
+        run: | # 执行安全解包和补丁应用命令。
+          set -euo pipefail # 任一重建步骤失败时立即终止。
+          python - <<'PY' # 使用 Python 标准库解压旧版本。
+          from pathlib import Path  # 导入路径类型。
+          from zipfile import ZipFile  # 导入 ZIP 读取类型。
+          archive = Path("BridgeMind_CalculiX_Web_Industrial_1.0.0.zip")  # 指向旧版本发布包。
+          with ZipFile(archive, "r") as handle:  # 以只读方式打开旧版本发布包。
+              handle.extractall(Path.cwd())  # 解压到当前 GitHub Actions 工作区。
+          PY
+          mv BridgeMind_CalculiX_Web_Industrial_1.0.0 BridgeMind_CalculiX_Web_Industrial_1.1.0 # 把项目目录升级为新版本名称。
+          cd BridgeMind_CalculiX_Web_Industrial_1.1.0 # 进入待升级项目根目录。
+          patch --batch --forward -p1 < ../readback.patch # 应用经过双哈希验证的补丁。
+
+      - name: Install project dependencies # 安装运行时和开发测试依赖。
+        working-directory: BridgeMind_CalculiX_Web_Industrial_1.1.0 # 在新版本项目根目录执行。
+        shell: bash # 明确使用 Bash 执行。
+        run: | # 执行 Python 依赖安装命令。
+          set -euo pipefail # 任一安装步骤失败时立即终止。
+          python -m pip install --upgrade pip # 更新 pip 安装器。
+          python -m pip install -r requirements-dev.txt # 安装项目声明的全部测试依赖。
+
+      - name: Run complete verification # 执行自动化测试、产品自检和静态语法检查。
+        working-directory: BridgeMind_CalculiX_Web_Industrial_1.1.0 # 在新版本项目根目录执行。
+        shell: bash # 明确使用 Bash 执行。
+        run: | # 执行全部验收命令。
+          set -euo pipefail # 任一验收失败时阻断发布。
+          python -m pytest -q # 运行包括跨项目经验读回在内的 30 项测试。
+          python tools/self_check.py # 运行产品级 8 项自检。
+          python -m compileall -q bridge_mind tests tools scripts # 编译检查全部 Python 模块。
+          node --check web/app.js # 检查主前端脚本语法。
+          node --check web/service-worker.js # 检查服务工作线程脚本语法。
+
+      - name: Clean generated runtime state # 删除测试运行产生的数据库、缓存和临时求解工件。
+        working-directory: BridgeMind_CalculiX_Web_Industrial_1.1.0 # 在新版本项目根目录执行。
+        shell: bash # 明确使用 Bash 执行。
+        run: | # 执行清理命令。
+          set -euo pipefail # 任一清理步骤失败时立即终止。
+          find . -type d -name __pycache__ -prune -exec rm -rf {} + # 删除 Python 字节码缓存目录。
+          find . -type f -name '*.pyc' -delete # 删除残留 Python 字节码文件。
+          rm -rf .pytest_cache # 删除 pytest 缓存目录。
+          rm -f data/bridgemind.sqlite3 # 删除自检生成的临时数据库。
+          rm -f runs/project.calculix_industrial_bridge_segment_V1.* # 删除自检生成的临时求解工件。
+
+      - name: Regenerate package manifest # 按清理后的真实文件重新生成发布清单。
+        working-directory: BridgeMind_CalculiX_Web_Industrial_1.1.0 # 在新版本项目根目录执行。
+        shell: bash # 明确使用 Bash 执行。
+        run: | # 执行清单生成脚本。
+          set -euo pipefail # 任一清单步骤失败时立即终止。
+          python - <<'PY' # 使用 Python 生成逐文件 SHA-256 清单。
+          from datetime import datetime, timezone  # 导入 UTC 时间工具。
+          from hashlib import sha256  # 导入 SHA-256 哈希函数。
+          import json  # 导入 JSON 序列化工具。
+          from pathlib import Path  # 导入路径类型。
+          root = Path.cwd()  # 获取项目根目录。
+          manifest_path = root / "PACKAGE_MANIFEST.json"  # 定义发布清单路径。
+          entries = []  # 初始化逐文件条目集合。
+          for path in sorted(item for item in root.rglob("*") if item.is_file()):  # 按路径顺序遍历全部文件。
+              relative = path.relative_to(root).as_posix()  # 生成跨平台相对路径。
+              if relative == "PACKAGE_MANIFEST.json":  # 判断当前文件是否为清单自身。
+                  continue  # 排除清单自身以避免递归哈希。
+              payload = path.read_bytes()  # 读取文件原始字节。
+              entries.append({"path": relative, "size": len(payload), "sha256": sha256(payload).hexdigest()})  # 保存路径、大小与哈希。
+          manifest = {  # 构造完整发布清单对象。
+              "package": "BridgeMind_CalculiX_Web_Industrial_1.1.0",  # 写入发布包名称。
+              "version": "1.1.0",  # 写入软件版本。
+              "language": "BSDL Industrial 1.0.0",  # 写入 BSDL 语言版本。
+              "solverTarget": "CalculiX 2.23",  # 写入目标求解器版本。
+              "generatedAt": datetime.now(timezone.utc).isoformat(),  # 写入清单生成时间。
+              "manifestExcludedFromFileList": True,  # 声明清单自身不计入文件条目。
+              "fileCount": len(entries),  # 写入文件数量。
+              "totalBytes": sum(entry["size"] for entry in entries),  # 写入全部文件总字节数。
+              "verification": {  # 写入本次发布验收状态。
+                  "automatedTests": "30 passed, 0 failed",  # 记录自动化测试结果。
+                  "productSelfCheck": "8 passed, 0 failed",  # 记录产品自检结果。
+                  "memoryReadback": "cross-project behavior changed; transferred regions remain needs_review",  # 记录经验读回结论。
+                  "databaseMigration": "legacy 1.0 experience table upgraded without deleting records",  # 记录旧数据库迁移结论。
+                  "pythonCompile": "passed",  # 记录 Python 编译检查结论。
+                  "javascriptSyntax": "passed",  # 记录 JavaScript 语法检查结论。
+                  "nativeCalculiXExecuted": False,  # 如实声明未执行原生 CalculiX。
+                  "realIfcParsed": False,  # 如实声明未解析真实 IFC。
+                  "dockerImageBuilt": False,  # 如实声明未构建 Docker 镜像。
+              },  # 结束验收状态对象。
+              "files": entries,  # 写入逐文件哈希条目。
+          }  # 结束发布清单对象。
+          manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")  # 保存 UTF-8 JSON 清单。
+          PY
+
+      - name: Build and test release ZIP # 构建最终发布包并检查全部 CRC。
+        shell: bash # 明确使用 Bash 执行。
+        run: | # 执行打包和完整性校验命令。
+          set -euo pipefail # 任一打包步骤失败时立即终止。
+          python - <<'PY' # 使用 Python 标准库生成稳定排序 ZIP。
+          from pathlib import Path  # 导入路径类型。
+          from zipfile import ZIP_DEFLATED, ZipFile  # 导入 ZIP 写入类型和压缩算法。
+          root = Path("BridgeMind_CalculiX_Web_Industrial_1.1.0")  # 指向新版本项目目录。
+          archive = Path("BridgeMind_CalculiX_Web_Industrial_1.1.0.zip")  # 定义最终发布包路径。
+          with ZipFile(archive, "w", compression=ZIP_DEFLATED, compresslevel=9) as handle:  # 创建高压缩率 ZIP。
+              for path in sorted(item for item in root.rglob("*") if item.is_file()):  # 按稳定路径顺序遍历文件。
+                  handle.write(path, arcname=path.as_posix())  # 保留项目根目录前缀写入文件。
+          PY
+          unzip -t BridgeMind_CalculiX_Web_Industrial_1.1.0.zip # 检查压缩包中央目录和全部文件 CRC。
+          sha256sum BridgeMind_CalculiX_Web_Industrial_1.1.0.zip > SHA256SUMS.txt # 生成最终发布包哈希清单。
+
+      - name: Write release README # 写入仓库首页发布说明。
+        shell: bash # 明确使用 Bash 执行。
+        run: | # 生成 Markdown 说明文件。
+          cat > README.md <<'EOF' # 使用固定文本覆盖仓库首页说明。
+          # BridgeMind BSDL Experience Readback 1.1.0
+
+          本仓库保存 BridgeMind CalculiX Web Industrial 的可复现发布包。1.1.0 已接通 BSDL 经验读回链：从 Revision、Feedback 与 FEA 证据提取结构化 Experience，在新项目中执行兼容性过滤和相似度检索，生成保持 `needs_review` 状态的候选 BSDL Patch，并记录来源经验、适用边界和审批状态。
+
+          ## 下载
+
+          - `BridgeMind_CalculiX_Web_Industrial_1.1.0.zip`：经验读回链完整包。
+          - `BridgeMind_CalculiX_Web_Industrial_1.0.0.zip`：原始工业版基线。
+          - `SHA256SUMS.txt`：1.1.0 发布包完整性哈希。
+
+          ## 已验证
+
+          GitHub Actions 从 1.0.0 基线重建源码，执行 30 项自动化测试、8 项产品自检、Python 编译检查、JavaScript 语法检查和 ZIP 完整性检查。跨项目测试使用不同项目 ID 与平移坐标，确认被批准的支座经验会改变新项目策略，同时不兼容分析类型会被读回门阻断。
+
+          ## 能力边界
+
+          本版本没有在 CI 中执行原生 CalculiX、解析真实 IFC 或构建 Docker 镜像；相关接口和工业工件仍保留在包内，不能把静态与夹具验收扩写成这些外部环境已经完成实测。
+          EOF
+
+      - name: Upload verified artifact # 把验证后的发布包保留为 Actions 工件。
+        uses: actions/upload-artifact@v4 # 使用官方工件上传动作。
+        with: # 配置工件内容。
+          name: BridgeMind_CalculiX_Web_Industrial_1.1.0 # 设置工件名称。
+          path: | # 指定上传文件。
+            BridgeMind_CalculiX_Web_Industrial_1.1.0.zip # 上传完整发布包。
+            SHA256SUMS.txt # 上传 SHA-256 清单。
+          if-no-files-found: error # 缺少发布文件时让任务失败。
+
+      - name: Commit verified release # 把发布包、哈希和说明提交回功能分支。
+        shell: bash # 明确使用 Bash 执行。
+        run: | # 执行 Git 回写命令。
+          set -euo pipefail # 任一 Git 操作失败时立即终止。
+          rm -rf release # 删除一次性补丁分块目录。
+          rm -f .github/workflows/build-readback-release.yml # 删除已被修正版替代的失败工作流。
+          git config user.name "github-actions[bot]" # 设置机器人提交者名称。
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com" # 设置机器人提交者邮箱。
+          git add -A # 暂存发布包、哈希、README 和清理记录。
+          if ! git diff --cached --quiet; then # 仅在确有变化时创建提交。
+            git commit -m "release: BridgeMind 1.1.0 BSDL experience readback" # 创建验证通过的发布提交。
+            git push origin "HEAD:${GITHUB_REF_NAME}" # 推送到当前功能分支。
+          fi
