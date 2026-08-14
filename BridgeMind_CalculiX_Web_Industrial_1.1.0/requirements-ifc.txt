@@ -1,0 +1,2 @@
+# 安装 IFC 4.3 STEP 导入所需的可选 IfcOpenShell 绑定。
+ifcopenshell>=0.8.0

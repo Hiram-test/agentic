@@ -1,0 +1,1610 @@
+{
+  "$schema": "../schema/bsdl.schema.json",
+  "language": "Bridge-Structural-Description-Language",
+  "languageVersion": "0.1.0",
+  "documentId": "doc.two_girder_bridge",
+  "revision": {
+    "number": 1,
+    "parent": null,
+    "createdAt": "2026-08-13T10:00:00Z",
+    "createdBy": "human.demo",
+    "status": "working",
+    "summary": "初始双主梁桥三维梁系模型"
+  },
+  "project": {
+    "id": "project.two_girder_bridge",
+    "name": "双主梁桥智能建模闭环示例",
+    "description": "用于验证统一结构描述、区域策略、快速 FEA、人工修订和经验沉淀。",
+    "sourceType": "synthetic",
+    "sourceUri": null,
+    "tags": [
+      "demo",
+      "3d",
+      "frame"
+    ]
+  },
+  "units": {
+    "length": "m",
+    "force": "N",
+    "mass": "kg",
+    "stress": "Pa",
+    "angle": "rad"
+  },
+  "coordinateSystems": [
+    {
+      "id": "cs.global",
+      "name": "全局坐标系",
+      "parentRef": null,
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "xAxis": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "yAxis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "zAxis": [
+        0.0,
+        0.0,
+        1.0
+      ]
+    }
+  ],
+  "agents": [
+    {
+      "id": "human.demo",
+      "name": "示例工程师",
+      "kind": "person",
+      "version": null
+    },
+    {
+      "id": "software.bridgemind",
+      "name": "BridgeMind Studio",
+      "kind": "software",
+      "version": "0.1.0"
+    }
+  ],
+  "materials": [
+    {
+      "id": "mat.steel",
+      "name": "结构钢",
+      "model": "linear_elastic",
+      "density": 7850.0,
+      "elasticModulus": 206000000000.0,
+      "poissonRatio": 0.3,
+      "shearModulus": 79230769230.0,
+      "thermalExpansion": 1.2e-05,
+      "yieldStrength": 345000000.0,
+      "tags": [
+        "synthetic"
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "id": "sec.girder",
+      "name": "主梁等效截面",
+      "shape": "generic",
+      "area": 0.35,
+      "iy": 0.45,
+      "iz": 0.08,
+      "torsionConstant": 0.015,
+      "dimensions": {
+        "depth": 2.0,
+        "width": 0.8
+      },
+      "tags": [
+        "equivalent"
+      ]
+    },
+    {
+      "id": "sec.crossbeam",
+      "name": "横梁等效截面",
+      "shape": "generic",
+      "area": 0.16,
+      "iy": 0.06,
+      "iz": 0.025,
+      "torsionConstant": 0.006,
+      "dimensions": {
+        "depth": 1.2,
+        "width": 0.5
+      },
+      "tags": [
+        "equivalent"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "node.L.0",
+      "name": "L侧节点0",
+      "position": [
+        0.0,
+        -3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "support"
+      ],
+      "constraints": {
+        "ux": true,
+        "uy": true,
+        "uz": true,
+        "rx": true,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 0.0,
+        "side": "L"
+      }
+    },
+    {
+      "id": "node.R.0",
+      "name": "R侧节点0",
+      "position": [
+        0.0,
+        3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "support"
+      ],
+      "constraints": {
+        "ux": true,
+        "uy": true,
+        "uz": true,
+        "rx": true,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 0.0,
+        "side": "R"
+      }
+    },
+    {
+      "id": "node.L.1",
+      "name": "L侧节点1",
+      "position": [
+        10.0,
+        -3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 10.0,
+        "side": "L"
+      }
+    },
+    {
+      "id": "node.R.1",
+      "name": "R侧节点1",
+      "position": [
+        10.0,
+        3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 10.0,
+        "side": "R"
+      }
+    },
+    {
+      "id": "node.L.2",
+      "name": "L侧节点2",
+      "position": [
+        20.0,
+        -3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 20.0,
+        "side": "L"
+      }
+    },
+    {
+      "id": "node.R.2",
+      "name": "R侧节点2",
+      "position": [
+        20.0,
+        3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 20.0,
+        "side": "R"
+      }
+    },
+    {
+      "id": "node.L.3",
+      "name": "L侧节点3",
+      "position": [
+        30.0,
+        -3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 30.0,
+        "side": "L"
+      }
+    },
+    {
+      "id": "node.R.3",
+      "name": "R侧节点3",
+      "position": [
+        30.0,
+        3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 30.0,
+        "side": "R"
+      }
+    },
+    {
+      "id": "node.L.4",
+      "name": "L侧节点4",
+      "position": [
+        40.0,
+        -3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "support"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": true,
+        "uz": true,
+        "rx": true,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 40.0,
+        "side": "L"
+      }
+    },
+    {
+      "id": "node.R.4",
+      "name": "R侧节点4",
+      "position": [
+        40.0,
+        3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "support"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": true,
+        "uz": true,
+        "rx": true,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 40.0,
+        "side": "R"
+      }
+    }
+  ],
+  "components": [
+    {
+      "id": "comp.bridge",
+      "name": "示例双主梁桥",
+      "category": "bridge",
+      "topology": "solid",
+      "parentRef": null,
+      "nodeRefs": [],
+      "materialRef": null,
+      "sectionRef": null,
+      "geometry": {
+        "kind": "box",
+        "center": [
+          20.0,
+          0.0,
+          0.0
+        ],
+        "size": [
+          40.0,
+          8.0,
+          2.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "analysis": {
+        "elementType": "excluded",
+        "active": false,
+        "localUp": null
+      },
+      "attributes": {
+        "bridgeType": "two_girder_demo",
+        "loadBearing": true
+      },
+      "featureDescriptors": {
+        "length": 40.0,
+        "width": 6.0
+      },
+      "tags": [
+        "root"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.L.0",
+      "name": "L侧主梁段1",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.0",
+        "node.L.1"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            0.0,
+            -3.0,
+            0.0
+          ],
+          [
+            10.0,
+            -3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.L.1",
+      "name": "L侧主梁段2",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.1",
+        "node.L.2"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            10.0,
+            -3.0,
+            0.0
+          ],
+          [
+            20.0,
+            -3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.L.2",
+      "name": "L侧主梁段3",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.2",
+        "node.L.3"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            20.0,
+            -3.0,
+            0.0
+          ],
+          [
+            30.0,
+            -3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.L.3",
+      "name": "L侧主梁段4",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.3",
+        "node.L.4"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            30.0,
+            -3.0,
+            0.0
+          ],
+          [
+            40.0,
+            -3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.R.0",
+      "name": "R侧主梁段1",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.R.0",
+        "node.R.1"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            0.0,
+            3.0,
+            0.0
+          ],
+          [
+            10.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.R.1",
+      "name": "R侧主梁段2",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.R.1",
+        "node.R.2"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            10.0,
+            3.0,
+            0.0
+          ],
+          [
+            20.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.R.2",
+      "name": "R侧主梁段3",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.R.2",
+        "node.R.3"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            20.0,
+            3.0,
+            0.0
+          ],
+          [
+            30.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.R.3",
+      "name": "R侧主梁段4",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.R.3",
+        "node.R.4"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            30.0,
+            3.0,
+            0.0
+          ],
+          [
+            40.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.crossbeam.0",
+      "name": "横梁1",
+      "category": "crossbeam",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.0",
+        "node.R.0"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.crossbeam",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            0.0,
+            -3.0,
+            0.0
+          ],
+          [
+            0.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "transverse"
+      },
+      "featureDescriptors": {
+        "length": 6.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.crossbeam.1",
+      "name": "横梁2",
+      "category": "crossbeam",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.1",
+        "node.R.1"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.crossbeam",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            10.0,
+            -3.0,
+            0.0
+          ],
+          [
+            10.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "transverse"
+      },
+      "featureDescriptors": {
+        "length": 6.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.crossbeam.2",
+      "name": "横梁3",
+      "category": "crossbeam",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.2",
+        "node.R.2"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.crossbeam",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            20.0,
+            -3.0,
+            0.0
+          ],
+          [
+            20.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "transverse"
+      },
+      "featureDescriptors": {
+        "length": 6.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.crossbeam.3",
+      "name": "横梁4",
+      "category": "crossbeam",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.3",
+        "node.R.3"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.crossbeam",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            30.0,
+            -3.0,
+            0.0
+          ],
+          [
+            30.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "transverse"
+      },
+      "featureDescriptors": {
+        "length": 6.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.crossbeam.4",
+      "name": "横梁5",
+      "category": "crossbeam",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.4",
+        "node.R.4"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.crossbeam",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            40.0,
+            -3.0,
+            0.0
+          ],
+          [
+            40.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "transverse"
+      },
+      "featureDescriptors": {
+        "length": 6.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    }
+  ],
+  "connections": [
+    {
+      "id": "conn.L.0",
+      "name": "L侧节点0连接",
+      "kind": "shared_node",
+      "nodeRef": "node.L.0",
+      "participantRefs": [
+        "comp.girder.L.0",
+        "comp.crossbeam.0"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.R.0",
+      "name": "R侧节点0连接",
+      "kind": "shared_node",
+      "nodeRef": "node.R.0",
+      "participantRefs": [
+        "comp.girder.R.0",
+        "comp.crossbeam.0"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.L.1",
+      "name": "L侧节点1连接",
+      "kind": "shared_node",
+      "nodeRef": "node.L.1",
+      "participantRefs": [
+        "comp.girder.L.0",
+        "comp.girder.L.1",
+        "comp.crossbeam.1"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.R.1",
+      "name": "R侧节点1连接",
+      "kind": "shared_node",
+      "nodeRef": "node.R.1",
+      "participantRefs": [
+        "comp.girder.R.0",
+        "comp.girder.R.1",
+        "comp.crossbeam.1"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.L.2",
+      "name": "L侧节点2连接",
+      "kind": "shared_node",
+      "nodeRef": "node.L.2",
+      "participantRefs": [
+        "comp.girder.L.1",
+        "comp.girder.L.2",
+        "comp.crossbeam.2"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.R.2",
+      "name": "R侧节点2连接",
+      "kind": "shared_node",
+      "nodeRef": "node.R.2",
+      "participantRefs": [
+        "comp.girder.R.1",
+        "comp.girder.R.2",
+        "comp.crossbeam.2"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.L.3",
+      "name": "L侧节点3连接",
+      "kind": "shared_node",
+      "nodeRef": "node.L.3",
+      "participantRefs": [
+        "comp.girder.L.2",
+        "comp.girder.L.3",
+        "comp.crossbeam.3"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.R.3",
+      "name": "R侧节点3连接",
+      "kind": "shared_node",
+      "nodeRef": "node.R.3",
+      "participantRefs": [
+        "comp.girder.R.2",
+        "comp.girder.R.3",
+        "comp.crossbeam.3"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.L.4",
+      "name": "L侧节点4连接",
+      "kind": "shared_node",
+      "nodeRef": "node.L.4",
+      "participantRefs": [
+        "comp.girder.L.3",
+        "comp.crossbeam.4"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.R.4",
+      "name": "R侧节点4连接",
+      "kind": "shared_node",
+      "nodeRef": "node.R.4",
+      "participantRefs": [
+        "comp.girder.R.3",
+        "comp.crossbeam.4"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    }
+  ],
+  "loadCases": [
+    {
+      "id": "lc.service",
+      "name": "服务状态静力工况",
+      "type": "static",
+      "factor": 1.0
+    }
+  ],
+  "loads": [
+    {
+      "id": "load.L.1",
+      "name": "L侧节点1竖向荷载",
+      "caseRef": "lc.service",
+      "kind": "nodal",
+      "targetNodeRef": "node.L.1",
+      "targetComponentRef": null,
+      "force": [
+        0.0,
+        0.0,
+        -150000.0
+      ],
+      "moment": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "attributes": {
+        "source": "synthetic_example"
+      }
+    },
+    {
+      "id": "load.R.1",
+      "name": "R侧节点1竖向荷载",
+      "caseRef": "lc.service",
+      "kind": "nodal",
+      "targetNodeRef": "node.R.1",
+      "targetComponentRef": null,
+      "force": [
+        0.0,
+        0.0,
+        -150000.0
+      ],
+      "moment": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "attributes": {
+        "source": "synthetic_example"
+      }
+    },
+    {
+      "id": "load.L.2",
+      "name": "L侧节点2竖向荷载",
+      "caseRef": "lc.service",
+      "kind": "nodal",
+      "targetNodeRef": "node.L.2",
+      "targetComponentRef": null,
+      "force": [
+        0.0,
+        0.0,
+        -300000.0
+      ],
+      "moment": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "attributes": {
+        "source": "synthetic_example"
+      }
+    },
+    {
+      "id": "load.R.2",
+      "name": "R侧节点2竖向荷载",
+      "caseRef": "lc.service",
+      "kind": "nodal",
+      "targetNodeRef": "node.R.2",
+      "targetComponentRef": null,
+      "force": [
+        0.0,
+        0.0,
+        -300000.0
+      ],
+      "moment": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "attributes": {
+        "source": "synthetic_example"
+      }
+    },
+    {
+      "id": "load.L.3",
+      "name": "L侧节点3竖向荷载",
+      "caseRef": "lc.service",
+      "kind": "nodal",
+      "targetNodeRef": "node.L.3",
+      "targetComponentRef": null,
+      "force": [
+        0.0,
+        0.0,
+        -150000.0
+      ],
+      "moment": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "attributes": {
+        "source": "synthetic_example"
+      }
+    },
+    {
+      "id": "load.R.3",
+      "name": "R侧节点3竖向荷载",
+      "caseRef": "lc.service",
+      "kind": "nodal",
+      "targetNodeRef": "node.R.3",
+      "targetComponentRef": null,
+      "force": [
+        0.0,
+        0.0,
+        -150000.0
+      ],
+      "moment": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "attributes": {
+        "source": "synthetic_example"
+      }
+    }
+  ],
+  "analysisTasks": [
+    {
+      "id": "task.service",
+      "name": "全桥竖向挠度与内力快速试算",
+      "type": "linear_static",
+      "loadCaseRefs": [
+        "lc.service"
+      ],
+      "qoi": [
+        "vertical_displacement",
+        "member_end_moment",
+        "reaction_balance"
+      ],
+      "accuracyTarget": 0.05,
+      "budget": {
+        "maxElements": 5000,
+        "maxRuns": 10,
+        "maxWallSeconds": 60.0
+      },
+      "status": "approved"
+    }
+  ],
+  "cognitiveMap": {
+    "landmarks": [],
+    "decisionEdges": [],
+    "version": 1
+  },
+  "regions": [],
+  "meshPolicies": [
+    {
+      "id": "mesh.default",
+      "name": "初始全局网格策略",
+      "taskRef": "task.service",
+      "baseSize": 2.0,
+      "elementFamily": "frame",
+      "regionRules": [],
+      "budget": {
+        "maxElements": 5000,
+        "maxIterations": 4
+      },
+      "status": "draft"
+    }
+  ],
+  "solverPlans": [
+    {
+      "id": "solver.builtin",
+      "name": "内置空间梁快速试算",
+      "taskRef": "task.service",
+      "meshPolicyRef": "mesh.default",
+      "solver": "builtin_frame3d",
+      "settings": {
+        "loadCaseRef": "lc.service",
+        "singularTolerance": 1e-10
+      },
+      "status": "approved"
+    }
+  ],
+  "feedback": [],
+  "artifacts": [],
+  "experienceRefs": [],
+  "extensions": {
+    "bridgemind:display": {
+      "cameraTarget": [
+        20.0,
+        0.0,
+        0.0
+      ],
+      "cameraDistance": 55.0
+    }
+  }
+}

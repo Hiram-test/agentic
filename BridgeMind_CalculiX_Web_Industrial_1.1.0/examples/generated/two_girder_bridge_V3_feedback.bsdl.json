@@ -1,0 +1,4135 @@
+{
+  "$schema": "../schema/bsdl.schema.json",
+  "language": "Bridge-Structural-Description-Language",
+  "languageVersion": "0.1.0",
+  "documentId": "doc.two_girder_bridge",
+  "revision": {
+    "number": 3,
+    "parent": 2,
+    "createdAt": "2026-08-12T17:01:23.321333Z",
+    "createdBy": "software.bridgemind",
+    "status": "working",
+    "summary": "快速 FEA 反馈形成热点区域"
+  },
+  "project": {
+    "id": "project.two_girder_bridge",
+    "name": "双主梁桥智能建模闭环示例",
+    "description": "用于验证统一结构描述、区域策略、快速 FEA、人工修订和经验沉淀。",
+    "sourceType": "synthetic",
+    "sourceUri": null,
+    "tags": [
+      "demo",
+      "3d",
+      "frame"
+    ]
+  },
+  "units": {
+    "length": "m",
+    "force": "N",
+    "mass": "kg",
+    "stress": "Pa",
+    "angle": "rad"
+  },
+  "coordinateSystems": [
+    {
+      "id": "cs.global",
+      "name": "全局坐标系",
+      "parentRef": null,
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "xAxis": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "yAxis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "zAxis": [
+        0.0,
+        0.0,
+        1.0
+      ]
+    }
+  ],
+  "agents": [
+    {
+      "id": "human.demo",
+      "name": "示例工程师",
+      "kind": "person",
+      "version": null
+    },
+    {
+      "id": "software.bridgemind",
+      "name": "BridgeMind Studio",
+      "kind": "software",
+      "version": "0.1.0"
+    }
+  ],
+  "materials": [
+    {
+      "id": "mat.steel",
+      "name": "结构钢",
+      "model": "linear_elastic",
+      "density": 7850.0,
+      "elasticModulus": 206000000000.0,
+      "poissonRatio": 0.3,
+      "shearModulus": 79230769230.0,
+      "thermalExpansion": 1.2e-05,
+      "yieldStrength": 345000000.0,
+      "tags": [
+        "synthetic"
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "id": "sec.girder",
+      "name": "主梁等效截面",
+      "shape": "generic",
+      "area": 0.35,
+      "iy": 0.45,
+      "iz": 0.08,
+      "torsionConstant": 0.015,
+      "dimensions": {
+        "depth": 2.0,
+        "width": 0.8
+      },
+      "tags": [
+        "equivalent"
+      ]
+    },
+    {
+      "id": "sec.crossbeam",
+      "name": "横梁等效截面",
+      "shape": "generic",
+      "area": 0.16,
+      "iy": 0.06,
+      "iz": 0.025,
+      "torsionConstant": 0.006,
+      "dimensions": {
+        "depth": 1.2,
+        "width": 0.5
+      },
+      "tags": [
+        "equivalent"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "node.L.0",
+      "name": "L侧节点0",
+      "position": [
+        0.0,
+        -3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "support"
+      ],
+      "constraints": {
+        "ux": true,
+        "uy": true,
+        "uz": true,
+        "rx": true,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 0.0,
+        "side": "L"
+      }
+    },
+    {
+      "id": "node.R.0",
+      "name": "R侧节点0",
+      "position": [
+        0.0,
+        3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "support"
+      ],
+      "constraints": {
+        "ux": true,
+        "uy": true,
+        "uz": true,
+        "rx": true,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 0.0,
+        "side": "R"
+      }
+    },
+    {
+      "id": "node.L.1",
+      "name": "L侧节点1",
+      "position": [
+        10.0,
+        -3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 10.0,
+        "side": "L"
+      }
+    },
+    {
+      "id": "node.R.1",
+      "name": "R侧节点1",
+      "position": [
+        10.0,
+        3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 10.0,
+        "side": "R"
+      }
+    },
+    {
+      "id": "node.L.2",
+      "name": "L侧节点2",
+      "position": [
+        20.0,
+        -3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 20.0,
+        "side": "L"
+      }
+    },
+    {
+      "id": "node.R.2",
+      "name": "R侧节点2",
+      "position": [
+        20.0,
+        3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 20.0,
+        "side": "R"
+      }
+    },
+    {
+      "id": "node.L.3",
+      "name": "L侧节点3",
+      "position": [
+        30.0,
+        -3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 30.0,
+        "side": "L"
+      }
+    },
+    {
+      "id": "node.R.3",
+      "name": "R侧节点3",
+      "position": [
+        30.0,
+        3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 30.0,
+        "side": "R"
+      }
+    },
+    {
+      "id": "node.L.4",
+      "name": "L侧节点4",
+      "position": [
+        40.0,
+        -3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "support"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": true,
+        "uz": true,
+        "rx": true,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 40.0,
+        "side": "L"
+      }
+    },
+    {
+      "id": "node.R.4",
+      "name": "R侧节点4",
+      "position": [
+        40.0,
+        3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "support"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": true,
+        "uz": true,
+        "rx": true,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 40.0,
+        "side": "R"
+      }
+    }
+  ],
+  "components": [
+    {
+      "id": "comp.bridge",
+      "name": "示例双主梁桥",
+      "category": "bridge",
+      "topology": "solid",
+      "parentRef": null,
+      "nodeRefs": [],
+      "materialRef": null,
+      "sectionRef": null,
+      "geometry": {
+        "kind": "box",
+        "center": [
+          20.0,
+          0.0,
+          0.0
+        ],
+        "size": [
+          40.0,
+          8.0,
+          2.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "analysis": {
+        "elementType": "excluded",
+        "active": false,
+        "localUp": null
+      },
+      "attributes": {
+        "bridgeType": "two_girder_demo",
+        "loadBearing": true
+      },
+      "featureDescriptors": {
+        "length": 40.0,
+        "width": 6.0
+      },
+      "tags": [
+        "root"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.L.0",
+      "name": "L侧主梁段1",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.0",
+        "node.L.1"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            0.0,
+            -3.0,
+            0.0
+          ],
+          [
+            10.0,
+            -3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.L.1",
+      "name": "L侧主梁段2",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.1",
+        "node.L.2"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            10.0,
+            -3.0,
+            0.0
+          ],
+          [
+            20.0,
+            -3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.L.2",
+      "name": "L侧主梁段3",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.2",
+        "node.L.3"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            20.0,
+            -3.0,
+            0.0
+          ],
+          [
+            30.0,
+            -3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.L.3",
+      "name": "L侧主梁段4",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.3",
+        "node.L.4"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            30.0,
+            -3.0,
+            0.0
+          ],
+          [
+            40.0,
+            -3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.R.0",
+      "name": "R侧主梁段1",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.R.0",
+        "node.R.1"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            0.0,
+            3.0,
+            0.0
+          ],
+          [
+            10.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.R.1",
+      "name": "R侧主梁段2",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.R.1",
+        "node.R.2"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            10.0,
+            3.0,
+            0.0
+          ],
+          [
+            20.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.R.2",
+      "name": "R侧主梁段3",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.R.2",
+        "node.R.3"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            20.0,
+            3.0,
+            0.0
+          ],
+          [
+            30.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.R.3",
+      "name": "R侧主梁段4",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.R.3",
+        "node.R.4"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            30.0,
+            3.0,
+            0.0
+          ],
+          [
+            40.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.crossbeam.0",
+      "name": "横梁1",
+      "category": "crossbeam",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.0",
+        "node.R.0"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.crossbeam",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            0.0,
+            -3.0,
+            0.0
+          ],
+          [
+            0.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "transverse"
+      },
+      "featureDescriptors": {
+        "length": 6.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.crossbeam.1",
+      "name": "横梁2",
+      "category": "crossbeam",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.1",
+        "node.R.1"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.crossbeam",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            10.0,
+            -3.0,
+            0.0
+          ],
+          [
+            10.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "transverse"
+      },
+      "featureDescriptors": {
+        "length": 6.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.crossbeam.2",
+      "name": "横梁3",
+      "category": "crossbeam",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.2",
+        "node.R.2"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.crossbeam",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            20.0,
+            -3.0,
+            0.0
+          ],
+          [
+            20.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "transverse"
+      },
+      "featureDescriptors": {
+        "length": 6.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.crossbeam.3",
+      "name": "横梁4",
+      "category": "crossbeam",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.3",
+        "node.R.3"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.crossbeam",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            30.0,
+            -3.0,
+            0.0
+          ],
+          [
+            30.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "transverse"
+      },
+      "featureDescriptors": {
+        "length": 6.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.crossbeam.4",
+      "name": "横梁5",
+      "category": "crossbeam",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.4",
+        "node.R.4"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.crossbeam",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            40.0,
+            -3.0,
+            0.0
+          ],
+          [
+            40.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "transverse"
+      },
+      "featureDescriptors": {
+        "length": 6.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    }
+  ],
+  "connections": [
+    {
+      "id": "conn.L.0",
+      "name": "L侧节点0连接",
+      "kind": "shared_node",
+      "nodeRef": "node.L.0",
+      "participantRefs": [
+        "comp.girder.L.0",
+        "comp.crossbeam.0"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.R.0",
+      "name": "R侧节点0连接",
+      "kind": "shared_node",
+      "nodeRef": "node.R.0",
+      "participantRefs": [
+        "comp.girder.R.0",
+        "comp.crossbeam.0"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.L.1",
+      "name": "L侧节点1连接",
+      "kind": "shared_node",
+      "nodeRef": "node.L.1",
+      "participantRefs": [
+        "comp.girder.L.0",
+        "comp.girder.L.1",
+        "comp.crossbeam.1"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.R.1",
+      "name": "R侧节点1连接",
+      "kind": "shared_node",
+      "nodeRef": "node.R.1",
+      "participantRefs": [
+        "comp.girder.R.0",
+        "comp.girder.R.1",
+        "comp.crossbeam.1"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.L.2",
+      "name": "L侧节点2连接",
+      "kind": "shared_node",
+      "nodeRef": "node.L.2",
+      "participantRefs": [
+        "comp.girder.L.1",
+        "comp.girder.L.2",
+        "comp.crossbeam.2"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.R.2",
+      "name": "R侧节点2连接",
+      "kind": "shared_node",
+      "nodeRef": "node.R.2",
+      "participantRefs": [
+        "comp.girder.R.1",
+        "comp.girder.R.2",
+        "comp.crossbeam.2"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.L.3",
+      "name": "L侧节点3连接",
+      "kind": "shared_node",
+      "nodeRef": "node.L.3",
+      "participantRefs": [
+        "comp.girder.L.2",
+        "comp.girder.L.3",
+        "comp.crossbeam.3"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.R.3",
+      "name": "R侧节点3连接",
+      "kind": "shared_node",
+      "nodeRef": "node.R.3",
+      "participantRefs": [
+        "comp.girder.R.2",
+        "comp.girder.R.3",
+        "comp.crossbeam.3"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.L.4",
+      "name": "L侧节点4连接",
+      "kind": "shared_node",
+      "nodeRef": "node.L.4",
+      "participantRefs": [
+        "comp.girder.L.3",
+        "comp.crossbeam.4"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.R.4",
+      "name": "R侧节点4连接",
+      "kind": "shared_node",
+      "nodeRef": "node.R.4",
+      "participantRefs": [
+        "comp.girder.R.3",
+        "comp.crossbeam.4"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    }
+  ],
+  "loadCases": [
+    {
+      "id": "lc.service",
+      "name": "服务状态静力工况",
+      "type": "static",
+      "factor": 1.0
+    }
+  ],
+  "loads": [
+    {
+      "id": "load.L.1",
+      "name": "L侧节点1竖向荷载",
+      "caseRef": "lc.service",
+      "kind": "nodal",
+      "targetNodeRef": "node.L.1",
+      "targetComponentRef": null,
+      "force": [
+        0.0,
+        0.0,
+        -150000.0
+      ],
+      "moment": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "attributes": {
+        "source": "synthetic_example"
+      }
+    },
+    {
+      "id": "load.R.1",
+      "name": "R侧节点1竖向荷载",
+      "caseRef": "lc.service",
+      "kind": "nodal",
+      "targetNodeRef": "node.R.1",
+      "targetComponentRef": null,
+      "force": [
+        0.0,
+        0.0,
+        -150000.0
+      ],
+      "moment": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "attributes": {
+        "source": "synthetic_example"
+      }
+    },
+    {
+      "id": "load.L.2",
+      "name": "L侧节点2竖向荷载",
+      "caseRef": "lc.service",
+      "kind": "nodal",
+      "targetNodeRef": "node.L.2",
+      "targetComponentRef": null,
+      "force": [
+        0.0,
+        0.0,
+        -300000.0
+      ],
+      "moment": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "attributes": {
+        "source": "synthetic_example"
+      }
+    },
+    {
+      "id": "load.R.2",
+      "name": "R侧节点2竖向荷载",
+      "caseRef": "lc.service",
+      "kind": "nodal",
+      "targetNodeRef": "node.R.2",
+      "targetComponentRef": null,
+      "force": [
+        0.0,
+        0.0,
+        -300000.0
+      ],
+      "moment": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "attributes": {
+        "source": "synthetic_example"
+      }
+    },
+    {
+      "id": "load.L.3",
+      "name": "L侧节点3竖向荷载",
+      "caseRef": "lc.service",
+      "kind": "nodal",
+      "targetNodeRef": "node.L.3",
+      "targetComponentRef": null,
+      "force": [
+        0.0,
+        0.0,
+        -150000.0
+      ],
+      "moment": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "attributes": {
+        "source": "synthetic_example"
+      }
+    },
+    {
+      "id": "load.R.3",
+      "name": "R侧节点3竖向荷载",
+      "caseRef": "lc.service",
+      "kind": "nodal",
+      "targetNodeRef": "node.R.3",
+      "targetComponentRef": null,
+      "force": [
+        0.0,
+        0.0,
+        -150000.0
+      ],
+      "moment": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "attributes": {
+        "source": "synthetic_example"
+      }
+    }
+  ],
+  "analysisTasks": [
+    {
+      "id": "task.service",
+      "name": "全桥竖向挠度与内力快速试算",
+      "type": "linear_static",
+      "loadCaseRefs": [
+        "lc.service"
+      ],
+      "qoi": [
+        "vertical_displacement",
+        "member_end_moment",
+        "reaction_balance"
+      ],
+      "accuracyTarget": 0.05,
+      "budget": {
+        "maxElements": 5000,
+        "maxRuns": 10,
+        "maxWallSeconds": 60.0
+      },
+      "status": "approved"
+    }
+  ],
+  "cognitiveMap": {
+    "landmarks": [
+      {
+        "id": "landmark.fea.hotspot.4b967d3735",
+        "kind": "hotspot",
+        "targetRefs": [
+          "comp.girder.L.1",
+          "comp.girder.L.2"
+        ],
+        "position": [
+          20.0,
+          -3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 6,
+          "targetSize": 0.3125,
+          "source": "fea",
+          "semanticType": "hotspot",
+          "componentLength": 10.0,
+          "componentCategory": "girder",
+          "sectionArea": 0.35
+        },
+        "reason": [
+          "单元弯矩指标为 4.5e+06",
+          "单元剪力指标为 150000",
+          "响应位于当前网格结果高分位区",
+          "单元弯矩指标为 4.40625e+06",
+          "单元弯矩指标为 4.3125e+06"
+        ],
+        "confidence": 0.7297755611235052
+      },
+      {
+        "id": "landmark.fea.hotspot.02cdd00249",
+        "kind": "hotspot",
+        "targetRefs": [
+          "comp.girder.R.1",
+          "comp.girder.R.2"
+        ],
+        "position": [
+          20.0,
+          3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 6,
+          "targetSize": 0.3125,
+          "source": "fea",
+          "semanticType": "hotspot",
+          "componentLength": 10.0,
+          "componentCategory": "girder",
+          "sectionArea": 0.35
+        },
+        "reason": [
+          "单元弯矩指标为 4.5e+06",
+          "单元剪力指标为 150000",
+          "响应位于当前网格结果高分位区",
+          "单元弯矩指标为 4.40625e+06",
+          "单元弯矩指标为 4.3125e+06"
+        ],
+        "confidence": 0.7297755611187486
+      },
+      {
+        "id": "landmark.agent.support.ee528b4a1c",
+        "kind": "support",
+        "targetRefs": [
+          "node.L.0",
+          "comp.girder.L.0",
+          "comp.crossbeam.0"
+        ],
+        "position": [
+          0.0,
+          -3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 5,
+          "targetSize": 0.5625,
+          "source": "agent",
+          "semanticType": "support",
+          "nodeDegree": 2,
+          "isSupport": true,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "节点连接度为 2",
+          "约束自由度：ux, uy, uz, rx"
+        ],
+        "confidence": 0.9199999999999999
+      },
+      {
+        "id": "landmark.agent.support.87c3029e7e",
+        "kind": "support",
+        "targetRefs": [
+          "node.R.0",
+          "comp.girder.R.0",
+          "comp.crossbeam.0"
+        ],
+        "position": [
+          0.0,
+          3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 5,
+          "targetSize": 0.5625,
+          "source": "agent",
+          "semanticType": "support",
+          "nodeDegree": 2,
+          "isSupport": true,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "节点连接度为 2",
+          "约束自由度：ux, uy, uz, rx"
+        ],
+        "confidence": 0.9199999999999999
+      },
+      {
+        "id": "landmark.agent.support.b1b412383d",
+        "kind": "support",
+        "targetRefs": [
+          "node.L.4",
+          "comp.girder.L.3",
+          "comp.crossbeam.4"
+        ],
+        "position": [
+          40.0,
+          -3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 5,
+          "targetSize": 0.5625,
+          "source": "agent",
+          "semanticType": "support",
+          "nodeDegree": 2,
+          "isSupport": true,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "节点连接度为 2",
+          "约束自由度：uy, uz, rx"
+        ],
+        "confidence": 0.9199999999999999
+      },
+      {
+        "id": "landmark.agent.support.52bd0963c6",
+        "kind": "support",
+        "targetRefs": [
+          "node.R.4",
+          "comp.girder.R.3",
+          "comp.crossbeam.4"
+        ],
+        "position": [
+          40.0,
+          3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 5,
+          "targetSize": 0.5625,
+          "source": "agent",
+          "semanticType": "support",
+          "nodeDegree": 2,
+          "isSupport": true,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "节点连接度为 2",
+          "约束自由度：uy, uz, rx"
+        ],
+        "confidence": 0.9199999999999999
+      },
+      {
+        "id": "landmark.agent.joint.db47ee3946",
+        "kind": "joint",
+        "targetRefs": [
+          "node.L.1",
+          "comp.girder.L.0",
+          "comp.girder.L.1",
+          "comp.crossbeam.1"
+        ],
+        "position": [
+          10.0,
+          -3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 4,
+          "targetSize": 0.75,
+          "source": "agent",
+          "semanticType": "joint",
+          "nodeDegree": 3,
+          "isSupport": false,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "节点连接度为 3",
+          "多构件在该节点交汇"
+        ],
+        "confidence": 0.87
+      },
+      {
+        "id": "landmark.agent.joint.8b75999005",
+        "kind": "joint",
+        "targetRefs": [
+          "node.R.1",
+          "comp.girder.R.0",
+          "comp.girder.R.1",
+          "comp.crossbeam.1"
+        ],
+        "position": [
+          10.0,
+          3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 4,
+          "targetSize": 0.75,
+          "source": "agent",
+          "semanticType": "joint",
+          "nodeDegree": 3,
+          "isSupport": false,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "节点连接度为 3",
+          "多构件在该节点交汇"
+        ],
+        "confidence": 0.87
+      },
+      {
+        "id": "landmark.agent.joint.89d228462f",
+        "kind": "joint",
+        "targetRefs": [
+          "node.L.2",
+          "comp.girder.L.1",
+          "comp.girder.L.2",
+          "comp.crossbeam.2"
+        ],
+        "position": [
+          20.0,
+          -3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 4,
+          "targetSize": 0.75,
+          "source": "agent",
+          "semanticType": "joint",
+          "nodeDegree": 3,
+          "isSupport": false,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "节点连接度为 3",
+          "多构件在该节点交汇"
+        ],
+        "confidence": 0.87
+      },
+      {
+        "id": "landmark.agent.joint.f58af78396",
+        "kind": "joint",
+        "targetRefs": [
+          "node.R.2",
+          "comp.girder.R.1",
+          "comp.girder.R.2",
+          "comp.crossbeam.2"
+        ],
+        "position": [
+          20.0,
+          3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 4,
+          "targetSize": 0.75,
+          "source": "agent",
+          "semanticType": "joint",
+          "nodeDegree": 3,
+          "isSupport": false,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "节点连接度为 3",
+          "多构件在该节点交汇"
+        ],
+        "confidence": 0.87
+      },
+      {
+        "id": "landmark.agent.joint.693d72348c",
+        "kind": "joint",
+        "targetRefs": [
+          "node.L.3",
+          "comp.girder.L.2",
+          "comp.girder.L.3",
+          "comp.crossbeam.3"
+        ],
+        "position": [
+          30.0,
+          -3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 4,
+          "targetSize": 0.75,
+          "source": "agent",
+          "semanticType": "joint",
+          "nodeDegree": 3,
+          "isSupport": false,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "节点连接度为 3",
+          "多构件在该节点交汇"
+        ],
+        "confidence": 0.87
+      },
+      {
+        "id": "landmark.agent.joint.38b601be82",
+        "kind": "joint",
+        "targetRefs": [
+          "node.R.3",
+          "comp.girder.R.2",
+          "comp.girder.R.3",
+          "comp.crossbeam.3"
+        ],
+        "position": [
+          30.0,
+          3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 4,
+          "targetSize": 0.75,
+          "source": "agent",
+          "semanticType": "joint",
+          "nodeDegree": 3,
+          "isSupport": false,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "节点连接度为 3",
+          "多构件在该节点交汇"
+        ],
+        "confidence": 0.87
+      },
+      {
+        "id": "landmark.agent.discontinuity.2686c110dd",
+        "kind": "discontinuity",
+        "targetRefs": [
+          "node.L.1",
+          "comp.girder.L.0",
+          "comp.girder.L.1",
+          "comp.crossbeam.1"
+        ],
+        "position": [
+          10.0,
+          -3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 5,
+          "targetSize": 0.625,
+          "source": "agent",
+          "semanticType": "discontinuity",
+          "nodeDegree": 3,
+          "isSupport": false,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "相邻构件截面面积比为 2.19",
+          "最小无向夹角为 0.0°"
+        ],
+        "confidence": 0.9
+      },
+      {
+        "id": "landmark.agent.discontinuity.c2e799ad80",
+        "kind": "discontinuity",
+        "targetRefs": [
+          "node.R.1",
+          "comp.girder.R.0",
+          "comp.girder.R.1",
+          "comp.crossbeam.1"
+        ],
+        "position": [
+          10.0,
+          3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 5,
+          "targetSize": 0.625,
+          "source": "agent",
+          "semanticType": "discontinuity",
+          "nodeDegree": 3,
+          "isSupport": false,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "相邻构件截面面积比为 2.19",
+          "最小无向夹角为 0.0°"
+        ],
+        "confidence": 0.9
+      },
+      {
+        "id": "landmark.agent.discontinuity.b1cd20c80a",
+        "kind": "discontinuity",
+        "targetRefs": [
+          "node.L.2",
+          "comp.girder.L.1",
+          "comp.girder.L.2",
+          "comp.crossbeam.2"
+        ],
+        "position": [
+          20.0,
+          -3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 5,
+          "targetSize": 0.625,
+          "source": "agent",
+          "semanticType": "discontinuity",
+          "nodeDegree": 3,
+          "isSupport": false,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "相邻构件截面面积比为 2.19",
+          "最小无向夹角为 0.0°"
+        ],
+        "confidence": 0.9
+      },
+      {
+        "id": "landmark.agent.discontinuity.028098a72e",
+        "kind": "discontinuity",
+        "targetRefs": [
+          "node.R.2",
+          "comp.girder.R.1",
+          "comp.girder.R.2",
+          "comp.crossbeam.2"
+        ],
+        "position": [
+          20.0,
+          3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 5,
+          "targetSize": 0.625,
+          "source": "agent",
+          "semanticType": "discontinuity",
+          "nodeDegree": 3,
+          "isSupport": false,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "相邻构件截面面积比为 2.19",
+          "最小无向夹角为 0.0°"
+        ],
+        "confidence": 0.9
+      },
+      {
+        "id": "landmark.agent.discontinuity.35732b727e",
+        "kind": "discontinuity",
+        "targetRefs": [
+          "node.L.3",
+          "comp.girder.L.2",
+          "comp.girder.L.3",
+          "comp.crossbeam.3"
+        ],
+        "position": [
+          30.0,
+          -3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 5,
+          "targetSize": 0.625,
+          "source": "agent",
+          "semanticType": "discontinuity",
+          "nodeDegree": 3,
+          "isSupport": false,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "相邻构件截面面积比为 2.19",
+          "最小无向夹角为 0.0°"
+        ],
+        "confidence": 0.9
+      },
+      {
+        "id": "landmark.agent.discontinuity.48ccb0aafc",
+        "kind": "discontinuity",
+        "targetRefs": [
+          "node.R.3",
+          "comp.girder.R.2",
+          "comp.girder.R.3",
+          "comp.crossbeam.3"
+        ],
+        "position": [
+          30.0,
+          3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 5,
+          "targetSize": 0.625,
+          "source": "agent",
+          "semanticType": "discontinuity",
+          "nodeDegree": 3,
+          "isSupport": false,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "相邻构件截面面积比为 2.19",
+          "最小无向夹角为 0.0°"
+        ],
+        "confidence": 0.9
+      },
+      {
+        "id": "landmark.agent.discontinuity.fe805a663e",
+        "kind": "discontinuity",
+        "targetRefs": [
+          "node.L.0",
+          "comp.girder.L.0",
+          "comp.crossbeam.0"
+        ],
+        "position": [
+          0.0,
+          -3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 5,
+          "targetSize": 0.625,
+          "source": "agent",
+          "semanticType": "discontinuity",
+          "nodeDegree": 2,
+          "isSupport": true,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "相邻构件截面面积比为 2.19"
+        ],
+        "confidence": 0.8
+      },
+      {
+        "id": "landmark.agent.discontinuity.d684dc8b91",
+        "kind": "discontinuity",
+        "targetRefs": [
+          "node.R.0",
+          "comp.girder.R.0",
+          "comp.crossbeam.0"
+        ],
+        "position": [
+          0.0,
+          3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 5,
+          "targetSize": 0.625,
+          "source": "agent",
+          "semanticType": "discontinuity",
+          "nodeDegree": 2,
+          "isSupport": true,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "相邻构件截面面积比为 2.19"
+        ],
+        "confidence": 0.8
+      },
+      {
+        "id": "landmark.agent.discontinuity.7452d93f46",
+        "kind": "discontinuity",
+        "targetRefs": [
+          "node.L.4",
+          "comp.girder.L.3",
+          "comp.crossbeam.4"
+        ],
+        "position": [
+          40.0,
+          -3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 5,
+          "targetSize": 0.625,
+          "source": "agent",
+          "semanticType": "discontinuity",
+          "nodeDegree": 2,
+          "isSupport": true,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "相邻构件截面面积比为 2.19"
+        ],
+        "confidence": 0.8
+      },
+      {
+        "id": "landmark.agent.discontinuity.8fd69ff326",
+        "kind": "discontinuity",
+        "targetRefs": [
+          "node.R.4",
+          "comp.girder.R.3",
+          "comp.crossbeam.4"
+        ],
+        "position": [
+          40.0,
+          3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 5,
+          "targetSize": 0.625,
+          "source": "agent",
+          "semanticType": "discontinuity",
+          "nodeDegree": 2,
+          "isSupport": true,
+          "sectionAreaRatio": 2.1875,
+          "materialCount": 1
+        },
+        "reason": [
+          "相邻构件截面面积比为 2.19"
+        ],
+        "confidence": 0.8
+      },
+      {
+        "id": "landmark.agent.smooth.33a3bacfdb",
+        "kind": "smooth",
+        "targetRefs": [
+          "comp.girder.L.1"
+        ],
+        "position": [
+          15.0,
+          -3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 1,
+          "targetSize": 1.875,
+          "source": "agent",
+          "semanticType": "smooth",
+          "componentLength": 10.0,
+          "componentCategory": "girder",
+          "sectionArea": 0.35
+        },
+        "reason": [
+          "构件长度不小于中位长度",
+          "两端不属于支承或高连接度复杂节点",
+          "允许在满足响应要求时放松网格"
+        ],
+        "confidence": 0.68
+      },
+      {
+        "id": "landmark.agent.smooth.6ab104e47f",
+        "kind": "smooth",
+        "targetRefs": [
+          "comp.girder.L.2"
+        ],
+        "position": [
+          25.0,
+          -3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 1,
+          "targetSize": 1.875,
+          "source": "agent",
+          "semanticType": "smooth",
+          "componentLength": 10.0,
+          "componentCategory": "girder",
+          "sectionArea": 0.35
+        },
+        "reason": [
+          "构件长度不小于中位长度",
+          "两端不属于支承或高连接度复杂节点",
+          "允许在满足响应要求时放松网格"
+        ],
+        "confidence": 0.68
+      },
+      {
+        "id": "landmark.agent.smooth.0051212a57",
+        "kind": "smooth",
+        "targetRefs": [
+          "comp.girder.R.1"
+        ],
+        "position": [
+          15.0,
+          3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 1,
+          "targetSize": 1.875,
+          "source": "agent",
+          "semanticType": "smooth",
+          "componentLength": 10.0,
+          "componentCategory": "girder",
+          "sectionArea": 0.35
+        },
+        "reason": [
+          "构件长度不小于中位长度",
+          "两端不属于支承或高连接度复杂节点",
+          "允许在满足响应要求时放松网格"
+        ],
+        "confidence": 0.68
+      },
+      {
+        "id": "landmark.agent.smooth.b6681ecf9c",
+        "kind": "smooth",
+        "targetRefs": [
+          "comp.girder.R.2"
+        ],
+        "position": [
+          25.0,
+          3.0,
+          0.0
+        ],
+        "featureVector": {
+          "meshLevel": 1,
+          "targetSize": 1.875,
+          "source": "agent",
+          "semanticType": "smooth",
+          "componentLength": 10.0,
+          "componentCategory": "girder",
+          "sectionArea": 0.35
+        },
+        "reason": [
+          "构件长度不小于中位长度",
+          "两端不属于支承或高连接度复杂节点",
+          "允许在满足响应要求时放松网格"
+        ],
+        "confidence": 0.68
+      }
+    ],
+    "decisionEdges": [
+      {
+        "id": "decision.1.4b967d3735",
+        "fromRef": "landmark.fea.hotspot.4b967d3735",
+        "toRef": "region.fea.hotspot.4b967d3735",
+        "condition": "单元弯矩指标为 4.5e+06; 单元剪力指标为 150000; 响应位于当前网格结果高分位区; 单元弯矩指标为 4.40625e+06; 单元弯矩指标为 4.3125e+06",
+        "action": "meshLevel=6, targetSize=0.3125",
+        "source": "fea"
+      },
+      {
+        "id": "decision.2.02cdd00249",
+        "fromRef": "landmark.fea.hotspot.02cdd00249",
+        "toRef": "region.fea.hotspot.02cdd00249",
+        "condition": "单元弯矩指标为 4.5e+06; 单元剪力指标为 150000; 响应位于当前网格结果高分位区; 单元弯矩指标为 4.40625e+06; 单元弯矩指标为 4.3125e+06",
+        "action": "meshLevel=6, targetSize=0.3125",
+        "source": "fea"
+      },
+      {
+        "id": "decision.3.ee528b4a1c",
+        "fromRef": "landmark.agent.support.ee528b4a1c",
+        "toRef": "region.agent.support.ee528b4a1c",
+        "condition": "节点连接度为 2; 约束自由度：ux, uy, uz, rx",
+        "action": "meshLevel=5, targetSize=0.5625",
+        "source": "rule"
+      },
+      {
+        "id": "decision.4.87c3029e7e",
+        "fromRef": "landmark.agent.support.87c3029e7e",
+        "toRef": "region.agent.support.87c3029e7e",
+        "condition": "节点连接度为 2; 约束自由度：ux, uy, uz, rx",
+        "action": "meshLevel=5, targetSize=0.5625",
+        "source": "rule"
+      },
+      {
+        "id": "decision.5.b1b412383d",
+        "fromRef": "landmark.agent.support.b1b412383d",
+        "toRef": "region.agent.support.b1b412383d",
+        "condition": "节点连接度为 2; 约束自由度：uy, uz, rx",
+        "action": "meshLevel=5, targetSize=0.5625",
+        "source": "rule"
+      },
+      {
+        "id": "decision.6.52bd0963c6",
+        "fromRef": "landmark.agent.support.52bd0963c6",
+        "toRef": "region.agent.support.52bd0963c6",
+        "condition": "节点连接度为 2; 约束自由度：uy, uz, rx",
+        "action": "meshLevel=5, targetSize=0.5625",
+        "source": "rule"
+      },
+      {
+        "id": "decision.7.db47ee3946",
+        "fromRef": "landmark.agent.joint.db47ee3946",
+        "toRef": "region.agent.joint.db47ee3946",
+        "condition": "节点连接度为 3; 多构件在该节点交汇",
+        "action": "meshLevel=4, targetSize=0.75",
+        "source": "rule"
+      },
+      {
+        "id": "decision.8.8b75999005",
+        "fromRef": "landmark.agent.joint.8b75999005",
+        "toRef": "region.agent.joint.8b75999005",
+        "condition": "节点连接度为 3; 多构件在该节点交汇",
+        "action": "meshLevel=4, targetSize=0.75",
+        "source": "rule"
+      },
+      {
+        "id": "decision.9.89d228462f",
+        "fromRef": "landmark.agent.joint.89d228462f",
+        "toRef": "region.agent.joint.89d228462f",
+        "condition": "节点连接度为 3; 多构件在该节点交汇",
+        "action": "meshLevel=4, targetSize=0.75",
+        "source": "rule"
+      },
+      {
+        "id": "decision.10.f58af78396",
+        "fromRef": "landmark.agent.joint.f58af78396",
+        "toRef": "region.agent.joint.f58af78396",
+        "condition": "节点连接度为 3; 多构件在该节点交汇",
+        "action": "meshLevel=4, targetSize=0.75",
+        "source": "rule"
+      },
+      {
+        "id": "decision.11.693d72348c",
+        "fromRef": "landmark.agent.joint.693d72348c",
+        "toRef": "region.agent.joint.693d72348c",
+        "condition": "节点连接度为 3; 多构件在该节点交汇",
+        "action": "meshLevel=4, targetSize=0.75",
+        "source": "rule"
+      },
+      {
+        "id": "decision.12.38b601be82",
+        "fromRef": "landmark.agent.joint.38b601be82",
+        "toRef": "region.agent.joint.38b601be82",
+        "condition": "节点连接度为 3; 多构件在该节点交汇",
+        "action": "meshLevel=4, targetSize=0.75",
+        "source": "rule"
+      },
+      {
+        "id": "decision.13.2686c110dd",
+        "fromRef": "landmark.agent.discontinuity.2686c110dd",
+        "toRef": "region.agent.discontinuity.2686c110dd",
+        "condition": "相邻构件截面面积比为 2.19; 最小无向夹角为 0.0°",
+        "action": "meshLevel=5, targetSize=0.625",
+        "source": "rule"
+      },
+      {
+        "id": "decision.14.c2e799ad80",
+        "fromRef": "landmark.agent.discontinuity.c2e799ad80",
+        "toRef": "region.agent.discontinuity.c2e799ad80",
+        "condition": "相邻构件截面面积比为 2.19; 最小无向夹角为 0.0°",
+        "action": "meshLevel=5, targetSize=0.625",
+        "source": "rule"
+      },
+      {
+        "id": "decision.15.b1cd20c80a",
+        "fromRef": "landmark.agent.discontinuity.b1cd20c80a",
+        "toRef": "region.agent.discontinuity.b1cd20c80a",
+        "condition": "相邻构件截面面积比为 2.19; 最小无向夹角为 0.0°",
+        "action": "meshLevel=5, targetSize=0.625",
+        "source": "rule"
+      },
+      {
+        "id": "decision.16.028098a72e",
+        "fromRef": "landmark.agent.discontinuity.028098a72e",
+        "toRef": "region.agent.discontinuity.028098a72e",
+        "condition": "相邻构件截面面积比为 2.19; 最小无向夹角为 0.0°",
+        "action": "meshLevel=5, targetSize=0.625",
+        "source": "rule"
+      },
+      {
+        "id": "decision.17.35732b727e",
+        "fromRef": "landmark.agent.discontinuity.35732b727e",
+        "toRef": "region.agent.discontinuity.35732b727e",
+        "condition": "相邻构件截面面积比为 2.19; 最小无向夹角为 0.0°",
+        "action": "meshLevel=5, targetSize=0.625",
+        "source": "rule"
+      },
+      {
+        "id": "decision.18.48ccb0aafc",
+        "fromRef": "landmark.agent.discontinuity.48ccb0aafc",
+        "toRef": "region.agent.discontinuity.48ccb0aafc",
+        "condition": "相邻构件截面面积比为 2.19; 最小无向夹角为 0.0°",
+        "action": "meshLevel=5, targetSize=0.625",
+        "source": "rule"
+      },
+      {
+        "id": "decision.19.fe805a663e",
+        "fromRef": "landmark.agent.discontinuity.fe805a663e",
+        "toRef": "region.agent.discontinuity.fe805a663e",
+        "condition": "相邻构件截面面积比为 2.19",
+        "action": "meshLevel=5, targetSize=0.625",
+        "source": "rule"
+      },
+      {
+        "id": "decision.20.d684dc8b91",
+        "fromRef": "landmark.agent.discontinuity.d684dc8b91",
+        "toRef": "region.agent.discontinuity.d684dc8b91",
+        "condition": "相邻构件截面面积比为 2.19",
+        "action": "meshLevel=5, targetSize=0.625",
+        "source": "rule"
+      },
+      {
+        "id": "decision.21.7452d93f46",
+        "fromRef": "landmark.agent.discontinuity.7452d93f46",
+        "toRef": "region.agent.discontinuity.7452d93f46",
+        "condition": "相邻构件截面面积比为 2.19",
+        "action": "meshLevel=5, targetSize=0.625",
+        "source": "rule"
+      },
+      {
+        "id": "decision.22.8fd69ff326",
+        "fromRef": "landmark.agent.discontinuity.8fd69ff326",
+        "toRef": "region.agent.discontinuity.8fd69ff326",
+        "condition": "相邻构件截面面积比为 2.19",
+        "action": "meshLevel=5, targetSize=0.625",
+        "source": "rule"
+      },
+      {
+        "id": "decision.23.33a3bacfdb",
+        "fromRef": "landmark.agent.smooth.33a3bacfdb",
+        "toRef": "region.agent.smooth.33a3bacfdb",
+        "condition": "构件长度不小于中位长度; 两端不属于支承或高连接度复杂节点; 允许在满足响应要求时放松网格",
+        "action": "meshLevel=1, targetSize=1.875",
+        "source": "rule"
+      },
+      {
+        "id": "decision.24.6ab104e47f",
+        "fromRef": "landmark.agent.smooth.6ab104e47f",
+        "toRef": "region.agent.smooth.6ab104e47f",
+        "condition": "构件长度不小于中位长度; 两端不属于支承或高连接度复杂节点; 允许在满足响应要求时放松网格",
+        "action": "meshLevel=1, targetSize=1.875",
+        "source": "rule"
+      },
+      {
+        "id": "decision.25.0051212a57",
+        "fromRef": "landmark.agent.smooth.0051212a57",
+        "toRef": "region.agent.smooth.0051212a57",
+        "condition": "构件长度不小于中位长度; 两端不属于支承或高连接度复杂节点; 允许在满足响应要求时放松网格",
+        "action": "meshLevel=1, targetSize=1.875",
+        "source": "rule"
+      },
+      {
+        "id": "decision.26.b6681ecf9c",
+        "fromRef": "landmark.agent.smooth.b6681ecf9c",
+        "toRef": "region.agent.smooth.b6681ecf9c",
+        "condition": "构件长度不小于中位长度; 两端不属于支承或高连接度复杂节点; 允许在满足响应要求时放松网格",
+        "action": "meshLevel=1, targetSize=1.875",
+        "source": "rule"
+      }
+    ],
+    "version": 1
+  },
+  "regions": [
+    {
+      "id": "region.fea.hotspot.4b967d3735",
+      "name": "hotspot区域1",
+      "semanticType": "hotspot",
+      "source": "fea",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          20.0,
+          -3.0,
+          0.0
+        ],
+        "size": [
+          5.099999999999998,
+          2.5,
+          2.5
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "comp.girder.L.1",
+        "comp.girder.L.2"
+      ],
+      "active": true,
+      "meshLevel": 6,
+      "targetSize": 0.3125,
+      "elementFamily": "frame",
+      "amrEngine": "gradient",
+      "maxIterations": 4,
+      "reason": [
+        "单元弯矩指标为 4.5e+06",
+        "单元剪力指标为 150000",
+        "响应位于当前网格结果高分位区",
+        "单元弯矩指标为 4.40625e+06",
+        "单元弯矩指标为 4.3125e+06"
+      ],
+      "confidence": 0.7297755611235052,
+      "status": "proposed",
+      "evidenceRefs": [
+        "elem.comp_girder_L_1.12",
+        "elem.comp_girder_L_1.13",
+        "elem.comp_girder_L_1.14",
+        "elem.comp_girder_L_2.1",
+        "elem.comp_girder_L_2.2",
+        "elem.comp_girder_L_2.3"
+      ],
+      "attributes": {
+        "momentThreshold": 4009999.9989822377,
+        "shearThreshold": 299999.99966311455,
+        "responseRatio": 1.075436409098301,
+        "expertIds": [
+          "fea_hotspot",
+          "fusion"
+        ]
+      }
+    },
+    {
+      "id": "region.fea.hotspot.02cdd00249",
+      "name": "hotspot区域2",
+      "semanticType": "hotspot",
+      "source": "fea",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          20.0,
+          3.0,
+          0.0
+        ],
+        "size": [
+          5.099999999999998,
+          2.5,
+          2.5
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "comp.girder.R.1",
+        "comp.girder.R.2"
+      ],
+      "active": true,
+      "meshLevel": 6,
+      "targetSize": 0.3125,
+      "elementFamily": "frame",
+      "amrEngine": "gradient",
+      "maxIterations": 4,
+      "reason": [
+        "单元弯矩指标为 4.5e+06",
+        "单元剪力指标为 150000",
+        "响应位于当前网格结果高分位区",
+        "单元弯矩指标为 4.40625e+06",
+        "单元弯矩指标为 4.3125e+06"
+      ],
+      "confidence": 0.7297755611187486,
+      "status": "proposed",
+      "evidenceRefs": [
+        "elem.comp_girder_R_1.12",
+        "elem.comp_girder_R_1.13",
+        "elem.comp_girder_R_1.14",
+        "elem.comp_girder_R_2.1",
+        "elem.comp_girder_R_2.2",
+        "elem.comp_girder_R_2.3"
+      ],
+      "attributes": {
+        "momentThreshold": 4009999.9989822377,
+        "shearThreshold": 299999.99966311455,
+        "responseRatio": 1.075436409037418,
+        "expertIds": [
+          "fea_hotspot",
+          "fusion"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.support.ee528b4a1c",
+      "name": "support区域3",
+      "semanticType": "support",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          0.0,
+          -3.0,
+          0.0
+        ],
+        "size": [
+          2.7,
+          2.7,
+          2.7
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.L.0",
+        "comp.girder.L.0",
+        "comp.crossbeam.0"
+      ],
+      "active": true,
+      "meshLevel": 5,
+      "targetSize": 0.5625,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "节点连接度为 2",
+        "约束自由度：ux, uy, uz, rx"
+      ],
+      "confidence": 0.9199999999999999,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "nodeDegree": 2,
+        "constraints": [
+          "ux",
+          "uy",
+          "uz",
+          "rx"
+        ],
+        "expertIds": [
+          "support_joint"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.support.87c3029e7e",
+      "name": "support区域4",
+      "semanticType": "support",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          0.0,
+          3.0,
+          0.0
+        ],
+        "size": [
+          2.7,
+          2.7,
+          2.7
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.R.0",
+        "comp.girder.R.0",
+        "comp.crossbeam.0"
+      ],
+      "active": true,
+      "meshLevel": 5,
+      "targetSize": 0.5625,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "节点连接度为 2",
+        "约束自由度：ux, uy, uz, rx"
+      ],
+      "confidence": 0.9199999999999999,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "nodeDegree": 2,
+        "constraints": [
+          "ux",
+          "uy",
+          "uz",
+          "rx"
+        ],
+        "expertIds": [
+          "support_joint"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.support.b1b412383d",
+      "name": "support区域5",
+      "semanticType": "support",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          40.0,
+          -3.0,
+          0.0
+        ],
+        "size": [
+          2.7,
+          2.7,
+          2.7
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.L.4",
+        "comp.girder.L.3",
+        "comp.crossbeam.4"
+      ],
+      "active": true,
+      "meshLevel": 5,
+      "targetSize": 0.5625,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "节点连接度为 2",
+        "约束自由度：uy, uz, rx"
+      ],
+      "confidence": 0.9199999999999999,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "nodeDegree": 2,
+        "constraints": [
+          "uy",
+          "uz",
+          "rx"
+        ],
+        "expertIds": [
+          "support_joint"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.support.52bd0963c6",
+      "name": "support区域6",
+      "semanticType": "support",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          40.0,
+          3.0,
+          0.0
+        ],
+        "size": [
+          2.7,
+          2.7,
+          2.7
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.R.4",
+        "comp.girder.R.3",
+        "comp.crossbeam.4"
+      ],
+      "active": true,
+      "meshLevel": 5,
+      "targetSize": 0.5625,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "节点连接度为 2",
+        "约束自由度：uy, uz, rx"
+      ],
+      "confidence": 0.9199999999999999,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "nodeDegree": 2,
+        "constraints": [
+          "uy",
+          "uz",
+          "rx"
+        ],
+        "expertIds": [
+          "support_joint"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.joint.db47ee3946",
+      "name": "joint区域7",
+      "semanticType": "joint",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          10.0,
+          -3.0,
+          0.0
+        ],
+        "size": [
+          2.7,
+          2.7,
+          2.7
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.L.1",
+        "comp.girder.L.0",
+        "comp.girder.L.1",
+        "comp.crossbeam.1"
+      ],
+      "active": true,
+      "meshLevel": 4,
+      "targetSize": 0.75,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "节点连接度为 3",
+        "多构件在该节点交汇"
+      ],
+      "confidence": 0.87,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "nodeDegree": 3,
+        "constraints": [],
+        "expertIds": [
+          "support_joint"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.joint.8b75999005",
+      "name": "joint区域8",
+      "semanticType": "joint",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          10.0,
+          3.0,
+          0.0
+        ],
+        "size": [
+          2.7,
+          2.7,
+          2.7
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.R.1",
+        "comp.girder.R.0",
+        "comp.girder.R.1",
+        "comp.crossbeam.1"
+      ],
+      "active": true,
+      "meshLevel": 4,
+      "targetSize": 0.75,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "节点连接度为 3",
+        "多构件在该节点交汇"
+      ],
+      "confidence": 0.87,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "nodeDegree": 3,
+        "constraints": [],
+        "expertIds": [
+          "support_joint"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.joint.89d228462f",
+      "name": "joint区域9",
+      "semanticType": "joint",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          20.0,
+          -3.0,
+          0.0
+        ],
+        "size": [
+          2.7,
+          2.7,
+          2.7
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.L.2",
+        "comp.girder.L.1",
+        "comp.girder.L.2",
+        "comp.crossbeam.2"
+      ],
+      "active": true,
+      "meshLevel": 4,
+      "targetSize": 0.75,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "节点连接度为 3",
+        "多构件在该节点交汇"
+      ],
+      "confidence": 0.87,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "nodeDegree": 3,
+        "constraints": [],
+        "expertIds": [
+          "support_joint"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.joint.f58af78396",
+      "name": "joint区域10",
+      "semanticType": "joint",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          20.0,
+          3.0,
+          0.0
+        ],
+        "size": [
+          2.7,
+          2.7,
+          2.7
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.R.2",
+        "comp.girder.R.1",
+        "comp.girder.R.2",
+        "comp.crossbeam.2"
+      ],
+      "active": true,
+      "meshLevel": 4,
+      "targetSize": 0.75,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "节点连接度为 3",
+        "多构件在该节点交汇"
+      ],
+      "confidence": 0.87,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "nodeDegree": 3,
+        "constraints": [],
+        "expertIds": [
+          "support_joint"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.joint.693d72348c",
+      "name": "joint区域11",
+      "semanticType": "joint",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          30.0,
+          -3.0,
+          0.0
+        ],
+        "size": [
+          2.7,
+          2.7,
+          2.7
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.L.3",
+        "comp.girder.L.2",
+        "comp.girder.L.3",
+        "comp.crossbeam.3"
+      ],
+      "active": true,
+      "meshLevel": 4,
+      "targetSize": 0.75,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "节点连接度为 3",
+        "多构件在该节点交汇"
+      ],
+      "confidence": 0.87,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "nodeDegree": 3,
+        "constraints": [],
+        "expertIds": [
+          "support_joint"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.joint.38b601be82",
+      "name": "joint区域12",
+      "semanticType": "joint",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          30.0,
+          3.0,
+          0.0
+        ],
+        "size": [
+          2.7,
+          2.7,
+          2.7
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.R.3",
+        "comp.girder.R.2",
+        "comp.girder.R.3",
+        "comp.crossbeam.3"
+      ],
+      "active": true,
+      "meshLevel": 4,
+      "targetSize": 0.75,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "节点连接度为 3",
+        "多构件在该节点交汇"
+      ],
+      "confidence": 0.87,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "nodeDegree": 3,
+        "constraints": [],
+        "expertIds": [
+          "support_joint"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.discontinuity.2686c110dd",
+      "name": "discontinuity区域13",
+      "semanticType": "discontinuity",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          10.0,
+          -3.0,
+          0.0
+        ],
+        "size": [
+          2.5,
+          2.5,
+          2.5
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.L.1",
+        "comp.girder.L.0",
+        "comp.girder.L.1",
+        "comp.crossbeam.1"
+      ],
+      "active": true,
+      "meshLevel": 5,
+      "targetSize": 0.625,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "相邻构件截面面积比为 2.19",
+        "最小无向夹角为 0.0°"
+      ],
+      "confidence": 0.9,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "sectionAreaRatio": 2.1875,
+        "materialCount": 1,
+        "minAngle": 0.0,
+        "expertIds": [
+          "discontinuity"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.discontinuity.c2e799ad80",
+      "name": "discontinuity区域14",
+      "semanticType": "discontinuity",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          10.0,
+          3.0,
+          0.0
+        ],
+        "size": [
+          2.5,
+          2.5,
+          2.5
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.R.1",
+        "comp.girder.R.0",
+        "comp.girder.R.1",
+        "comp.crossbeam.1"
+      ],
+      "active": true,
+      "meshLevel": 5,
+      "targetSize": 0.625,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "相邻构件截面面积比为 2.19",
+        "最小无向夹角为 0.0°"
+      ],
+      "confidence": 0.9,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "sectionAreaRatio": 2.1875,
+        "materialCount": 1,
+        "minAngle": 0.0,
+        "expertIds": [
+          "discontinuity"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.discontinuity.b1cd20c80a",
+      "name": "discontinuity区域15",
+      "semanticType": "discontinuity",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          20.0,
+          -3.0,
+          0.0
+        ],
+        "size": [
+          2.5,
+          2.5,
+          2.5
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.L.2",
+        "comp.girder.L.1",
+        "comp.girder.L.2",
+        "comp.crossbeam.2"
+      ],
+      "active": true,
+      "meshLevel": 5,
+      "targetSize": 0.625,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "相邻构件截面面积比为 2.19",
+        "最小无向夹角为 0.0°"
+      ],
+      "confidence": 0.9,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "sectionAreaRatio": 2.1875,
+        "materialCount": 1,
+        "minAngle": 0.0,
+        "expertIds": [
+          "discontinuity"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.discontinuity.028098a72e",
+      "name": "discontinuity区域16",
+      "semanticType": "discontinuity",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          20.0,
+          3.0,
+          0.0
+        ],
+        "size": [
+          2.5,
+          2.5,
+          2.5
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.R.2",
+        "comp.girder.R.1",
+        "comp.girder.R.2",
+        "comp.crossbeam.2"
+      ],
+      "active": true,
+      "meshLevel": 5,
+      "targetSize": 0.625,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "相邻构件截面面积比为 2.19",
+        "最小无向夹角为 0.0°"
+      ],
+      "confidence": 0.9,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "sectionAreaRatio": 2.1875,
+        "materialCount": 1,
+        "minAngle": 0.0,
+        "expertIds": [
+          "discontinuity"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.discontinuity.35732b727e",
+      "name": "discontinuity区域17",
+      "semanticType": "discontinuity",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          30.0,
+          -3.0,
+          0.0
+        ],
+        "size": [
+          2.5,
+          2.5,
+          2.5
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.L.3",
+        "comp.girder.L.2",
+        "comp.girder.L.3",
+        "comp.crossbeam.3"
+      ],
+      "active": true,
+      "meshLevel": 5,
+      "targetSize": 0.625,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "相邻构件截面面积比为 2.19",
+        "最小无向夹角为 0.0°"
+      ],
+      "confidence": 0.9,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "sectionAreaRatio": 2.1875,
+        "materialCount": 1,
+        "minAngle": 0.0,
+        "expertIds": [
+          "discontinuity"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.discontinuity.48ccb0aafc",
+      "name": "discontinuity区域18",
+      "semanticType": "discontinuity",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          30.0,
+          3.0,
+          0.0
+        ],
+        "size": [
+          2.5,
+          2.5,
+          2.5
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.R.3",
+        "comp.girder.R.2",
+        "comp.girder.R.3",
+        "comp.crossbeam.3"
+      ],
+      "active": true,
+      "meshLevel": 5,
+      "targetSize": 0.625,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "相邻构件截面面积比为 2.19",
+        "最小无向夹角为 0.0°"
+      ],
+      "confidence": 0.9,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "sectionAreaRatio": 2.1875,
+        "materialCount": 1,
+        "minAngle": 0.0,
+        "expertIds": [
+          "discontinuity"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.discontinuity.fe805a663e",
+      "name": "discontinuity区域19",
+      "semanticType": "discontinuity",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          0.0,
+          -3.0,
+          0.0
+        ],
+        "size": [
+          2.5,
+          2.5,
+          2.5
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.L.0",
+        "comp.girder.L.0",
+        "comp.crossbeam.0"
+      ],
+      "active": true,
+      "meshLevel": 5,
+      "targetSize": 0.625,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "相邻构件截面面积比为 2.19"
+      ],
+      "confidence": 0.8,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "sectionAreaRatio": 2.1875,
+        "materialCount": 1,
+        "minAngle": 1.5707963267948966,
+        "expertIds": [
+          "discontinuity"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.discontinuity.d684dc8b91",
+      "name": "discontinuity区域20",
+      "semanticType": "discontinuity",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          0.0,
+          3.0,
+          0.0
+        ],
+        "size": [
+          2.5,
+          2.5,
+          2.5
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.R.0",
+        "comp.girder.R.0",
+        "comp.crossbeam.0"
+      ],
+      "active": true,
+      "meshLevel": 5,
+      "targetSize": 0.625,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "相邻构件截面面积比为 2.19"
+      ],
+      "confidence": 0.8,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "sectionAreaRatio": 2.1875,
+        "materialCount": 1,
+        "minAngle": 1.5707963267948966,
+        "expertIds": [
+          "discontinuity"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.discontinuity.7452d93f46",
+      "name": "discontinuity区域21",
+      "semanticType": "discontinuity",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          40.0,
+          -3.0,
+          0.0
+        ],
+        "size": [
+          2.5,
+          2.5,
+          2.5
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.L.4",
+        "comp.girder.L.3",
+        "comp.crossbeam.4"
+      ],
+      "active": true,
+      "meshLevel": 5,
+      "targetSize": 0.625,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "相邻构件截面面积比为 2.19"
+      ],
+      "confidence": 0.8,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "sectionAreaRatio": 2.1875,
+        "materialCount": 1,
+        "minAngle": 1.5707963267948966,
+        "expertIds": [
+          "discontinuity"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.discontinuity.8fd69ff326",
+      "name": "discontinuity区域22",
+      "semanticType": "discontinuity",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          40.0,
+          3.0,
+          0.0
+        ],
+        "size": [
+          2.5,
+          2.5,
+          2.5
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "node.R.4",
+        "comp.girder.R.3",
+        "comp.crossbeam.4"
+      ],
+      "active": true,
+      "meshLevel": 5,
+      "targetSize": 0.625,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "相邻构件截面面积比为 2.19"
+      ],
+      "confidence": 0.8,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "sectionAreaRatio": 2.1875,
+        "materialCount": 1,
+        "minAngle": 1.5707963267948966,
+        "expertIds": [
+          "discontinuity"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.smooth.33a3bacfdb",
+      "name": "smooth区域23",
+      "semanticType": "smooth",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          15.0,
+          -3.0,
+          0.0
+        ],
+        "size": [
+          6.5,
+          1.875,
+          1.875
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "comp.girder.L.1"
+      ],
+      "active": true,
+      "meshLevel": 1,
+      "targetSize": 1.875,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "构件长度不小于中位长度",
+        "两端不属于支承或高连接度复杂节点",
+        "允许在满足响应要求时放松网格"
+      ],
+      "confidence": 0.68,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "componentLength": 10.0,
+        "baseSize": 1.25,
+        "expertIds": [
+          "smooth_region"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.smooth.6ab104e47f",
+      "name": "smooth区域24",
+      "semanticType": "smooth",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          25.0,
+          -3.0,
+          0.0
+        ],
+        "size": [
+          6.5,
+          1.875,
+          1.875
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "comp.girder.L.2"
+      ],
+      "active": true,
+      "meshLevel": 1,
+      "targetSize": 1.875,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "构件长度不小于中位长度",
+        "两端不属于支承或高连接度复杂节点",
+        "允许在满足响应要求时放松网格"
+      ],
+      "confidence": 0.68,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "componentLength": 10.0,
+        "baseSize": 1.25,
+        "expertIds": [
+          "smooth_region"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.smooth.0051212a57",
+      "name": "smooth区域25",
+      "semanticType": "smooth",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          15.0,
+          3.0,
+          0.0
+        ],
+        "size": [
+          6.5,
+          1.875,
+          1.875
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "comp.girder.R.1"
+      ],
+      "active": true,
+      "meshLevel": 1,
+      "targetSize": 1.875,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "构件长度不小于中位长度",
+        "两端不属于支承或高连接度复杂节点",
+        "允许在满足响应要求时放松网格"
+      ],
+      "confidence": 0.68,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "componentLength": 10.0,
+        "baseSize": 1.25,
+        "expertIds": [
+          "smooth_region"
+        ]
+      }
+    },
+    {
+      "id": "region.agent.smooth.b6681ecf9c",
+      "name": "smooth区域26",
+      "semanticType": "smooth",
+      "source": "agent",
+      "geometry": {
+        "kind": "box",
+        "center": [
+          25.0,
+          3.0,
+          0.0
+        ],
+        "size": [
+          6.5,
+          1.875,
+          1.875
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "targetRefs": [
+        "comp.girder.R.2"
+      ],
+      "active": true,
+      "meshLevel": 1,
+      "targetSize": 1.875,
+      "elementFamily": "frame",
+      "amrEngine": "rule_based",
+      "maxIterations": 4,
+      "reason": [
+        "构件长度不小于中位长度",
+        "两端不属于支承或高连接度复杂节点",
+        "允许在满足响应要求时放松网格"
+      ],
+      "confidence": 0.68,
+      "status": "proposed",
+      "evidenceRefs": [],
+      "attributes": {
+        "componentLength": 10.0,
+        "baseSize": 1.25,
+        "expertIds": [
+          "smooth_region"
+        ]
+      }
+    }
+  ],
+  "meshPolicies": [
+    {
+      "id": "mesh.default",
+      "name": "初始全局网格策略",
+      "taskRef": "task.service",
+      "baseSize": 1.25,
+      "elementFamily": "frame",
+      "regionRules": [
+        {
+          "regionRef": "region.fea.hotspot.4b967d3735",
+          "targetSize": 0.3125,
+          "priority": 95
+        },
+        {
+          "regionRef": "region.fea.hotspot.02cdd00249",
+          "targetSize": 0.3125,
+          "priority": 95
+        },
+        {
+          "regionRef": "region.agent.support.ee528b4a1c",
+          "targetSize": 0.5625,
+          "priority": 95
+        },
+        {
+          "regionRef": "region.agent.support.87c3029e7e",
+          "targetSize": 0.5625,
+          "priority": 95
+        },
+        {
+          "regionRef": "region.agent.support.b1b412383d",
+          "targetSize": 0.5625,
+          "priority": 95
+        },
+        {
+          "regionRef": "region.agent.support.52bd0963c6",
+          "targetSize": 0.5625,
+          "priority": 95
+        },
+        {
+          "regionRef": "region.agent.joint.db47ee3946",
+          "targetSize": 0.75,
+          "priority": 85
+        },
+        {
+          "regionRef": "region.agent.joint.8b75999005",
+          "targetSize": 0.75,
+          "priority": 85
+        },
+        {
+          "regionRef": "region.agent.joint.89d228462f",
+          "targetSize": 0.75,
+          "priority": 85
+        },
+        {
+          "regionRef": "region.agent.joint.f58af78396",
+          "targetSize": 0.75,
+          "priority": 85
+        },
+        {
+          "regionRef": "region.agent.joint.693d72348c",
+          "targetSize": 0.75,
+          "priority": 85
+        },
+        {
+          "regionRef": "region.agent.joint.38b601be82",
+          "targetSize": 0.75,
+          "priority": 85
+        },
+        {
+          "regionRef": "region.agent.discontinuity.2686c110dd",
+          "targetSize": 0.625,
+          "priority": 80
+        },
+        {
+          "regionRef": "region.agent.discontinuity.c2e799ad80",
+          "targetSize": 0.625,
+          "priority": 80
+        },
+        {
+          "regionRef": "region.agent.discontinuity.b1cd20c80a",
+          "targetSize": 0.625,
+          "priority": 80
+        },
+        {
+          "regionRef": "region.agent.discontinuity.028098a72e",
+          "targetSize": 0.625,
+          "priority": 80
+        },
+        {
+          "regionRef": "region.agent.discontinuity.35732b727e",
+          "targetSize": 0.625,
+          "priority": 80
+        },
+        {
+          "regionRef": "region.agent.discontinuity.48ccb0aafc",
+          "targetSize": 0.625,
+          "priority": 80
+        },
+        {
+          "regionRef": "region.agent.discontinuity.fe805a663e",
+          "targetSize": 0.625,
+          "priority": 80
+        },
+        {
+          "regionRef": "region.agent.discontinuity.d684dc8b91",
+          "targetSize": 0.625,
+          "priority": 80
+        },
+        {
+          "regionRef": "region.agent.discontinuity.7452d93f46",
+          "targetSize": 0.625,
+          "priority": 80
+        },
+        {
+          "regionRef": "region.agent.discontinuity.8fd69ff326",
+          "targetSize": 0.625,
+          "priority": 80
+        },
+        {
+          "regionRef": "region.agent.smooth.33a3bacfdb",
+          "targetSize": 1.875,
+          "priority": 20
+        },
+        {
+          "regionRef": "region.agent.smooth.6ab104e47f",
+          "targetSize": 1.875,
+          "priority": 20
+        },
+        {
+          "regionRef": "region.agent.smooth.0051212a57",
+          "targetSize": 1.875,
+          "priority": 20
+        },
+        {
+          "regionRef": "region.agent.smooth.b6681ecf9c",
+          "targetSize": 1.875,
+          "priority": 20
+        }
+      ],
+      "budget": {
+        "maxElements": 5000,
+        "maxIterations": 4
+      },
+      "status": "draft"
+    }
+  ],
+  "solverPlans": [
+    {
+      "id": "solver.builtin",
+      "name": "内置空间梁快速试算",
+      "taskRef": "task.service",
+      "meshPolicyRef": "mesh.default",
+      "solver": "builtin_frame3d",
+      "settings": {
+        "loadCaseRef": "lc.service",
+        "singularTolerance": 1e-10
+      },
+      "status": "approved"
+    }
+  ],
+  "feedback": [
+    {
+      "id": "feedback.strategy.1",
+      "source": "agent",
+      "kind": "parameter_edit",
+      "createdAt": "2026-08-12T17:01:23.031162Z",
+      "createdBy": "software.bridgemind",
+      "targetRefs": [
+        "mesh.default",
+        "region.agent.support.ee528b4a1c",
+        "region.agent.support.87c3029e7e",
+        "region.agent.support.b1b412383d",
+        "region.agent.support.52bd0963c6",
+        "region.agent.joint.db47ee3946",
+        "region.agent.joint.8b75999005",
+        "region.agent.joint.89d228462f",
+        "region.agent.joint.f58af78396",
+        "region.agent.joint.693d72348c",
+        "region.agent.joint.38b601be82",
+        "region.agent.discontinuity.2686c110dd",
+        "region.agent.discontinuity.c2e799ad80",
+        "region.agent.discontinuity.b1cd20c80a",
+        "region.agent.discontinuity.028098a72e",
+        "region.agent.discontinuity.35732b727e",
+        "region.agent.discontinuity.48ccb0aafc",
+        "region.agent.discontinuity.fe805a663e",
+        "region.agent.discontinuity.d684dc8b91",
+        "region.agent.discontinuity.7452d93f46",
+        "region.agent.discontinuity.8fd69ff326",
+        "region.agent.smooth.33a3bacfdb",
+        "region.agent.smooth.6ab104e47f",
+        "region.agent.smooth.0051212a57",
+        "region.agent.smooth.b6681ecf9c"
+      ],
+      "before": {
+        "regionCount": 0
+      },
+      "after": {
+        "regionCount": 24,
+        "baseSize": 1.25
+      },
+      "metrics": {
+        "proposalCount": 24,
+        "fusedCount": 24,
+        "generatedRegionCount": 24
+      },
+      "comment": "全局分配器与局部多 expert 生成区域级网格策略。",
+      "status": "recorded"
+    },
+    {
+      "id": "feedback.strategy.2",
+      "source": "agent",
+      "kind": "parameter_edit",
+      "createdAt": "2026-08-12T17:01:23.321333Z",
+      "createdBy": "software.bridgemind",
+      "targetRefs": [
+        "mesh.default",
+        "region.fea.hotspot.4b967d3735",
+        "region.fea.hotspot.02cdd00249",
+        "region.agent.support.ee528b4a1c",
+        "region.agent.support.87c3029e7e",
+        "region.agent.support.b1b412383d",
+        "region.agent.support.52bd0963c6",
+        "region.agent.joint.db47ee3946",
+        "region.agent.joint.8b75999005",
+        "region.agent.joint.89d228462f",
+        "region.agent.joint.f58af78396",
+        "region.agent.joint.693d72348c",
+        "region.agent.joint.38b601be82",
+        "region.agent.discontinuity.2686c110dd",
+        "region.agent.discontinuity.c2e799ad80",
+        "region.agent.discontinuity.b1cd20c80a",
+        "region.agent.discontinuity.028098a72e",
+        "region.agent.discontinuity.35732b727e",
+        "region.agent.discontinuity.48ccb0aafc",
+        "region.agent.discontinuity.fe805a663e",
+        "region.agent.discontinuity.d684dc8b91",
+        "region.agent.discontinuity.7452d93f46",
+        "region.agent.discontinuity.8fd69ff326",
+        "region.agent.smooth.33a3bacfdb",
+        "region.agent.smooth.6ab104e47f",
+        "region.agent.smooth.0051212a57",
+        "region.agent.smooth.b6681ecf9c"
+      ],
+      "before": {
+        "regionCount": 24
+      },
+      "after": {
+        "regionCount": 26,
+        "baseSize": 1.25
+      },
+      "metrics": {
+        "proposalCount": 36,
+        "fusedCount": 26,
+        "generatedRegionCount": 26
+      },
+      "comment": "全局分配器与局部多 expert 生成区域级网格策略。",
+      "status": "recorded"
+    }
+  ],
+  "artifacts": [],
+  "experienceRefs": [],
+  "extensions": {
+    "bridgemind:display": {
+      "cameraTarget": [
+        20.0,
+        0.0,
+        0.0
+      ],
+      "cameraDistance": 55.0
+    }
+  }
+}

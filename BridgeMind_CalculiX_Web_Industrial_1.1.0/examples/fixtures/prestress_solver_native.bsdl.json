@@ -1,0 +1,3756 @@
+{
+  "$schema": "../schema/bsdl-industrial.schema.json",
+  "language": "Bridge-Structural-Description-Language",
+  "languageVersion": "1.0.0",
+  "documentId": "document.calculix_prestress_native",
+  "revision": {
+    "number": 1,
+    "parent": null,
+    "createdAt": "2026-08-13T00:00:00Z",
+    "createdBy": "human.demo",
+    "status": "approved",
+    "summary": "CalculiX 工业示例首版"
+  },
+  "project": {
+    "id": "project.calculix_prestress_native",
+    "name": "CalculiX 原生预紧截面契约夹具",
+    "description": "用于验证 BSDL Industrial 1.0 与 CalculiX 2.23 Adapter 的混合单元、接触、预应力、阶段、结果和验算链。",
+    "sourceType": "synthetic",
+    "sourceUri": null,
+    "tags": [
+      "calculix",
+      "shell",
+      "solid",
+      "contact",
+      "prestress",
+      "construction_stage"
+    ]
+  },
+  "units": {
+    "length": "m",
+    "force": "N",
+    "mass": "kg",
+    "stress": "Pa",
+    "angle": "rad"
+  },
+  "coordinateSystems": [
+    {
+      "id": "cs.global",
+      "name": "全局坐标系",
+      "parentRef": null,
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "xAxis": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "yAxis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "zAxis": [
+        0.0,
+        0.0,
+        1.0
+      ]
+    }
+  ],
+  "agents": [
+    {
+      "id": "human.demo",
+      "name": "示例工程师",
+      "kind": "person",
+      "version": null
+    },
+    {
+      "id": "software.bridgemind",
+      "name": "BridgeMind Studio",
+      "kind": "software",
+      "version": "0.1.0"
+    }
+  ],
+  "materials": [
+    {
+      "id": "mat.steel",
+      "name": "结构钢",
+      "model": "bilinear_plastic",
+      "density": 7850.0,
+      "elasticModulus": 206000000000.0,
+      "poissonRatio": 0.3,
+      "shearModulus": 79230769230.8,
+      "thermalExpansion": 1.2e-05,
+      "yieldStrength": 345000000.0,
+      "tags": [
+        "steel"
+      ],
+      "plasticity": {
+        "points": [
+          {
+            "stress": 345000000.0,
+            "plasticStrain": 0.0
+          },
+          {
+            "stress": 380000000.0,
+            "plasticStrain": 0.02
+          }
+        ]
+      },
+      "creep": null,
+      "relaxation": null
+    },
+    {
+      "id": "mat.concrete",
+      "name": "混凝土等效弹性材料",
+      "model": "linear_elastic",
+      "density": 2500.0,
+      "elasticModulus": 34500000000.0,
+      "poissonRatio": 0.2,
+      "shearModulus": null,
+      "thermalExpansion": 1e-05,
+      "yieldStrength": null,
+      "tags": [
+        "concrete",
+        "equivalent"
+      ],
+      "plasticity": null,
+      "creep": null,
+      "relaxation": null
+    },
+    {
+      "id": "mat.prestress",
+      "name": "1860 MPa 预应力钢绞线",
+      "model": "linear_elastic",
+      "density": 7850.0,
+      "elasticModulus": 195000000000.0,
+      "poissonRatio": 0.3,
+      "shearModulus": null,
+      "thermalExpansion": 1.2e-05,
+      "yieldStrength": 1670000000.0,
+      "tags": [
+        "prestress"
+      ],
+      "plasticity": null,
+      "creep": null,
+      "relaxation": {
+        "model": "project_defined"
+      }
+    }
+  ],
+  "sections": [
+    {
+      "id": "sec.tendon",
+      "name": "预应力筋等效面积",
+      "shape": "circular",
+      "area": 0.0014,
+      "iy": 1.56e-07,
+      "iz": 1.56e-07,
+      "torsionConstant": 3.12e-07,
+      "dimensions": {
+        "diameter": 0.0422
+      },
+      "tags": [
+        "tendon"
+      ]
+    },
+    {
+      "id": "sec.girder",
+      "name": "保留的主梁截面",
+      "shape": "rectangular",
+      "area": 0.12,
+      "iy": 0.18,
+      "iz": 0.012,
+      "torsionConstant": 0.002,
+      "dimensions": {
+        "width": 0.6,
+        "depth": 1.8
+      },
+      "tags": [
+        "beam"
+      ]
+    },
+    {
+      "id": "sec.crossbeam",
+      "name": "保留的横梁截面",
+      "shape": "rectangular",
+      "area": 0.16,
+      "iy": 0.06,
+      "iz": 0.025,
+      "torsionConstant": 0.006,
+      "dimensions": {
+        "width": 0.5,
+        "depth": 1.2
+      },
+      "tags": [
+        "beam",
+        "crossbeam"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "node.L.0",
+      "name": "L侧节点0",
+      "position": [
+        0.0,
+        -3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "support"
+      ],
+      "constraints": {
+        "ux": true,
+        "uy": true,
+        "uz": true,
+        "rx": true,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 0.0,
+        "side": "L"
+      }
+    },
+    {
+      "id": "node.R.0",
+      "name": "R侧节点0",
+      "position": [
+        0.0,
+        3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "support"
+      ],
+      "constraints": {
+        "ux": true,
+        "uy": true,
+        "uz": true,
+        "rx": true,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 0.0,
+        "side": "R"
+      }
+    },
+    {
+      "id": "node.L.1",
+      "name": "L侧节点1",
+      "position": [
+        10.0,
+        -3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 10.0,
+        "side": "L"
+      }
+    },
+    {
+      "id": "node.R.1",
+      "name": "R侧节点1",
+      "position": [
+        10.0,
+        3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 10.0,
+        "side": "R"
+      }
+    },
+    {
+      "id": "node.L.2",
+      "name": "L侧节点2",
+      "position": [
+        20.0,
+        -3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 20.0,
+        "side": "L"
+      }
+    },
+    {
+      "id": "node.R.2",
+      "name": "R侧节点2",
+      "position": [
+        20.0,
+        3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 20.0,
+        "side": "R"
+      }
+    },
+    {
+      "id": "node.L.3",
+      "name": "L侧节点3",
+      "position": [
+        30.0,
+        -3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 30.0,
+        "side": "L"
+      }
+    },
+    {
+      "id": "node.R.3",
+      "name": "R侧节点3",
+      "position": [
+        30.0,
+        3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "load"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": false,
+        "uz": false,
+        "rx": false,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 30.0,
+        "side": "R"
+      }
+    },
+    {
+      "id": "node.L.4",
+      "name": "L侧节点4",
+      "position": [
+        40.0,
+        -3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "support"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": true,
+        "uz": true,
+        "rx": true,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 40.0,
+        "side": "L"
+      }
+    },
+    {
+      "id": "node.R.4",
+      "name": "R侧节点4",
+      "position": [
+        40.0,
+        3.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "roles": [
+        "geometry",
+        "joint",
+        "support"
+      ],
+      "constraints": {
+        "ux": false,
+        "uy": true,
+        "uz": true,
+        "rx": true,
+        "ry": false,
+        "rz": false
+      },
+      "tags": [
+        "girder_node"
+      ],
+      "sourceIds": {},
+      "attributes": {
+        "station": 40.0,
+        "side": "R"
+      }
+    }
+  ],
+  "components": [
+    {
+      "id": "comp.bridge",
+      "name": "示例双主梁桥",
+      "category": "bridge",
+      "topology": "solid",
+      "parentRef": null,
+      "nodeRefs": [],
+      "materialRef": null,
+      "sectionRef": null,
+      "geometry": {
+        "kind": "box",
+        "center": [
+          20.0,
+          0.0,
+          0.0
+        ],
+        "size": [
+          40.0,
+          8.0,
+          2.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "analysis": {
+        "elementType": "excluded",
+        "active": false,
+        "localUp": null,
+        "finiteElementModelRef": null,
+        "shellSectionRef": null,
+        "solidSectionRef": null
+      },
+      "attributes": {
+        "bridgeType": "two_girder_demo",
+        "loadBearing": true
+      },
+      "featureDescriptors": {
+        "length": 40.0,
+        "width": 6.0
+      },
+      "tags": [
+        "root"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.L.0",
+      "name": "L侧主梁段1",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.0",
+        "node.L.1"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            0.0,
+            -3.0,
+            0.0
+          ],
+          [
+            10.0,
+            -3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "finiteElementModelRef": null,
+        "shellSectionRef": null,
+        "solidSectionRef": null
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.L.1",
+      "name": "L侧主梁段2",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.1",
+        "node.L.2"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            10.0,
+            -3.0,
+            0.0
+          ],
+          [
+            20.0,
+            -3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "finiteElementModelRef": null,
+        "shellSectionRef": null,
+        "solidSectionRef": null
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.L.2",
+      "name": "L侧主梁段3",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.2",
+        "node.L.3"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            20.0,
+            -3.0,
+            0.0
+          ],
+          [
+            30.0,
+            -3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "finiteElementModelRef": null,
+        "shellSectionRef": null,
+        "solidSectionRef": null
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.L.3",
+      "name": "L侧主梁段4",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.3",
+        "node.L.4"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            30.0,
+            -3.0,
+            0.0
+          ],
+          [
+            40.0,
+            -3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "finiteElementModelRef": null,
+        "shellSectionRef": null,
+        "solidSectionRef": null
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.R.0",
+      "name": "R侧主梁段1",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.R.0",
+        "node.R.1"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            0.0,
+            3.0,
+            0.0
+          ],
+          [
+            10.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "finiteElementModelRef": null,
+        "shellSectionRef": null,
+        "solidSectionRef": null
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.R.1",
+      "name": "R侧主梁段2",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.R.1",
+        "node.R.2"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            10.0,
+            3.0,
+            0.0
+          ],
+          [
+            20.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "finiteElementModelRef": null,
+        "shellSectionRef": null,
+        "solidSectionRef": null
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.R.2",
+      "name": "R侧主梁段3",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.R.2",
+        "node.R.3"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            20.0,
+            3.0,
+            0.0
+          ],
+          [
+            30.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "finiteElementModelRef": null,
+        "shellSectionRef": null,
+        "solidSectionRef": null
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.girder.R.3",
+      "name": "R侧主梁段4",
+      "category": "girder",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.R.3",
+        "node.R.4"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.girder",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            30.0,
+            3.0,
+            0.0
+          ],
+          [
+            40.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "finiteElementModelRef": null,
+        "shellSectionRef": null,
+        "solidSectionRef": null
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "longitudinal"
+      },
+      "featureDescriptors": {
+        "length": 10.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.crossbeam.0",
+      "name": "横梁1",
+      "category": "crossbeam",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.0",
+        "node.R.0"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.crossbeam",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            0.0,
+            -3.0,
+            0.0
+          ],
+          [
+            0.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "finiteElementModelRef": null,
+        "shellSectionRef": null,
+        "solidSectionRef": null
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "transverse"
+      },
+      "featureDescriptors": {
+        "length": 6.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.crossbeam.1",
+      "name": "横梁2",
+      "category": "crossbeam",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.1",
+        "node.R.1"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.crossbeam",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            10.0,
+            -3.0,
+            0.0
+          ],
+          [
+            10.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "finiteElementModelRef": null,
+        "shellSectionRef": null,
+        "solidSectionRef": null
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "transverse"
+      },
+      "featureDescriptors": {
+        "length": 6.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.crossbeam.2",
+      "name": "横梁3",
+      "category": "crossbeam",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.2",
+        "node.R.2"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.crossbeam",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            20.0,
+            -3.0,
+            0.0
+          ],
+          [
+            20.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "finiteElementModelRef": null,
+        "shellSectionRef": null,
+        "solidSectionRef": null
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "transverse"
+      },
+      "featureDescriptors": {
+        "length": 6.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.crossbeam.3",
+      "name": "横梁4",
+      "category": "crossbeam",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.3",
+        "node.R.3"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.crossbeam",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            30.0,
+            -3.0,
+            0.0
+          ],
+          [
+            30.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "finiteElementModelRef": null,
+        "shellSectionRef": null,
+        "solidSectionRef": null
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "transverse"
+      },
+      "featureDescriptors": {
+        "length": 6.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    },
+    {
+      "id": "comp.crossbeam.4",
+      "name": "横梁5",
+      "category": "crossbeam",
+      "topology": "line",
+      "parentRef": "comp.bridge",
+      "nodeRefs": [
+        "node.L.4",
+        "node.R.4"
+      ],
+      "materialRef": "mat.steel",
+      "sectionRef": "sec.crossbeam",
+      "geometry": {
+        "kind": "line",
+        "points": [
+          [
+            40.0,
+            -3.0,
+            0.0
+          ],
+          [
+            40.0,
+            3.0,
+            0.0
+          ]
+        ]
+      },
+      "analysis": {
+        "elementType": "frame3d",
+        "active": true,
+        "localUp": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "finiteElementModelRef": null,
+        "shellSectionRef": null,
+        "solidSectionRef": null
+      },
+      "attributes": {
+        "loadBearing": true,
+        "bridgeRole": "transverse"
+      },
+      "featureDescriptors": {
+        "length": 6.0,
+        "curvatureProxy": 0.0
+      },
+      "tags": [
+        "global_model"
+      ],
+      "sourceIds": {}
+    }
+  ],
+  "connections": [
+    {
+      "id": "conn.L.0",
+      "name": "L侧节点0连接",
+      "kind": "shared_node",
+      "nodeRef": "node.L.0",
+      "participantRefs": [
+        "comp.girder.L.0",
+        "comp.crossbeam.0"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.R.0",
+      "name": "R侧节点0连接",
+      "kind": "shared_node",
+      "nodeRef": "node.R.0",
+      "participantRefs": [
+        "comp.girder.R.0",
+        "comp.crossbeam.0"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.L.1",
+      "name": "L侧节点1连接",
+      "kind": "shared_node",
+      "nodeRef": "node.L.1",
+      "participantRefs": [
+        "comp.girder.L.0",
+        "comp.girder.L.1",
+        "comp.crossbeam.1"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.R.1",
+      "name": "R侧节点1连接",
+      "kind": "shared_node",
+      "nodeRef": "node.R.1",
+      "participantRefs": [
+        "comp.girder.R.0",
+        "comp.girder.R.1",
+        "comp.crossbeam.1"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.L.2",
+      "name": "L侧节点2连接",
+      "kind": "shared_node",
+      "nodeRef": "node.L.2",
+      "participantRefs": [
+        "comp.girder.L.1",
+        "comp.girder.L.2",
+        "comp.crossbeam.2"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.R.2",
+      "name": "R侧节点2连接",
+      "kind": "shared_node",
+      "nodeRef": "node.R.2",
+      "participantRefs": [
+        "comp.girder.R.1",
+        "comp.girder.R.2",
+        "comp.crossbeam.2"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.L.3",
+      "name": "L侧节点3连接",
+      "kind": "shared_node",
+      "nodeRef": "node.L.3",
+      "participantRefs": [
+        "comp.girder.L.2",
+        "comp.girder.L.3",
+        "comp.crossbeam.3"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.R.3",
+      "name": "R侧节点3连接",
+      "kind": "shared_node",
+      "nodeRef": "node.R.3",
+      "participantRefs": [
+        "comp.girder.R.2",
+        "comp.girder.R.3",
+        "comp.crossbeam.3"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.L.4",
+      "name": "L侧节点4连接",
+      "kind": "shared_node",
+      "nodeRef": "node.L.4",
+      "participantRefs": [
+        "comp.girder.L.3",
+        "comp.crossbeam.4"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    },
+    {
+      "id": "conn.R.4",
+      "name": "R侧节点4连接",
+      "kind": "shared_node",
+      "nodeRef": "node.R.4",
+      "participantRefs": [
+        "comp.girder.R.3",
+        "comp.crossbeam.4"
+      ],
+      "coordinateSystemRef": "cs.global",
+      "mechanical": {
+        "dofs": {
+          "ux": true,
+          "uy": true,
+          "uz": true,
+          "rx": true,
+          "ry": true,
+          "rz": true
+        },
+        "stiffness": null,
+        "gap": null,
+        "friction": null
+      },
+      "attributes": {
+        "source": "model_topology"
+      }
+    }
+  ],
+  "loadCases": [
+    {
+      "id": "lc.dead",
+      "name": "自重",
+      "type": "static",
+      "factor": 1.0
+    },
+    {
+      "id": "lc.prestress",
+      "name": "预应力",
+      "type": "static",
+      "factor": 1.0
+    },
+    {
+      "id": "lc.service",
+      "name": "桥面服务压力",
+      "type": "static",
+      "factor": 1.0
+    }
+  ],
+  "loads": [
+    {
+      "id": "load.dead",
+      "name": "全模型自重",
+      "caseRef": "lc.dead",
+      "kind": "self_weight",
+      "targetNodeRef": null,
+      "targetComponentRef": "comp.bridge",
+      "force": [
+        0.0,
+        0.0,
+        -9.81
+      ],
+      "moment": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "attributes": {
+        "elementSetRef": "fem.bridge_segment.set.all"
+      }
+    },
+    {
+      "id": "load.service.pressure",
+      "name": "桥面均布压力",
+      "caseRef": "lc.service",
+      "kind": "other",
+      "targetNodeRef": null,
+      "targetComponentRef": "comp.bridge",
+      "force": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "moment": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "attributes": {
+        "surfaceRef": "fem.deck.surface.positive",
+        "pressure": -25000.0
+      }
+    },
+    {
+      "id": "load.service.anchor",
+      "name": "服务阶段节点校核荷载",
+      "caseRef": "lc.service",
+      "kind": "nodal",
+      "targetNodeRef": "node.L.2",
+      "targetComponentRef": null,
+      "force": [
+        0.0,
+        0.0,
+        -100000.0
+      ],
+      "moment": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "coordinateSystemRef": "cs.global",
+      "attributes": {
+        "purpose": "同时满足核心梁系预览和工业 FE 回归测试",
+        "finiteElementNodeRef": "fem.deck.n.3.1"
+      }
+    }
+  ],
+  "analysisTasks": [
+    {
+      "id": "task.industrial",
+      "name": "壳实体接触预应力施工阶段非线性静力分析",
+      "type": "other",
+      "loadCaseRefs": [
+        "lc.dead",
+        "lc.prestress",
+        "lc.service"
+      ],
+      "qoi": [
+        "vertical_displacement",
+        "contact_pressure",
+        "von_mises_stress",
+        "reaction_balance"
+      ],
+      "accuracyTarget": 0.05,
+      "budget": {
+        "maxElements": 1000000,
+        "maxRuns": 30,
+        "maxWallSeconds": 7200.0
+      },
+      "status": "approved"
+    }
+  ],
+  "cognitiveMap": {
+    "landmarks": [],
+    "decisionEdges": [],
+    "version": 1
+  },
+  "regions": [],
+  "meshPolicies": [
+    {
+      "id": "mesh.industrial",
+      "name": "壳实体混合网格策略",
+      "taskRef": "task.industrial",
+      "baseSize": 1.0,
+      "elementFamily": "auto",
+      "regionRules": [],
+      "budget": {
+        "maxElements": 1000000,
+        "maxIterations": 8
+      },
+      "status": "approved"
+    }
+  ],
+  "solverPlans": [
+    {
+      "id": "solver.calculix.industrial",
+      "name": "CalculiX 2.23 非线性施工阶段计划",
+      "taskRef": "task.industrial",
+      "meshPolicyRef": "mesh.industrial",
+      "solver": "calculix",
+      "settings": {
+        "analysis": "nonlinear_static",
+        "nlgeom": true,
+        "strictConversion": true,
+        "timeoutSeconds": 3600,
+        "threads": 2,
+        "contactOutput": true
+      },
+      "status": "approved",
+      "solverProfileRef": "solver.profile.calculix.2_23",
+      "finiteElementModelRef": "fem.bridge_segment",
+      "stageRefs": [
+        "stage.support",
+        "stage.deck",
+        "stage.prestress",
+        "stage.service"
+      ]
+    }
+  ],
+  "feedback": [],
+  "artifacts": [],
+  "experienceRefs": [],
+  "extensions": {
+    "bridgemind:display": {
+      "cameraTarget": [
+        20.0,
+        0.0,
+        0.0
+      ],
+      "cameraDistance": 55.0
+    },
+    "bridgemind:industrial": {
+      "solverMainline": "calculix",
+      "calculixTargetVersion": "2.23",
+      "adapterVersion": "1.0.0",
+      "capabilityPolicy": "unsupported safety-critical semantics block export or execution"
+    },
+    "calculixIndustrialProfile": {
+      "targetVersion": "2.23",
+      "syntheticExample": true,
+      "engineeringUse": "language_and_adapter_validation_only",
+      "nativePretensionSection": "blocked_until_benchmark_validated"
+    }
+  },
+  "shellSections": [
+    {
+      "id": "shell.deck.025",
+      "name": "250 mm 桥面板壳截面",
+      "materialRef": "mat.concrete",
+      "thickness": 0.25,
+      "offset": 0.0,
+      "integrationPoints": 5,
+      "formulation": "general",
+      "orientationRef": "cs.global",
+      "layers": [],
+      "tags": [
+        "deck",
+        "shell"
+      ]
+    }
+  ],
+  "solidSections": [
+    {
+      "id": "solid.bearing.steel",
+      "name": "钢支座实体截面",
+      "materialRef": "mat.steel",
+      "orientationRef": "cs.global",
+      "integration": "reduced",
+      "tags": [
+        "bearing",
+        "solid"
+      ]
+    }
+  ],
+  "finiteElementModels": [
+    {
+      "id": "fem.bridge_segment",
+      "name": "桥面壳—支座实体—预应力筋混合模型",
+      "taskRef": "task.industrial",
+      "coordinateSystemRef": "cs.global",
+      "nodes": [
+        {
+          "id": "fem.deck.n.0.0",
+          "position": [
+            0.0,
+            0.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": true,
+            "uy": true,
+            "uz": true,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.0,
+              0.0
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.1.0",
+          "position": [
+            2.0,
+            0.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.16666666666666666,
+              0.0
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.2.0",
+          "position": [
+            4.0,
+            0.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.3333333333333333,
+              0.0
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.3.0",
+          "position": [
+            6.0,
+            0.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.5,
+              0.0
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.4.0",
+          "position": [
+            8.0,
+            0.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.6666666666666666,
+              0.0
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.5.0",
+          "position": [
+            10.0,
+            0.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.8333333333333334,
+              0.0
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.6.0",
+          "position": [
+            12.0,
+            0.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": true,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              1.0,
+              0.0
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.0.1",
+          "position": [
+            0.0,
+            2.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": true,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.0,
+              0.5
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.1.1",
+          "position": [
+            2.0,
+            2.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.16666666666666666,
+              0.5
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.2.1",
+          "position": [
+            4.0,
+            2.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.3333333333333333,
+              0.5
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.3.1",
+          "position": [
+            6.0,
+            2.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.5,
+              0.5
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.4.1",
+          "position": [
+            8.0,
+            2.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.6666666666666666,
+              0.5
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.5.1",
+          "position": [
+            10.0,
+            2.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.8333333333333334,
+              0.5
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.6.1",
+          "position": [
+            12.0,
+            2.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": true,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              1.0,
+              0.5
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.0.2",
+          "position": [
+            0.0,
+            4.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": true,
+            "uz": true,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.0,
+              1.0
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.1.2",
+          "position": [
+            2.0,
+            4.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.16666666666666666,
+              1.0
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.2.2",
+          "position": [
+            4.0,
+            4.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.3333333333333333,
+              1.0
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.3.2",
+          "position": [
+            6.0,
+            4.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.5,
+              1.0
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.4.2",
+          "position": [
+            8.0,
+            4.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.6666666666666666,
+              1.0
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.5.2",
+          "position": [
+            10.0,
+            4.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              0.8333333333333334,
+              1.0
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.n.6.2",
+          "position": [
+            12.0,
+            4.0,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": true,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.bridge",
+          "attributes": {
+            "parametric": [
+              1.0,
+              1.0
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "id": "fem.bearing.n.0.0.0",
+          "position": [
+            5.0,
+            1.5,
+            1.5
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": true,
+            "uy": true,
+            "uz": true,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.crossbeam.2",
+          "attributes": {
+            "grid": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "id": "fem.bearing.n.1.0.0",
+          "position": [
+            6.0,
+            1.5,
+            1.5
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": true,
+            "uy": true,
+            "uz": true,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.crossbeam.2",
+          "attributes": {
+            "grid": [
+              1,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "id": "fem.bearing.n.2.0.0",
+          "position": [
+            7.0,
+            1.5,
+            1.5
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": true,
+            "uy": true,
+            "uz": true,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.crossbeam.2",
+          "attributes": {
+            "grid": [
+              2,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "id": "fem.bearing.n.0.1.0",
+          "position": [
+            5.0,
+            2.5,
+            1.5
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": true,
+            "uy": true,
+            "uz": true,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.crossbeam.2",
+          "attributes": {
+            "grid": [
+              0,
+              1,
+              0
+            ]
+          }
+        },
+        {
+          "id": "fem.bearing.n.1.1.0",
+          "position": [
+            6.0,
+            2.5,
+            1.5
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": true,
+            "uy": true,
+            "uz": true,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.crossbeam.2",
+          "attributes": {
+            "grid": [
+              1,
+              1,
+              0
+            ]
+          }
+        },
+        {
+          "id": "fem.bearing.n.2.1.0",
+          "position": [
+            7.0,
+            2.5,
+            1.5
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": true,
+            "uy": true,
+            "uz": true,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.crossbeam.2",
+          "attributes": {
+            "grid": [
+              2,
+              1,
+              0
+            ]
+          }
+        },
+        {
+          "id": "fem.bearing.n.0.0.1",
+          "position": [
+            5.0,
+            1.5,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.crossbeam.2",
+          "attributes": {
+            "grid": [
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        {
+          "id": "fem.bearing.n.1.0.1",
+          "position": [
+            6.0,
+            1.5,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.crossbeam.2",
+          "attributes": {
+            "grid": [
+              1,
+              0,
+              1
+            ]
+          }
+        },
+        {
+          "id": "fem.bearing.n.2.0.1",
+          "position": [
+            7.0,
+            1.5,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.crossbeam.2",
+          "attributes": {
+            "grid": [
+              2,
+              0,
+              1
+            ]
+          }
+        },
+        {
+          "id": "fem.bearing.n.0.1.1",
+          "position": [
+            5.0,
+            2.5,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.crossbeam.2",
+          "attributes": {
+            "grid": [
+              0,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "fem.bearing.n.1.1.1",
+          "position": [
+            6.0,
+            2.5,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.crossbeam.2",
+          "attributes": {
+            "grid": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "fem.bearing.n.2.1.1",
+          "position": [
+            7.0,
+            2.5,
+            2.0
+          ],
+          "coordinateSystemRef": "cs.global",
+          "constraints": {
+            "ux": false,
+            "uy": false,
+            "uz": false,
+            "rx": false,
+            "ry": false,
+            "rz": false
+          },
+          "sourceRef": "comp.crossbeam.2",
+          "attributes": {
+            "grid": [
+              2,
+              1,
+              1
+            ]
+          }
+        }
+      ],
+      "elements": [
+        {
+          "id": "fem.deck.e.0.0",
+          "type": "S4R",
+          "nodeRefs": [
+            "fem.deck.n.0.0",
+            "fem.deck.n.1.0",
+            "fem.deck.n.1.1",
+            "fem.deck.n.0.1"
+          ],
+          "sectionRef": "shell.deck.025",
+          "materialRef": null,
+          "sourceRef": "comp.bridge",
+          "orientationRef": "cs.global",
+          "setRefs": [
+            "fem.deck.set.all"
+          ],
+          "active": false,
+          "attributes": {
+            "cell": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.e.1.0",
+          "type": "S4R",
+          "nodeRefs": [
+            "fem.deck.n.1.0",
+            "fem.deck.n.2.0",
+            "fem.deck.n.2.1",
+            "fem.deck.n.1.1"
+          ],
+          "sectionRef": "shell.deck.025",
+          "materialRef": null,
+          "sourceRef": "comp.bridge",
+          "orientationRef": "cs.global",
+          "setRefs": [
+            "fem.deck.set.all"
+          ],
+          "active": false,
+          "attributes": {
+            "cell": [
+              1,
+              0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.e.2.0",
+          "type": "S4R",
+          "nodeRefs": [
+            "fem.deck.n.2.0",
+            "fem.deck.n.3.0",
+            "fem.deck.n.3.1",
+            "fem.deck.n.2.1"
+          ],
+          "sectionRef": "shell.deck.025",
+          "materialRef": null,
+          "sourceRef": "comp.bridge",
+          "orientationRef": "cs.global",
+          "setRefs": [
+            "fem.deck.set.all"
+          ],
+          "active": false,
+          "attributes": {
+            "cell": [
+              2,
+              0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.e.3.0",
+          "type": "S4R",
+          "nodeRefs": [
+            "fem.deck.n.3.0",
+            "fem.deck.n.4.0",
+            "fem.deck.n.4.1",
+            "fem.deck.n.3.1"
+          ],
+          "sectionRef": "shell.deck.025",
+          "materialRef": null,
+          "sourceRef": "comp.bridge",
+          "orientationRef": "cs.global",
+          "setRefs": [
+            "fem.deck.set.all"
+          ],
+          "active": false,
+          "attributes": {
+            "cell": [
+              3,
+              0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.e.4.0",
+          "type": "S4R",
+          "nodeRefs": [
+            "fem.deck.n.4.0",
+            "fem.deck.n.5.0",
+            "fem.deck.n.5.1",
+            "fem.deck.n.4.1"
+          ],
+          "sectionRef": "shell.deck.025",
+          "materialRef": null,
+          "sourceRef": "comp.bridge",
+          "orientationRef": "cs.global",
+          "setRefs": [
+            "fem.deck.set.all"
+          ],
+          "active": false,
+          "attributes": {
+            "cell": [
+              4,
+              0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.e.5.0",
+          "type": "S4R",
+          "nodeRefs": [
+            "fem.deck.n.5.0",
+            "fem.deck.n.6.0",
+            "fem.deck.n.6.1",
+            "fem.deck.n.5.1"
+          ],
+          "sectionRef": "shell.deck.025",
+          "materialRef": null,
+          "sourceRef": "comp.bridge",
+          "orientationRef": "cs.global",
+          "setRefs": [
+            "fem.deck.set.all"
+          ],
+          "active": false,
+          "attributes": {
+            "cell": [
+              5,
+              0
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.e.0.1",
+          "type": "S4R",
+          "nodeRefs": [
+            "fem.deck.n.0.1",
+            "fem.deck.n.1.1",
+            "fem.deck.n.1.2",
+            "fem.deck.n.0.2"
+          ],
+          "sectionRef": "shell.deck.025",
+          "materialRef": null,
+          "sourceRef": "comp.bridge",
+          "orientationRef": "cs.global",
+          "setRefs": [
+            "fem.deck.set.all"
+          ],
+          "active": false,
+          "attributes": {
+            "cell": [
+              0,
+              1
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.e.1.1",
+          "type": "S4R",
+          "nodeRefs": [
+            "fem.deck.n.1.1",
+            "fem.deck.n.2.1",
+            "fem.deck.n.2.2",
+            "fem.deck.n.1.2"
+          ],
+          "sectionRef": "shell.deck.025",
+          "materialRef": null,
+          "sourceRef": "comp.bridge",
+          "orientationRef": "cs.global",
+          "setRefs": [
+            "fem.deck.set.all"
+          ],
+          "active": false,
+          "attributes": {
+            "cell": [
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.e.2.1",
+          "type": "S4R",
+          "nodeRefs": [
+            "fem.deck.n.2.1",
+            "fem.deck.n.3.1",
+            "fem.deck.n.3.2",
+            "fem.deck.n.2.2"
+          ],
+          "sectionRef": "shell.deck.025",
+          "materialRef": null,
+          "sourceRef": "comp.bridge",
+          "orientationRef": "cs.global",
+          "setRefs": [
+            "fem.deck.set.all"
+          ],
+          "active": false,
+          "attributes": {
+            "cell": [
+              2,
+              1
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.e.3.1",
+          "type": "S4R",
+          "nodeRefs": [
+            "fem.deck.n.3.1",
+            "fem.deck.n.4.1",
+            "fem.deck.n.4.2",
+            "fem.deck.n.3.2"
+          ],
+          "sectionRef": "shell.deck.025",
+          "materialRef": null,
+          "sourceRef": "comp.bridge",
+          "orientationRef": "cs.global",
+          "setRefs": [
+            "fem.deck.set.all"
+          ],
+          "active": false,
+          "attributes": {
+            "cell": [
+              3,
+              1
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.e.4.1",
+          "type": "S4R",
+          "nodeRefs": [
+            "fem.deck.n.4.1",
+            "fem.deck.n.5.1",
+            "fem.deck.n.5.2",
+            "fem.deck.n.4.2"
+          ],
+          "sectionRef": "shell.deck.025",
+          "materialRef": null,
+          "sourceRef": "comp.bridge",
+          "orientationRef": "cs.global",
+          "setRefs": [
+            "fem.deck.set.all"
+          ],
+          "active": false,
+          "attributes": {
+            "cell": [
+              4,
+              1
+            ]
+          }
+        },
+        {
+          "id": "fem.deck.e.5.1",
+          "type": "S4R",
+          "nodeRefs": [
+            "fem.deck.n.5.1",
+            "fem.deck.n.6.1",
+            "fem.deck.n.6.2",
+            "fem.deck.n.5.2"
+          ],
+          "sectionRef": "shell.deck.025",
+          "materialRef": null,
+          "sourceRef": "comp.bridge",
+          "orientationRef": "cs.global",
+          "setRefs": [
+            "fem.deck.set.all"
+          ],
+          "active": false,
+          "attributes": {
+            "cell": [
+              5,
+              1
+            ]
+          }
+        },
+        {
+          "id": "fem.bearing.e.0.0.0",
+          "type": "C3D8R",
+          "nodeRefs": [
+            "fem.bearing.n.0.0.0",
+            "fem.bearing.n.1.0.0",
+            "fem.bearing.n.1.1.0",
+            "fem.bearing.n.0.1.0",
+            "fem.bearing.n.0.0.1",
+            "fem.bearing.n.1.0.1",
+            "fem.bearing.n.1.1.1",
+            "fem.bearing.n.0.1.1"
+          ],
+          "sectionRef": "solid.bearing.steel",
+          "materialRef": null,
+          "sourceRef": "comp.crossbeam.2",
+          "orientationRef": "cs.global",
+          "setRefs": [
+            "fem.bearing.set.all"
+          ],
+          "active": false,
+          "attributes": {
+            "cell": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "id": "fem.bearing.e.1.0.0",
+          "type": "C3D8R",
+          "nodeRefs": [
+            "fem.bearing.n.1.0.0",
+            "fem.bearing.n.2.0.0",
+            "fem.bearing.n.2.1.0",
+            "fem.bearing.n.1.1.0",
+            "fem.bearing.n.1.0.1",
+            "fem.bearing.n.2.0.1",
+            "fem.bearing.n.2.1.1",
+            "fem.bearing.n.1.1.1"
+          ],
+          "sectionRef": "solid.bearing.steel",
+          "materialRef": null,
+          "sourceRef": "comp.crossbeam.2",
+          "orientationRef": "cs.global",
+          "setRefs": [
+            "fem.bearing.set.all"
+          ],
+          "active": false,
+          "attributes": {
+            "cell": [
+              1,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "id": "fem.tendon.e.0",
+          "type": "T3D2",
+          "nodeRefs": [
+            "fem.deck.n.0.1",
+            "fem.deck.n.3.1"
+          ],
+          "sectionRef": "sec.tendon",
+          "materialRef": "mat.prestress",
+          "sourceRef": null,
+          "orientationRef": "cs.global",
+          "setRefs": [
+            "fem.tendon.set.all"
+          ],
+          "active": false,
+          "attributes": {
+            "role": "prestress_tendon",
+            "coupling": "shared_shell_nodes"
+          }
+        },
+        {
+          "id": "fem.tendon.e.1",
+          "type": "T3D2",
+          "nodeRefs": [
+            "fem.deck.n.3.1",
+            "fem.deck.n.6.1"
+          ],
+          "sectionRef": "sec.tendon",
+          "materialRef": "mat.prestress",
+          "sourceRef": null,
+          "orientationRef": "cs.global",
+          "setRefs": [
+            "fem.tendon.set.all"
+          ],
+          "active": false,
+          "attributes": {
+            "role": "prestress_tendon",
+            "coupling": "shared_shell_nodes"
+          }
+        }
+      ],
+      "sets": [
+        {
+          "id": "fem.deck.set.all",
+          "name": "全部壳单元",
+          "kind": "element",
+          "refs": [
+            "fem.deck.e.0.0",
+            "fem.deck.e.1.0",
+            "fem.deck.e.2.0",
+            "fem.deck.e.3.0",
+            "fem.deck.e.4.0",
+            "fem.deck.e.5.0",
+            "fem.deck.e.0.1",
+            "fem.deck.e.1.1",
+            "fem.deck.e.2.1",
+            "fem.deck.e.3.1",
+            "fem.deck.e.4.1",
+            "fem.deck.e.5.1"
+          ],
+          "faces": [],
+          "sourceRefs": [
+            "comp.bridge"
+          ],
+          "attributes": {}
+        },
+        {
+          "id": "fem.deck.set.edge.u0",
+          "name": "U 起始边",
+          "kind": "node",
+          "refs": [
+            "fem.deck.n.0.0",
+            "fem.deck.n.0.1",
+            "fem.deck.n.0.2"
+          ],
+          "faces": [],
+          "sourceRefs": [],
+          "attributes": {}
+        },
+        {
+          "id": "fem.deck.set.edge.u1",
+          "name": "U 终止边",
+          "kind": "node",
+          "refs": [
+            "fem.deck.n.6.0",
+            "fem.deck.n.6.1",
+            "fem.deck.n.6.2"
+          ],
+          "faces": [],
+          "sourceRefs": [],
+          "attributes": {}
+        },
+        {
+          "id": "fem.deck.set.edge.v0",
+          "name": "V 起始边",
+          "kind": "node",
+          "refs": [
+            "fem.deck.n.0.0",
+            "fem.deck.n.1.0",
+            "fem.deck.n.2.0",
+            "fem.deck.n.3.0",
+            "fem.deck.n.4.0",
+            "fem.deck.n.5.0",
+            "fem.deck.n.6.0"
+          ],
+          "faces": [],
+          "sourceRefs": [],
+          "attributes": {}
+        },
+        {
+          "id": "fem.deck.set.edge.v1",
+          "name": "V 终止边",
+          "kind": "node",
+          "refs": [
+            "fem.deck.n.0.2",
+            "fem.deck.n.1.2",
+            "fem.deck.n.2.2",
+            "fem.deck.n.3.2",
+            "fem.deck.n.4.2",
+            "fem.deck.n.5.2",
+            "fem.deck.n.6.2"
+          ],
+          "faces": [],
+          "sourceRefs": [],
+          "attributes": {}
+        },
+        {
+          "id": "fem.deck.surface.positive",
+          "name": "壳正面",
+          "kind": "surface",
+          "refs": [],
+          "faces": [
+            {
+              "elementRef": "fem.deck.e.0.0",
+              "face": "SPOS"
+            },
+            {
+              "elementRef": "fem.deck.e.1.0",
+              "face": "SPOS"
+            },
+            {
+              "elementRef": "fem.deck.e.2.0",
+              "face": "SPOS"
+            },
+            {
+              "elementRef": "fem.deck.e.3.0",
+              "face": "SPOS"
+            },
+            {
+              "elementRef": "fem.deck.e.4.0",
+              "face": "SPOS"
+            },
+            {
+              "elementRef": "fem.deck.e.5.0",
+              "face": "SPOS"
+            },
+            {
+              "elementRef": "fem.deck.e.0.1",
+              "face": "SPOS"
+            },
+            {
+              "elementRef": "fem.deck.e.1.1",
+              "face": "SPOS"
+            },
+            {
+              "elementRef": "fem.deck.e.2.1",
+              "face": "SPOS"
+            },
+            {
+              "elementRef": "fem.deck.e.3.1",
+              "face": "SPOS"
+            },
+            {
+              "elementRef": "fem.deck.e.4.1",
+              "face": "SPOS"
+            },
+            {
+              "elementRef": "fem.deck.e.5.1",
+              "face": "SPOS"
+            }
+          ],
+          "sourceRefs": [],
+          "attributes": {}
+        },
+        {
+          "id": "fem.deck.surface.negative",
+          "name": "壳负面",
+          "kind": "surface",
+          "refs": [],
+          "faces": [
+            {
+              "elementRef": "fem.deck.e.0.0",
+              "face": "SNEG"
+            },
+            {
+              "elementRef": "fem.deck.e.1.0",
+              "face": "SNEG"
+            },
+            {
+              "elementRef": "fem.deck.e.2.0",
+              "face": "SNEG"
+            },
+            {
+              "elementRef": "fem.deck.e.3.0",
+              "face": "SNEG"
+            },
+            {
+              "elementRef": "fem.deck.e.4.0",
+              "face": "SNEG"
+            },
+            {
+              "elementRef": "fem.deck.e.5.0",
+              "face": "SNEG"
+            },
+            {
+              "elementRef": "fem.deck.e.0.1",
+              "face": "SNEG"
+            },
+            {
+              "elementRef": "fem.deck.e.1.1",
+              "face": "SNEG"
+            },
+            {
+              "elementRef": "fem.deck.e.2.1",
+              "face": "SNEG"
+            },
+            {
+              "elementRef": "fem.deck.e.3.1",
+              "face": "SNEG"
+            },
+            {
+              "elementRef": "fem.deck.e.4.1",
+              "face": "SNEG"
+            },
+            {
+              "elementRef": "fem.deck.e.5.1",
+              "face": "SNEG"
+            }
+          ],
+          "sourceRefs": [],
+          "attributes": {}
+        },
+        {
+          "id": "fem.bearing.set.all",
+          "name": "全部实体单元",
+          "kind": "element",
+          "refs": [
+            "fem.bearing.e.0.0.0",
+            "fem.bearing.e.1.0.0"
+          ],
+          "faces": [],
+          "sourceRefs": [
+            "comp.crossbeam.2"
+          ],
+          "attributes": {}
+        },
+        {
+          "id": "fem.bearing.surface.xmin",
+          "name": "xmin",
+          "kind": "surface",
+          "refs": [],
+          "faces": [
+            {
+              "elementRef": "fem.bearing.e.0.0.0",
+              "face": "S6"
+            }
+          ],
+          "sourceRefs": [],
+          "attributes": {}
+        },
+        {
+          "id": "fem.bearing.surface.xmax",
+          "name": "xmax",
+          "kind": "surface",
+          "refs": [],
+          "faces": [
+            {
+              "elementRef": "fem.bearing.e.1.0.0",
+              "face": "S4"
+            }
+          ],
+          "sourceRefs": [],
+          "attributes": {}
+        },
+        {
+          "id": "fem.bearing.surface.ymin",
+          "name": "ymin",
+          "kind": "surface",
+          "refs": [],
+          "faces": [
+            {
+              "elementRef": "fem.bearing.e.0.0.0",
+              "face": "S1"
+            },
+            {
+              "elementRef": "fem.bearing.e.1.0.0",
+              "face": "S1"
+            }
+          ],
+          "sourceRefs": [],
+          "attributes": {}
+        },
+        {
+          "id": "fem.bearing.surface.ymax",
+          "name": "ymax",
+          "kind": "surface",
+          "refs": [],
+          "faces": [
+            {
+              "elementRef": "fem.bearing.e.0.0.0",
+              "face": "S2"
+            },
+            {
+              "elementRef": "fem.bearing.e.1.0.0",
+              "face": "S2"
+            }
+          ],
+          "sourceRefs": [],
+          "attributes": {}
+        },
+        {
+          "id": "fem.bearing.surface.zmin",
+          "name": "zmin",
+          "kind": "surface",
+          "refs": [],
+          "faces": [
+            {
+              "elementRef": "fem.bearing.e.0.0.0",
+              "face": "S3"
+            },
+            {
+              "elementRef": "fem.bearing.e.1.0.0",
+              "face": "S3"
+            }
+          ],
+          "sourceRefs": [],
+          "attributes": {}
+        },
+        {
+          "id": "fem.bearing.surface.zmax",
+          "name": "zmax",
+          "kind": "surface",
+          "refs": [],
+          "faces": [
+            {
+              "elementRef": "fem.bearing.e.0.0.0",
+              "face": "S5"
+            },
+            {
+              "elementRef": "fem.bearing.e.1.0.0",
+              "face": "S5"
+            }
+          ],
+          "sourceRefs": [],
+          "attributes": {}
+        },
+        {
+          "id": "fem.tendon.set.all",
+          "name": "全部预应力筋单元",
+          "kind": "element",
+          "refs": [
+            "fem.tendon.e.0",
+            "fem.tendon.e.1"
+          ],
+          "faces": [],
+          "sourceRefs": [],
+          "attributes": {
+            "coupling": "shared_shell_nodes"
+          }
+        },
+        {
+          "id": "fem.bridge_segment.set.all",
+          "name": "全部混合单元",
+          "kind": "element",
+          "refs": [
+            "fem.deck.e.0.0",
+            "fem.deck.e.1.0",
+            "fem.deck.e.2.0",
+            "fem.deck.e.3.0",
+            "fem.deck.e.4.0",
+            "fem.deck.e.5.0",
+            "fem.deck.e.0.1",
+            "fem.deck.e.1.1",
+            "fem.deck.e.2.1",
+            "fem.deck.e.3.1",
+            "fem.deck.e.4.1",
+            "fem.deck.e.5.1",
+            "fem.bearing.e.0.0.0",
+            "fem.bearing.e.1.0.0",
+            "fem.tendon.e.0",
+            "fem.tendon.e.1"
+          ],
+          "faces": [],
+          "sourceRefs": [
+            "comp.bridge"
+          ],
+          "attributes": {
+            "mixedDimensional": true
+          }
+        }
+      ],
+      "source": "generated",
+      "meshHash": "d10e71223e1a3c0a5e21c22b856c2a4640a85462886d3b4f510a081b28f60dad",
+      "status": "approved",
+      "statistics": {
+        "nodeCount": 33,
+        "elementCount": 16,
+        "setCount": 16,
+        "elementTypes": {
+          "S4R": 12,
+          "C3D8R": 2,
+          "T3D2": 2
+        },
+        "minimumEdge": 0.5,
+        "maximumEdge": 6.0,
+        "maximumAspectRatio": 2.0,
+        "meanAspectRatio": 1.125,
+        "degenerateElements": [],
+        "wrongNodeCountElements": [],
+        "validTopology": true
+      },
+      "artifactRefs": []
+    }
+  ],
+  "contacts": [
+    {
+      "id": "contact.deck.bearing",
+      "name": "桥面板—支座摩擦接触",
+      "masterSurfaceRef": "fem.bearing.surface.zmax",
+      "slaveSurfaceRef": "fem.deck.surface.negative",
+      "behavior": "contact",
+      "normalBehavior": "linear_penalty",
+      "tangentialBehavior": "penalty_friction",
+      "frictionCoefficient": 0.3,
+      "penaltyStiffness": 1000000000000.0,
+      "allowSeparation": true,
+      "finiteSliding": false,
+      "stageRefs": [
+        "stage.deck",
+        "stage.prestress",
+        "stage.service"
+      ],
+      "status": "approved",
+      "attributes": {
+        "calculixContactType": "SURFACE TO SURFACE",
+        "calibrationRequired": true
+      }
+    }
+  ],
+  "prestressingSystems": [
+    {
+      "id": "prestress.tendon.native",
+      "name": "CalculiX PRE-TENSION SECTION",
+      "kind": "internal_bonded",
+      "representation": "solver_native",
+      "materialRef": "mat.prestress",
+      "area": 0.0014,
+      "path": [
+        {
+          "position": [
+            0.0,
+            2.0,
+            2.0
+          ],
+          "nodeRef": "fem.deck.n.0.1",
+          "station": 0.0,
+          "attributes": {
+            "role": "active_anchor"
+          }
+        },
+        {
+          "position": [
+            6.0,
+            2.0,
+            1.75
+          ],
+          "nodeRef": "fem.deck.n.3.1",
+          "station": 6.005,
+          "attributes": {
+            "role": "deviation"
+          }
+        },
+        {
+          "position": [
+            12.0,
+            2.0,
+            2.0
+          ],
+          "nodeRef": "fem.deck.n.6.1",
+          "station": 12.01,
+          "attributes": {
+            "role": "passive_anchor"
+          }
+        }
+      ],
+      "jackingForce": 1800000.0,
+      "initialStress": null,
+      "frictionCoefficient": 0.02,
+      "wobbleCoefficient": 0.0015,
+      "anchorageSlip": 0.006,
+      "immediateLossFactor": 0.04,
+      "longTermLossFactor": 0.12,
+      "anchorRefs": [
+        "fem.deck.n.0.1",
+        "fem.deck.n.6.1"
+      ],
+      "targetRefs": [
+        "fem.tendon.set.all"
+      ],
+      "stageRef": "stage.prestress",
+      "loadCaseRef": "lc.prestress",
+      "status": "approved",
+      "attributes": {
+        "pretensionSurfaceRef": "fem.bearing.surface.xmin",
+        "controlMode": "force",
+        "controlValue": 500000.0,
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "referencePoint": [
+          0.0,
+          0.0,
+          1.75
+        ],
+        "fixturePurpose": "adapter_contract",
+        "engineeringUse": "synthetic_only"
+      }
+    }
+  ],
+  "constructionStages": [
+    {
+      "id": "stage.support",
+      "name": "支座安装",
+      "sequence": 1,
+      "duration": 1.0,
+      "activateRefs": [
+        "fem.bearing.set.all"
+      ],
+      "deactivateRefs": [],
+      "loadCaseRefs": [
+        "lc.dead"
+      ],
+      "prestressRefs": [],
+      "contactRefs": [],
+      "carryOver": true,
+      "solverSettings": {
+        "analysis": "nonlinear_static",
+        "nlgeom": true,
+        "initialIncrement": 0.1,
+        "maximumIncrement": 0.2
+      },
+      "status": "approved"
+    },
+    {
+      "id": "stage.deck",
+      "name": "桥面板架设并建立接触",
+      "sequence": 2,
+      "duration": 1.0,
+      "activateRefs": [
+        "fem.deck.set.all"
+      ],
+      "deactivateRefs": [],
+      "loadCaseRefs": [
+        "lc.dead"
+      ],
+      "prestressRefs": [],
+      "contactRefs": [
+        "contact.deck.bearing"
+      ],
+      "carryOver": true,
+      "solverSettings": {
+        "analysis": "nonlinear_static",
+        "nlgeom": true,
+        "initialIncrement": 0.05,
+        "maximumIncrement": 0.1
+      },
+      "status": "approved"
+    },
+    {
+      "id": "stage.prestress",
+      "name": "激活钢束并施加预应力",
+      "sequence": 3,
+      "duration": 0.5,
+      "activateRefs": [
+        "fem.tendon.set.all"
+      ],
+      "deactivateRefs": [],
+      "loadCaseRefs": [
+        "lc.prestress"
+      ],
+      "prestressRefs": [
+        "prestress.tendon.native"
+      ],
+      "contactRefs": [
+        "contact.deck.bearing"
+      ],
+      "carryOver": true,
+      "solverSettings": {
+        "analysis": "nonlinear_static",
+        "nlgeom": true,
+        "initialIncrement": 0.02,
+        "maximumIncrement": 0.08
+      },
+      "status": "approved"
+    },
+    {
+      "id": "stage.service",
+      "name": "运营服务阶段",
+      "sequence": 4,
+      "duration": 1.0,
+      "activateRefs": [],
+      "deactivateRefs": [],
+      "loadCaseRefs": [
+        "lc.service"
+      ],
+      "prestressRefs": [
+        "prestress.tendon.native"
+      ],
+      "contactRefs": [
+        "contact.deck.bearing"
+      ],
+      "carryOver": true,
+      "solverSettings": {
+        "analysis": "nonlinear_static",
+        "nlgeom": true,
+        "initialIncrement": 0.02,
+        "maximumIncrement": 0.08,
+        "contactOutput": true
+      },
+      "status": "approved"
+    }
+  ],
+  "codeCheckPlans": [
+    {
+      "id": "check.generic.service",
+      "name": "服务性、应力与平衡通用验算",
+      "taskRef": "task.industrial",
+      "standard": {
+        "code": "PROJECT-GENERIC",
+        "edition": "2026-08",
+        "nationalAnnex": null,
+        "licensedContentRequired": false
+      },
+      "limitState": "custom",
+      "rulePack": "generic.bridge",
+      "targetRefs": [
+        "comp.bridge"
+      ],
+      "resultSetRef": null,
+      "parameters": {},
+      "acceptance": {
+        "allowableDisplacement": 0.03,
+        "designStrength": 310000000.0,
+        "maxReactionBalanceResidual": 1e-05
+      },
+      "status": "approved"
+    }
+  ],
+  "codeCheckResults": [],
+  "solverProfiles": [
+    {
+      "id": "solver.profile.calculix.2_23",
+      "solver": "calculix",
+      "version": "2.23",
+      "adapter": "bridge_mind.adapters.calculix",
+      "adapterVersion": "1.0.0",
+      "capabilities": {
+        "elementTypes": [
+          "T3D2",
+          "B31",
+          "B32",
+          "S3",
+          "S4",
+          "S4R",
+          "C3D4",
+          "C3D6",
+          "C3D8",
+          "C3D8R",
+          "C3D10",
+          "C3D20",
+          "C3D20R",
+          "MASS",
+          "SPRINGA"
+        ],
+        "analyses": [
+          "linear_static",
+          "nonlinear_static",
+          "modal",
+          "buckling"
+        ],
+        "contacts": [
+          "contact",
+          "tie",
+          "frictionless",
+          "penalty_friction",
+          "rough"
+        ],
+        "prestress": [
+          "equivalent_load",
+          "truss_tendon",
+          "initial_stress",
+          "solver_native"
+        ],
+        "constructionStages": true,
+        "resultImport": [
+          "displacement",
+          "reaction",
+          "stress",
+          "strain",
+          "contact",
+          "energy"
+        ]
+      },
+      "executable": "ccx",
+      "licenseRequired": false,
+      "executionMode": "local",
+      "settings": {
+        "environmentVariable": "CCX_EXECUTABLE",
+        "inputFormat": "CalculiX keyword input",
+        "resultFormats": [
+          "FRD",
+          "DAT"
+        ]
+      },
+      "status": "unverified"
+    }
+  ],
+  "resultSets": [],
+  "externalMappings": [
+    {
+      "id": "mapping.ifc.bridge",
+      "sourceSystem": "IFC4X3_ADD2.DesignTransferView",
+      "sourceVersion": "IFC 4.3.2.0",
+      "sourceId": "2SyntheticBridgeGlobalId",
+      "targetRef": "comp.bridge",
+      "kind": "identity",
+      "method": "direct",
+      "confidence": 1.0,
+      "geometryHash": null,
+      "status": "needs_review",
+      "attributes": {
+        "ifcType": "IfcBridge",
+        "syntheticFixture": true
+      }
+    },
+    {
+      "id": "mapping.ifc.deck.mesh",
+      "sourceSystem": "IFC4X3_ADD2.DesignTransferView",
+      "sourceVersion": "IFC 4.3.2.0",
+      "sourceId": "3SyntheticDeckGlobalId",
+      "targetRef": "fem.deck.set.all",
+      "kind": "mesh_region",
+      "method": "rule",
+      "confidence": 0.9,
+      "geometryHash": "0c91fef80abb7b02af86575becc7915cf89bb7e431e73c8cc25b377b77955770",
+      "status": "needs_review",
+      "attributes": {
+        "ifcType": "IfcSlab",
+        "syntheticFixture": true
+      }
+    }
+  ],
+  "conversionReports": []
+}

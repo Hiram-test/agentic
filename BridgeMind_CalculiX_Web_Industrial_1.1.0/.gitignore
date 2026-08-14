@@ -1,0 +1,7 @@
+__pycache__/ # 忽略 Python 字节码目录。
+*.py[cod] # 忽略 Python 编译产物。
+.pytest_cache/ # 忽略 pytest 缓存。
+.venv/ # 忽略本地虚拟环境。
+data/*.sqlite3* # 忽略运行期 SQLite 数据库及 WAL 文件。
+runs/* # 忽略运行期求解与导出产物。
+!runs/.gitkeep # 保留空运行目录占位。

@@ -1,0 +1,32 @@
+[build-system] # 定义构建系统。
+requires = ["setuptools>=68", "wheel"] # 指定构建依赖。
+build-backend = "setuptools.build_meta" # 使用 setuptools 构建后端。
+
+[project] # 定义 Python 项目元数据。
+name = "bridgemind-bsdl" # 设置发布包名称。
+version = "1.1.0" # 设置工业网站交付版本。
+description = "BridgeMind BSDL Industrial mobile web and CalculiX workflow" # 设置工业网站项目简介。
+readme = "README.md" # 指定项目说明文件。
+requires-python = ">=3.11" # 指定最低 Python 版本。
+license = { text = "MIT" } # 声明本项目代码许可。
+authors = [{ name = "BridgeMind Research Prototype" }] # 设置项目作者占位元数据。
+dependencies = ["numpy>=1.26", "scikit-learn>=1.4", "jsonschema>=4.20", "PyYAML>=6.0", "fastapi>=0.110", "uvicorn>=0.29", "python-multipart>=0.0.9"] # 声明运行时依赖。
+
+[project.optional-dependencies] # 定义可选依赖组。
+test = ["pytest>=8.0", "httpx>=0.27"] # 声明测试依赖。
+ifc = ["ifcopenshell>=0.8.0"] # 声明 IFC 4.3 导入可选依赖。
+
+[project.scripts] # 定义安装后的命令行入口。
+bridgemind = "bridge_mind.cli:main" # 提供 BSDL 命令行工具。
+bridgemind-web = "bridge_mind.launcher:main" # 提供 Web Demo 启动命令。
+
+[tool.setuptools] # 配置 setuptools 包发现。
+include-package-data = true # 允许包含非 Python 资源。
+
+[tool.setuptools.packages.find] # 配置自动包发现。
+where = ["."] # 从项目根目录查找包。
+include = ["bridge_mind*"] # 只打包 BridgeMind 模块。
+
+[tool.pytest.ini_options] # 配置 pytest 默认行为。
+addopts = "-q" # 使用简洁测试输出。
+testpaths = ["tests"] # 指定测试目录。

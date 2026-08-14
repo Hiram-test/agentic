@@ -1,0 +1,1685 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/bridgemind/bsdl/0.1.0/bsdl.schema.json",
+  "title": "BSDL 0.1.0",
+  "type": "object",
+  "required": [
+    "language",
+    "languageVersion",
+    "documentId",
+    "revision",
+    "project",
+    "units",
+    "coordinateSystems",
+    "agents",
+    "materials",
+    "sections",
+    "nodes",
+    "components",
+    "connections",
+    "loadCases",
+    "loads",
+    "analysisTasks",
+    "cognitiveMap",
+    "regions",
+    "meshPolicies",
+    "solverPlans",
+    "feedback",
+    "artifacts",
+    "experienceRefs",
+    "extensions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "language": {
+      "const": "Bridge-Structural-Description-Language"
+    },
+    "languageVersion": {
+      "const": "0.1.0"
+    },
+    "documentId": {
+      "$ref": "#/$defs/id"
+    },
+    "revision": {
+      "$ref": "#/$defs/revision"
+    },
+    "project": {
+      "$ref": "#/$defs/project"
+    },
+    "units": {
+      "$ref": "#/$defs/units"
+    },
+    "coordinateSystems": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/coordinateSystem"
+      }
+    },
+    "agents": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/agent"
+      }
+    },
+    "materials": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/material"
+      }
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/section"
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/component"
+      }
+    },
+    "connections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/connection"
+      }
+    },
+    "loadCases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/loadCase"
+      }
+    },
+    "loads": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/load"
+      }
+    },
+    "analysisTasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/analysisTask"
+      }
+    },
+    "cognitiveMap": {
+      "$ref": "#/$defs/cognitiveMap"
+    },
+    "regions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/region"
+      }
+    },
+    "meshPolicies": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/meshPolicy"
+      }
+    },
+    "solverPlans": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/solverPlan"
+      }
+    },
+    "feedback": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/feedback"
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/artifact"
+      }
+    },
+    "experienceRefs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/id"
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{1,127}$"
+    },
+    "vector3": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "items": false,
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "vector6": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "items": false,
+      "minItems": 6,
+      "maxItems": 6
+    },
+    "constraint6": {
+      "type": "object",
+      "required": [
+        "ux",
+        "uy",
+        "uz",
+        "rx",
+        "ry",
+        "rz"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ux": {
+          "type": "boolean"
+        },
+        "uy": {
+          "type": "boolean"
+        },
+        "uz": {
+          "type": "boolean"
+        },
+        "rx": {
+          "type": "boolean"
+        },
+        "ry": {
+          "type": "boolean"
+        },
+        "rz": {
+          "type": "boolean"
+        }
+      }
+    },
+    "revision": {
+      "type": "object",
+      "required": [
+        "number",
+        "parent",
+        "createdAt",
+        "createdBy",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "parent": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdBy": {
+          "$ref": "#/$defs/id"
+        },
+        "status": {
+          "enum": [
+            "working",
+            "reviewed",
+            "approved",
+            "archived"
+          ]
+        },
+        "summary": {
+          "type": "string"
+        }
+      }
+    },
+    "project": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "description",
+        "sourceType"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "sourceType": {
+          "enum": [
+            "manual",
+            "synthetic",
+            "point_cloud",
+            "bim",
+            "imported"
+          ]
+        },
+        "sourceUri": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "units": {
+      "type": "object",
+      "required": [
+        "length",
+        "force",
+        "mass",
+        "stress",
+        "angle"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "length": {
+          "const": "m"
+        },
+        "force": {
+          "const": "N"
+        },
+        "mass": {
+          "const": "kg"
+        },
+        "stress": {
+          "const": "Pa"
+        },
+        "angle": {
+          "const": "rad"
+        }
+      }
+    },
+    "coordinateSystem": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "origin",
+        "xAxis",
+        "yAxis",
+        "zAxis"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "parentRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "origin": {
+          "$ref": "#/$defs/vector3"
+        },
+        "xAxis": {
+          "$ref": "#/$defs/vector3"
+        },
+        "yAxis": {
+          "$ref": "#/$defs/vector3"
+        },
+        "zAxis": {
+          "$ref": "#/$defs/vector3"
+        }
+      }
+    },
+    "agent": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "person",
+            "software",
+            "llm",
+            "service",
+            "organization"
+          ]
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "material": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "model",
+        "density",
+        "elasticModulus",
+        "poissonRatio"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "model": {
+          "enum": [
+            "linear_elastic",
+            "other"
+          ]
+        },
+        "density": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "elasticModulus": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "poissonRatio": {
+          "type": "number",
+          "minimum": -0.99,
+          "maximum": 0.4999
+        },
+        "shearModulus": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "thermalExpansion": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "yieldStrength": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "section": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "shape",
+        "area",
+        "iy",
+        "iz",
+        "torsionConstant"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "shape": {
+          "enum": [
+            "generic",
+            "rectangular",
+            "circular",
+            "box",
+            "i",
+            "other"
+          ]
+        },
+        "area": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "iy": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "iz": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "torsionConstant": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "dimensions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "node": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "position",
+        "coordinateSystemRef",
+        "roles",
+        "constraints",
+        "tags",
+        "sourceIds",
+        "attributes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "position": {
+          "$ref": "#/$defs/vector3"
+        },
+        "coordinateSystemRef": {
+          "$ref": "#/$defs/id"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "geometry",
+              "joint",
+              "support",
+              "load",
+              "sensor",
+              "landmark",
+              "other"
+            ]
+          }
+        },
+        "constraints": {
+          "$ref": "#/$defs/constraint6"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sourceIds": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "attributes": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "geometry": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "points"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "line"
+            },
+            "points": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "$ref": "#/$defs/vector3"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "center",
+            "size",
+            "rotation"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "box"
+            },
+            "center": {
+              "$ref": "#/$defs/vector3"
+            },
+            "size": {
+              "$ref": "#/$defs/vector3"
+            },
+            "rotation": {
+              "$ref": "#/$defs/vector3"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "artifactRef"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": [
+                "mesh",
+                "brep",
+                "point_cloud"
+              ]
+            },
+            "artifactRef": {
+              "$ref": "#/$defs/id"
+            },
+            "selector": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "component": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "category",
+        "topology",
+        "parentRef",
+        "nodeRefs",
+        "materialRef",
+        "sectionRef",
+        "geometry",
+        "analysis",
+        "attributes",
+        "featureDescriptors",
+        "tags",
+        "sourceIds"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "category": {
+          "enum": [
+            "bridge",
+            "span",
+            "deck",
+            "girder",
+            "crossbeam",
+            "diaphragm",
+            "stiffener",
+            "rib",
+            "pier",
+            "column",
+            "bearing",
+            "foundation",
+            "joint",
+            "rod",
+            "surface",
+            "solid_region",
+            "other"
+          ]
+        },
+        "topology": {
+          "enum": [
+            "point",
+            "line",
+            "surface",
+            "solid"
+          ]
+        },
+        "parentRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "nodeRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "materialRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sectionRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "geometry": {
+          "$ref": "#/$defs/geometry"
+        },
+        "analysis": {
+          "type": "object",
+          "required": [
+            "elementType",
+            "active"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "elementType": {
+              "enum": [
+                "frame3d",
+                "truss3d",
+                "shell",
+                "solid",
+                "excluded"
+              ]
+            },
+            "active": {
+              "type": "boolean"
+            },
+            "localUp": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/vector3"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "attributes": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "featureDescriptors": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "number",
+              "string",
+              "boolean",
+              "null"
+            ]
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sourceIds": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "connection": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "nodeRef",
+        "participantRefs",
+        "coordinateSystemRef",
+        "mechanical",
+        "attributes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "shared_node",
+            "rigid",
+            "pinned",
+            "spring",
+            "bearing",
+            "contact",
+            "tie",
+            "offset",
+            "other"
+          ]
+        },
+        "nodeRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "participantRefs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "coordinateSystemRef": {
+          "$ref": "#/$defs/id"
+        },
+        "mechanical": {
+          "type": "object",
+          "required": [
+            "dofs",
+            "stiffness"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "dofs": {
+              "$ref": "#/$defs/constraint6"
+            },
+            "stiffness": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/vector6"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "gap": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "friction": {
+              "type": [
+                "number",
+                "null"
+              ]
+            }
+          }
+        },
+        "attributes": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "loadCase": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "factor"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "static",
+            "modal",
+            "other"
+          ]
+        },
+        "factor": {
+          "type": "number"
+        }
+      }
+    },
+    "load": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "caseRef",
+        "kind",
+        "targetNodeRef",
+        "targetComponentRef",
+        "force",
+        "moment",
+        "coordinateSystemRef",
+        "attributes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "caseRef": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "nodal",
+            "self_weight",
+            "other"
+          ]
+        },
+        "targetNodeRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "targetComponentRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "force": {
+          "$ref": "#/$defs/vector3"
+        },
+        "moment": {
+          "$ref": "#/$defs/vector3"
+        },
+        "coordinateSystemRef": {
+          "$ref": "#/$defs/id"
+        },
+        "attributes": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "analysisTask": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "loadCaseRefs",
+        "qoi",
+        "accuracyTarget",
+        "budget",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "linear_static",
+            "modal",
+            "other"
+          ]
+        },
+        "loadCaseRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "qoi": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "accuracyTarget": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "budget": {
+          "type": "object",
+          "required": [
+            "maxElements",
+            "maxRuns",
+            "maxWallSeconds"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "maxElements": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "maxRuns": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "maxWallSeconds": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          }
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "approved",
+            "completed"
+          ]
+        }
+      }
+    },
+    "landmark": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "targetRefs",
+        "position",
+        "featureVector",
+        "reason",
+        "confidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "support",
+            "joint",
+            "discontinuity",
+            "smooth",
+            "hotspot",
+            "boundary",
+            "other"
+          ]
+        },
+        "targetRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "position": {
+          "$ref": "#/$defs/vector3"
+        },
+        "featureVector": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "number",
+              "string",
+              "boolean",
+              "null"
+            ]
+          }
+        },
+        "reason": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "decisionEdge": {
+      "type": "object",
+      "required": [
+        "id",
+        "fromRef",
+        "toRef",
+        "condition",
+        "action",
+        "source"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "fromRef": {
+          "$ref": "#/$defs/id"
+        },
+        "toRef": {
+          "$ref": "#/$defs/id"
+        },
+        "condition": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "source": {
+          "enum": [
+            "rule",
+            "human",
+            "experience",
+            "fea",
+            "llm"
+          ]
+        }
+      }
+    },
+    "cognitiveMap": {
+      "type": "object",
+      "required": [
+        "landmarks",
+        "decisionEdges",
+        "version"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "landmarks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/landmark"
+          }
+        },
+        "decisionEdges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/decisionEdge"
+          }
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "regionGeometry": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "center",
+            "size",
+            "rotation"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "box"
+            },
+            "center": {
+              "$ref": "#/$defs/vector3"
+            },
+            "size": {
+              "$ref": "#/$defs/vector3"
+            },
+            "rotation": {
+              "$ref": "#/$defs/vector3"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "center",
+            "radius"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "sphere"
+            },
+            "center": {
+              "$ref": "#/$defs/vector3"
+            },
+            "radius": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          }
+        }
+      ]
+    },
+    "region": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "semanticType",
+        "source",
+        "geometry",
+        "targetRefs",
+        "active",
+        "meshLevel",
+        "targetSize",
+        "elementFamily",
+        "amrEngine",
+        "maxIterations",
+        "reason",
+        "confidence",
+        "status",
+        "evidenceRefs",
+        "attributes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "semanticType": {
+          "enum": [
+            "support",
+            "joint",
+            "discontinuity",
+            "smooth",
+            "hotspot",
+            "boundary",
+            "user_defined"
+          ]
+        },
+        "source": {
+          "enum": [
+            "agent",
+            "human",
+            "fea",
+            "imported"
+          ]
+        },
+        "geometry": {
+          "$ref": "#/$defs/regionGeometry"
+        },
+        "targetRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "meshLevel": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "targetSize": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "elementFamily": {
+          "enum": [
+            "frame",
+            "truss",
+            "shell_quad",
+            "shell_tri",
+            "tet",
+            "hex",
+            "auto"
+          ]
+        },
+        "amrEngine": {
+          "enum": [
+            "none",
+            "rule_based",
+            "gradient",
+            "goal_oriented",
+            "external"
+          ]
+        },
+        "maxIterations": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "reason": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "status": {
+          "enum": [
+            "proposed",
+            "accepted",
+            "rejected",
+            "needs_review",
+            "archived"
+          ]
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "attributes": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "meshPolicy": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "taskRef",
+        "baseSize",
+        "elementFamily",
+        "regionRules",
+        "budget",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "taskRef": {
+          "$ref": "#/$defs/id"
+        },
+        "baseSize": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "elementFamily": {
+          "enum": [
+            "frame",
+            "truss",
+            "shell_quad",
+            "shell_tri",
+            "tet",
+            "hex",
+            "auto"
+          ]
+        },
+        "regionRules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "regionRef",
+              "targetSize",
+              "priority"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "regionRef": {
+                "$ref": "#/$defs/id"
+              },
+              "targetSize": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "priority": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100
+              }
+            }
+          }
+        },
+        "budget": {
+          "type": "object",
+          "required": [
+            "maxElements",
+            "maxIterations"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "maxElements": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "maxIterations": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "approved",
+            "executed",
+            "archived"
+          ]
+        }
+      }
+    },
+    "solverPlan": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "taskRef",
+        "meshPolicyRef",
+        "solver",
+        "settings",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "taskRef": {
+          "$ref": "#/$defs/id"
+        },
+        "meshPolicyRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "solver": {
+          "enum": [
+            "builtin_frame3d",
+            "calculix",
+            "opensees",
+            "abaqus",
+            "ansys",
+            "other"
+          ]
+        },
+        "settings": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "approved",
+            "running",
+            "completed",
+            "failed"
+          ]
+        }
+      }
+    },
+    "feedback": {
+      "type": "object",
+      "required": [
+        "id",
+        "source",
+        "kind",
+        "createdAt",
+        "createdBy",
+        "targetRefs",
+        "before",
+        "after",
+        "metrics",
+        "comment",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "source": {
+          "enum": [
+            "human",
+            "agent",
+            "fea",
+            "importer",
+            "validator"
+          ]
+        },
+        "kind": {
+          "enum": [
+            "region_edit",
+            "parameter_edit",
+            "topology_edit",
+            "validation",
+            "fea_result",
+            "approval",
+            "rejection",
+            "experience"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdBy": {
+          "$ref": "#/$defs/id"
+        },
+        "targetRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "before": {},
+        "after": {},
+        "metrics": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "number",
+              "string",
+              "boolean",
+              "null"
+            ]
+          }
+        },
+        "comment": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "recorded",
+            "accepted",
+            "rejected",
+            "archived"
+          ]
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "uri",
+        "format",
+        "hash",
+        "createdAt"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "geometry",
+            "point_cloud",
+            "mesh",
+            "solver_input",
+            "solver_output",
+            "log",
+            "image",
+            "other"
+          ]
+        },
+        "uri": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        },
+        "hash": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

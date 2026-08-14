@@ -1,0 +1,163 @@
+<!doctype html><!-- 声明 HTML5 文档。 -->
+<html lang="zh-CN"><!-- 设置中文页面语言。 -->
+<head><!-- 开始文档头部。 -->
+<meta charset="utf-8"><!-- 使用 UTF-8 字符编码。 -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><!-- 适配桌面、触屏和安全区域视口。 -->
+<meta name="theme-color" content="#071018"><!-- 设置 PWA 浏览器主题色。 -->
+<meta name="apple-mobile-web-app-capable" content="yes"><!-- 允许 iOS 主屏幕独立窗口运行。 -->
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><!-- 设置 iOS 状态栏样式。 -->
+<link rel="manifest" href="/manifest.webmanifest"><!-- 加载 PWA 安装清单。 -->
+<link rel="apple-touch-icon" href="/icons/icon-192.png"><!-- 设置移动主屏幕图标。 -->
+<title>BridgeMind Studio · BSDL</title><!-- 设置浏览器标题。 -->
+<link rel="stylesheet" href="/styles.css"><!-- 加载本地界面样式。 -->
+</head><!-- 结束文档头部。 -->
+<body><!-- 开始页面主体。 -->
+<header class="topbar"><!-- 创建顶部工具栏。 -->
+<div class="brand"><!-- 创建产品标识区。 -->
+<div class="brand-mark">BM</div><!-- 显示简写标识。 -->
+<div><h1>BridgeMind Studio</h1><p>BSDL 统一结构描述 · 认知地图 · 快速 FEA</p></div><!-- 显示产品名称与定位。 -->
+</div><!-- 结束产品标识区。 -->
+<div class="mobile-top-actions"><!-- 创建手机端侧栏切换按钮区。 -->
+<button id="mobileProjectsButton" class="secondary" aria-label="打开项目面板">项目</button><!-- 打开左侧项目面板。 -->
+<button id="mobileInspectButton" class="secondary" aria-label="打开对象面板">对象</button><!-- 打开右侧对象面板。 -->
+</div><!-- 结束手机端侧栏切换按钮区。 -->
+<div class="toolbar"><!-- 创建主要操作按钮区。 -->
+<select id="projectSelect" title="选择项目"></select><!-- 提供项目选择。 -->
+<button id="refreshButton" class="secondary">刷新</button><!-- 刷新项目数据。 -->
+<button id="validateButton">① 验证</button><!-- 执行 BSDL 验证。 -->
+<button id="strategyButton">② Agent 策略</button><!-- 运行多专家区域策略。 -->
+<button id="solveButton">③ 快速试算</button><!-- 执行内置空间梁 FEA。 -->
+<button id="saveButton">④ 保存 V+</button><!-- 保存人工编辑修订。 -->
+<button id="archiveButton" class="secondary">归档 V+</button><!-- 把当前状态封存为归档修订。 -->
+</div><!-- 结束主要操作按钮区。 -->
+</header><!-- 结束顶部工具栏。 -->
+<main class="workspace"><!-- 创建三栏工作区。 -->
+<aside id="leftPanel" class="panel left-panel"><!-- 创建左侧项目治理面板。 -->
+<div class="mobile-panel-header"><strong>项目与计算</strong><button id="closeLeftPanelButton" class="tiny secondary" aria-label="关闭项目面板">关闭</button></div><!-- 创建手机端左侧面板标题栏。 -->
+<section><!-- 创建生产服务器访问控制区。 -->
+<h2>服务器访问</h2><!-- 显示访问控制标题。 -->
+<label class="access-label">API 密钥<input id="apiKeyInput" class="full-control" type="password" autocomplete="off" inputmode="text" placeholder="仅保存在当前浏览器会话"></label><!-- 输入生产环境 X-API-Key。 -->
+<button id="saveApiKeyButton" class="secondary full">保存本会话密钥并连接</button><!-- 把密钥保存到 sessionStorage 并重新加载受保护数据。 -->
+<div id="apiKeyStatus" class="summary-card access-status">正在检测服务器访问策略。</div><!-- 显示服务器是否要求 API 密钥。 -->
+</section><!-- 结束生产服务器访问控制区。 -->
+<section><!-- 创建项目信息区。 -->
+<h2>项目与闭环</h2><!-- 显示区域标题。 -->
+<div id="projectSummary" class="summary-card"></div><!-- 显示项目摘要。 -->
+<div class="button-grid"><!-- 创建次级操作网格。 -->
+<button id="addRegionButton" class="secondary">新增人工框</button><!-- 新增人工区域。 -->
+<button id="deleteRegionButton" class="secondary">删除/驳回框</button><!-- 驳回选中区域。 -->
+<button id="experienceButton" class="secondary">提取经验</button><!-- 比较最近两个修订并提取经验。 -->
+<button id="memoryPreviewButton" class="secondary">读回预览</button><!-- 预览跨项目经验如何改变当前策略。 -->
+<button id="resetViewButton" class="secondary">重置视角</button><!-- 重置三维相机。 -->
+</div><!-- 结束次级操作网格。 -->
+<label class="check-row"><input id="memoryEnabled" type="checkbox" checked>新策略与快速试算启用跨项目经验读回</label><!-- 控制历史经验是否进入未来决策路径。 -->
+<div id="memorySummary" class="summary-card">尚未执行经验读回预览。</div><!-- 显示匹配区域、实际补丁和策略门槛。 -->
+</section><!-- 结束项目信息区。 -->
+<section class="scroll-section"><!-- 创建有限元认知地图区。 -->
+<h2>有限元认知地图</h2><!-- 显示认知地图标题。 -->
+<div id="cognitiveList" class="list"></div><!-- 显示局部地标、特征和下一步动作。 -->
+</section><!-- 结束有限元认知地图区。 -->
+<section><!-- 创建点云入口区。 -->
+<h2>点云入口</h2><!-- 显示点云标题。 -->
+<input id="pointCloudFile" type="file" accept=".xyz,.csv,.txt"><!-- 选择 XYZ 或 CSV 点云。 -->
+<div class="inline-fields"><!-- 创建点云参数行。 -->
+<label>eps<input id="pointCloudEps" type="number" value="0.6" step="0.05"></label><!-- 设置 DBSCAN 邻域半径。 -->
+<label>voxel<input id="pointCloudVoxel" type="number" value="0.2" step="0.05"></label><!-- 设置体素降采样尺寸。 -->
+</div><!-- 结束点云参数行。 -->
+<button id="pointCloudButton" class="secondary full">导入并生成 BSDL</button><!-- 执行点云导入。 -->
+</section><!-- 结束点云入口区。 -->
+<section class="scroll-section"><!-- 创建修订历史区。 -->
+<h2>修订 V1…Vn</h2><!-- 显示修订标题。 -->
+<div id="revisionList" class="list"></div><!-- 显示修订列表。 -->
+</section><!-- 结束修订历史区。 -->
+<section class="scroll-section"><!-- 创建试算任务区。 -->
+<h2>快速试算任务</h2><!-- 显示运行标题。 -->
+<div id="runList" class="list"></div><!-- 显示运行列表。 -->
+<canvas id="runChart" class="mini-chart"></canvas><!-- 绘制历次试算指标变化。 -->
+</section><!-- 结束试算任务区。 -->
+<section class="scroll-section"><!-- 创建经验库区。 -->
+<h2>局部经验库</h2><!-- 显示经验库标题。 -->
+<div id="experienceList" class="list"></div><!-- 显示结构特征—修订动作—结果经验。 -->
+</section><!-- 结束经验库区。 -->
+<section><!-- 创建提示和策略模板区。 -->
+<h2>知识与提示模板</h2><!-- 显示模板标题。 -->
+<select id="templateKind" class="full-control"><option value="structure_questionnaire">结构问卷</option><option value="mesh_strategy">网格策略</option><option value="experience_summary">经验摘要</option><option value="memory_policy">经验读回策略</option></select><!-- 选择模板类别。 -->
+<input id="templateId" class="full-control" value="template.custom" placeholder="template.id"><!-- 输入模板稳定 ID。 -->
+<input id="templateName" class="full-control" value="自定义模板" placeholder="模板名称"><!-- 输入模板显示名称。 -->
+<textarea id="templateBody" class="template-editor" spellcheck="false">{}</textarea><!-- 编辑结构化模板正文。 -->
+<label class="check-row"><input id="templateDefault" type="checkbox">设为同类默认模板</label><!-- 控制默认模板状态。 -->
+<button id="saveTemplateButton" class="secondary full">保存模板新版本</button><!-- 保存模板版本。 -->
+<div id="templateList" class="list compact-list"></div><!-- 显示模板版本列表。 -->
+</section><!-- 结束提示和策略模板区。 -->
+<section><!-- 创建导出区。 -->
+<h2>确定性 Adapter</h2><!-- 显示导出标题。 -->
+<div class="button-grid"><!-- 创建导出按钮网格。 -->
+<button id="exportBsdlButton" class="secondary">导出 BSDL</button><!-- 导出规范化语言文件。 -->
+<button id="exportGmshButton" class="secondary">导出 Gmsh</button><!-- 导出 Gmsh GEO。 -->
+<button id="exportCalculixButton" class="secondary">导出 CalculiX</button><!-- 导出 CalculiX INP。 -->
+</div><!-- 结束导出按钮网格。 -->
+<div id="downloadArea"></div><!-- 显示导出文件下载入口。 -->
+</section><!-- 结束导出区。 -->
+<section><!-- 创建 CalculiX 工业求解区。 -->
+<h2>CalculiX 工业求解</h2><!-- 显示 CalculiX 标题。 -->
+<div id="calculixStatus" class="summary-card">尚未检测服务器 ccx。</div><!-- 显示求解器可用状态。 -->
+<div class="button-grid"><!-- 创建工业运行按钮网格。 -->
+<button id="calculixStatusButton" class="secondary">检测 ccx</button><!-- 检测服务器 CalculiX。 -->
+<button id="runCalculixButton">运行 CalculiX</button><!-- 导出、检查、执行并回写结果。 -->
+<button id="runCodeCheckButton" class="secondary">执行验算</button><!-- 执行项目规则包验算。 -->
+<button id="installButton" class="secondary" hidden>安装到桌面</button><!-- 显示浏览器 PWA 安装入口。 -->
+</div><!-- 结束工业运行按钮网格。 -->
+</section><!-- 结束 CalculiX 工业求解区。 -->
+<section><!-- 创建 IFC 4.3 导入区。 -->
+<h2>IFC 4.3 / 项目 MVD</h2><!-- 显示 IFC 导入标题。 -->
+<input id="ifcFile" type="file" accept=".ifc,.ifczip,.ifcxml"><!-- 选择 IFC 4.3 文件。 -->
+<button id="ifcImportButton" class="secondary full">导入 IFC 并检查 MVD</button><!-- 执行 IFC 身份和几何映射。 -->
+</section><!-- 结束 IFC 导入区。 -->
+</aside><!-- 结束左侧项目治理面板。 -->
+<section class="scene-panel"><!-- 创建三维结构主视图。 -->
+<canvas id="sceneCanvas"></canvas><!-- 提供无外部依赖的三维画布。 -->
+<div class="scene-overlay top-left"><!-- 创建视图状态叠层。 -->
+<div id="sceneTitle">尚未载入项目</div><!-- 显示当前项目和修订。 -->
+<div id="selectionBadge">未选择对象</div><!-- 显示当前选择对象。 -->
+</div><!-- 结束视图状态叠层。 -->
+<div class="scene-overlay top-right legend"><!-- 创建区域来源图例。 -->
+<span><i class="agent-dot"></i>Agent</span><!-- 显示 Agent 区域标识。 -->
+<span><i class="human-dot"></i>人工</span><!-- 显示人工区域标识。 -->
+<span><i class="fea-dot"></i>FEA</span><!-- 显示 FEA 区域标识。 -->
+<span><i class="import-dot"></i>导入</span><!-- 显示导入区域标识。 -->
+</div><!-- 结束区域来源图例。 -->
+<div id="metricStrip" class="metric-strip"></div><!-- 显示网格和求解核心指标。 -->
+<div class="scene-help">鼠标拖动或单指旋转 · 滚轮或双指缩放 · 双指平移 · 点击选中 · 长按打开对象</div><!-- 显示桌面与触屏交互提示。 -->
+</section><!-- 结束三维结构主视图。 -->
+<aside id="rightPanel" class="panel right-panel"><!-- 创建右侧属性与 JSON 面板。 -->
+<div class="mobile-panel-header"><strong>对象与 BSDL</strong><button id="closeRightPanelButton" class="tiny secondary" aria-label="关闭对象面板">关闭</button></div><!-- 创建手机端右侧面板标题栏。 -->
+<section><!-- 创建选择对象属性区。 -->
+<h2>对象属性</h2><!-- 显示属性标题。 -->
+<div id="objectEditor" class="editor empty">在三维视图中选择构件、节点或区域。</div><!-- 显示动态对象编辑器。 -->
+</section><!-- 结束选择对象属性区。 -->
+<section class="json-section"><!-- 创建对象 JSON 区。 -->
+<div class="section-title-row"><h2>选中对象 JSON</h2><button id="copyObjectButton" class="tiny secondary">复制</button></div><!-- 显示 JSON 标题和复制按钮。 -->
+<pre id="objectJson" class="json-view">{}</pre><!-- 显示选中对象 JSON。 -->
+</section><!-- 结束对象 JSON 区。 -->
+<section class="document-section"><!-- 创建全文 JSON 编辑区。 -->
+<div class="section-title-row"><h2>完整 BSDL 文档</h2><button id="applyDocumentButton" class="tiny secondary">应用全文</button></div><!-- 显示全文编辑标题与应用按钮。 -->
+<textarea id="documentJson" spellcheck="false"></textarea><!-- 提供完整 BSDL JSON 编辑器。 -->
+</section><!-- 结束全文 JSON 编辑区。 -->
+<section class="log-section"><!-- 创建执行日志区。 -->
+<h2>执行日志</h2><!-- 显示日志标题。 -->
+<div id="logView" class="log-view"></div><!-- 显示验证、策略、求解和版本日志。 -->
+</section><!-- 结束执行日志区。 -->
+</aside><!-- 结束右侧属性与 JSON 面板。 -->
+</main><!-- 结束三栏工作区。 -->
+<div id="mobileBackdrop" class="mobile-backdrop" hidden></div><!-- 创建手机侧栏遮罩。 -->
+<nav class="mobile-action-bar" aria-label="手机快捷操作"><!-- 创建手机底部快捷操作栏。 -->
+<button id="mobileProjectAction" class="secondary">项目</button><!-- 打开项目和版本面板。 -->
+<button id="mobileAgentAction">Agent</button><!-- 快速生成区域策略。 -->
+<button id="mobileSolveAction" class="secondary">预览</button><!-- 快速执行内置梁系预览。 -->
+<button id="mobileCalculixAction">CalculiX</button><!-- 快速发起工业求解。 -->
+<button id="mobileObjectAction" class="secondary">对象</button><!-- 打开对象和 BSDL 面板。 -->
+</nav><!-- 结束手机底部快捷操作栏。 -->
+<div id="offlineBanner" class="offline-banner" hidden>当前离线：可查看已缓存界面，求解和保存需要恢复网络。</div><!-- 显示离线状态。 -->
+<script src="/app.js"></script><!-- 加载本地交互逻辑。 -->
+</body><!-- 结束页面主体。 -->
+</html><!-- 结束 HTML 文档。 -->

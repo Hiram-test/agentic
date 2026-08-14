@@ -1,0 +1,178 @@
+{
+  "v2": {
+    "allocation": {
+      "expertId": "global_allocator",
+      "baseSize": 1.25,
+      "medianLength": 10.0,
+      "maxElements": 5000,
+      "activeComponentCount": 13,
+      "reason": [
+        "根据中位构件长度建立全局尺度",
+        "根据任务 maxElements 约束平均分段数量"
+      ]
+    },
+    "experts": [
+      {
+        "expertId": "support_joint",
+        "proposalCount": 10
+      },
+      {
+        "expertId": "discontinuity",
+        "proposalCount": 10
+      },
+      {
+        "expertId": "smooth_region",
+        "proposalCount": 4
+      },
+      {
+        "expertId": "human_override",
+        "proposalCount": 0
+      },
+      {
+        "expertId": "fea_hotspot",
+        "proposalCount": 0
+      }
+    ],
+    "fusion": {
+      "proposalCount": 24,
+      "fusedCount": 24,
+      "mergeCount": 0,
+      "bySource": {
+        "agent": 24,
+        "human": 0,
+        "fea": 0,
+        "imported": 0
+      },
+      "byType": {
+        "support": 4,
+        "joint": 6,
+        "discontinuity": 10,
+        "hotspot": 0,
+        "boundary": 0,
+        "user_defined": 0,
+        "smooth": 4
+      }
+    },
+    "preservedRegionCount": 0,
+    "generatedRegionCount": 24,
+    "finalRegionCount": 24,
+    "hotspotRegionCount": 0,
+    "feaFeedbackUsed": false,
+    "meshPolicyRef": "mesh.default",
+    "featureStats": {
+      "medianLength": 10.0,
+      "minimumLength": 6.0,
+      "maximumLength": 10.0,
+      "activeLineComponentCount": 13
+    }
+  },
+  "v3": {
+    "allocation": {
+      "expertId": "global_allocator",
+      "baseSize": 1.25,
+      "medianLength": 10.0,
+      "maxElements": 5000,
+      "activeComponentCount": 13,
+      "reason": [
+        "根据中位构件长度建立全局尺度",
+        "根据任务 maxElements 约束平均分段数量"
+      ]
+    },
+    "experts": [
+      {
+        "expertId": "support_joint",
+        "proposalCount": 10
+      },
+      {
+        "expertId": "discontinuity",
+        "proposalCount": 10
+      },
+      {
+        "expertId": "smooth_region",
+        "proposalCount": 4
+      },
+      {
+        "expertId": "human_override",
+        "proposalCount": 0
+      },
+      {
+        "expertId": "fea_hotspot",
+        "proposalCount": 12
+      }
+    ],
+    "fusion": {
+      "proposalCount": 36,
+      "fusedCount": 26,
+      "mergeCount": 10,
+      "bySource": {
+        "agent": 24,
+        "human": 0,
+        "fea": 2,
+        "imported": 0
+      },
+      "byType": {
+        "support": 4,
+        "joint": 6,
+        "discontinuity": 10,
+        "hotspot": 2,
+        "boundary": 0,
+        "user_defined": 0,
+        "smooth": 4
+      }
+    },
+    "preservedRegionCount": 0,
+    "generatedRegionCount": 26,
+    "finalRegionCount": 26,
+    "hotspotRegionCount": 2,
+    "feaFeedbackUsed": true,
+    "meshPolicyRef": "mesh.default",
+    "featureStats": {
+      "medianLength": 10.0,
+      "minimumLength": 6.0,
+      "maximumLength": 10.0,
+      "activeLineComponentCount": 13
+    }
+  },
+  "validation": {
+    "v2": {
+      "valid": true,
+      "level": "L4-valid",
+      "errors": [],
+      "warnings": [],
+      "issues": [],
+      "stats": {
+        "entities": 124,
+        "nodes": 10,
+        "components": 14,
+        "activeFrameComponents": 13,
+        "regions": 24,
+        "loads": 6,
+        "constrainedDofs": 14,
+        "validLoads": 6,
+        "coordinateSystems": 1,
+        "componentLengthMin": 6.0,
+        "componentLengthMax": 10.0
+      }
+    },
+    "v3": {
+      "valid": true,
+      "level": "L4-valid",
+      "errors": [],
+      "warnings": [],
+      "issues": [],
+      "stats": {
+        "entities": 131,
+        "nodes": 10,
+        "components": 14,
+        "activeFrameComponents": 13,
+        "regions": 26,
+        "loads": 6,
+        "constrainedDofs": 14,
+        "validLoads": 6,
+        "coordinateSystems": 1,
+        "componentLengthMin": 6.0,
+        "componentLengthMax": 10.0
+      }
+    }
+  }
+}

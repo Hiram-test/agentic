@@ -1,0 +1,139 @@
+:root { --bg: #071018; --panel: #0c1822; --panel2: #10212d; --line: #213746; --text: #e5f3f7; --muted: #86a2af; --accent: #35d0ba; --accent2: #64a7ff; --danger: #ff6b7a; --warning: #f4c95d; --agent: #45d5ff; --human: #ffb454; --fea: #ff5f93; --imported: #a98bff; } /* 定义界面主题变量。 */
+* { box-sizing: border-box; } /* 统一盒模型。 */
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--bg); color: var(--text); font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif; } /* 设置页面基础样式。 */
+body { background-image: radial-gradient(circle at 50% -20%, rgba(53, 208, 186, 0.13), transparent 42%), linear-gradient(180deg, #08131c 0%, #050b10 100%); } /* 添加轻量科技背景。 */
+button, select, input, textarea { font: inherit; } /* 继承统一字体。 */
+button { border: 1px solid rgba(53, 208, 186, 0.55); background: linear-gradient(180deg, rgba(53, 208, 186, 0.2), rgba(53, 208, 186, 0.08)); color: var(--text); border-radius: 7px; padding: 8px 11px; cursor: pointer; transition: 0.15s ease; } /* 设置主按钮样式。 */
+button:hover { transform: translateY(-1px); border-color: var(--accent); box-shadow: 0 0 18px rgba(53, 208, 186, 0.16); } /* 设置按钮悬停反馈。 */
+button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; } /* 设置禁用按钮状态。 */
+button.secondary { border-color: rgba(100, 167, 255, 0.35); background: rgba(100, 167, 255, 0.08); } /* 设置次级按钮样式。 */
+button.tiny { padding: 4px 8px; font-size: 11px; } /* 设置微型按钮。 */
+button.full { width: 100%; margin-top: 8px; } /* 设置全宽按钮。 */
+select, input { min-height: 34px; border: 1px solid var(--line); border-radius: 6px; color: var(--text); background: #09151e; padding: 6px 8px; } /* 设置表单控件样式。 */
+textarea { border: 1px solid var(--line); border-radius: 6px; color: #bee8f2; background: #061018; padding: 10px; resize: none; line-height: 1.45; font-family: "JetBrains Mono", Consolas, monospace; font-size: 11px; } /* 设置全文 JSON 编辑器。 */
+.topbar { height: 66px; display: flex; align-items: center; justify-content: space-between; padding: 0 18px; border-bottom: 1px solid var(--line); background: rgba(6, 15, 22, 0.93); backdrop-filter: blur(10px); } /* 设置顶部工具栏。 */
+.brand { display: flex; align-items: center; gap: 11px; min-width: 330px; } /* 设置品牌区布局。 */
+.brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid var(--accent); border-radius: 9px; color: var(--accent); font-weight: 800; letter-spacing: 1px; box-shadow: inset 0 0 18px rgba(53, 208, 186, 0.12), 0 0 18px rgba(53, 208, 186, 0.1); } /* 设置品牌标识。 */
+.brand h1 { margin: 0; font-size: 17px; letter-spacing: 0.4px; } /* 设置品牌标题。 */
+.brand p { margin: 3px 0 0; color: var(--muted); font-size: 11px; } /* 设置品牌副标题。 */
+.toolbar { display: flex; align-items: center; gap: 7px; } /* 设置顶部操作布局。 */
+.toolbar select { width: 250px; } /* 设置项目选择器宽度。 */
+.workspace { height: calc(100% - 66px); display: grid; grid-template-columns: 276px minmax(460px, 1fr) 370px; } /* 设置三栏主工作区。 */
+.panel { min-width: 0; overflow-y: auto; background: rgba(9, 20, 29, 0.95); } /* 设置侧边面板基础样式。 */
+.left-panel { border-right: 1px solid var(--line); } /* 设置左面板分隔线。 */
+.right-panel { border-left: 1px solid var(--line); } /* 设置右面板分隔线。 */
+.panel section { padding: 13px; border-bottom: 1px solid rgba(33, 55, 70, 0.75); } /* 设置侧边章节。 */
+h2 { margin: 0 0 10px; color: #d8edf3; font-size: 12px; text-transform: uppercase; letter-spacing: 0.9px; } /* 设置章节标题。 */
+.summary-card { border: 1px solid var(--line); border-radius: 8px; background: rgba(16, 33, 45, 0.65); padding: 10px; color: var(--muted); font-size: 12px; line-height: 1.55; } /* 设置项目摘要卡。 */
+.summary-card strong { color: var(--text); } /* 强调摘要字段。 */
+.button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 9px; } /* 设置双列按钮网格。 */
+.inline-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 7px; } /* 设置行内参数布局。 */
+.inline-fields label { color: var(--muted); font-size: 10px; display: grid; gap: 3px; } /* 设置参数标签。 */
+.inline-fields input { width: 100%; } /* 设置参数输入宽度。 */
+#pointCloudFile { width: 100%; padding: 5px; font-size: 11px; } /* 设置点云文件选择器。 */
+.scroll-section { max-height: 220px; overflow: hidden; } /* 限制历史列表区域高度。 */
+.list { max-height: 174px; overflow-y: auto; display: grid; gap: 5px; } /* 设置列表滚动区。 */
+.list-item { border: 1px solid rgba(33, 55, 70, 0.8); border-radius: 6px; padding: 7px 8px; background: rgba(7, 16, 24, 0.72); cursor: pointer; font-size: 11px; color: var(--muted); } /* 设置列表项样式。 */
+.list-item:hover { border-color: var(--accent2); color: var(--text); } /* 设置列表项悬停状态。 */
+.list-item.active { border-color: var(--accent); background: rgba(53, 208, 186, 0.1); color: var(--text); } /* 设置当前修订列表项。 */
+.list-item .row { display: flex; justify-content: space-between; gap: 8px; } /* 设置列表项标题行。 */
+.list-item small { display: block; margin-top: 3px; color: #607e8b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } /* 设置列表项次级文本。 */
+.status-succeeded { color: var(--accent); } /* 设置成功状态颜色。 */
+.status-failed { color: var(--danger); } /* 设置失败状态颜色。 */
+.status-running { color: var(--warning); } /* 设置运行中状态颜色。 */
+.scene-panel { position: relative; min-width: 0; overflow: hidden; background: radial-gradient(circle at 50% 46%, rgba(24, 53, 68, 0.42), rgba(3, 8, 12, 0.98) 68%); } /* 设置三维主视图背景。 */
+#sceneCanvas { width: 100%; height: 100%; display: block; cursor: crosshair; } /* 设置三维画布。 */
+.scene-overlay { position: absolute; z-index: 3; pointer-events: none; border: 1px solid rgba(53, 208, 186, 0.2); background: rgba(5, 14, 20, 0.68); backdrop-filter: blur(7px); border-radius: 7px; padding: 8px 10px; font-size: 11px; color: var(--muted); } /* 设置画布叠层。 */
+.top-left { top: 13px; left: 13px; } /* 定位左上叠层。 */
+.top-right { top: 13px; right: 13px; } /* 定位右上叠层。 */
+#sceneTitle { color: var(--text); font-weight: 650; margin-bottom: 3px; } /* 设置场景标题。 */
+#selectionBadge { color: var(--accent); } /* 设置选择对象标识。 */
+.legend { display: flex; gap: 10px; } /* 设置图例布局。 */
+.legend span { display: inline-flex; align-items: center; gap: 4px; } /* 设置图例条目。 */
+.legend i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; } /* 设置图例色点。 */
+.agent-dot { background: var(--agent); box-shadow: 0 0 8px var(--agent); } /* 设置 Agent 色点。 */
+.human-dot { background: var(--human); box-shadow: 0 0 8px var(--human); } /* 设置人工色点。 */
+.fea-dot { background: var(--fea); box-shadow: 0 0 8px var(--fea); } /* 设置 FEA 色点。 */
+.import-dot { background: var(--imported); box-shadow: 0 0 8px var(--imported); } /* 设置导入色点。 */
+.metric-strip { position: absolute; left: 50%; bottom: 38px; transform: translateX(-50%); display: flex; gap: 7px; z-index: 3; pointer-events: none; } /* 设置指标条位置。 */
+.metric { min-width: 100px; border: 1px solid rgba(100, 167, 255, 0.24); border-radius: 7px; background: rgba(5, 14, 20, 0.76); padding: 7px 10px; text-align: center; } /* 设置单个指标卡。 */
+.metric b { display: block; color: var(--text); font-size: 13px; } /* 设置指标值。 */
+.metric span { color: var(--muted); font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; } /* 设置指标名称。 */
+.scene-help { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); color: #56717d; font-size: 10px; z-index: 3; pointer-events: none; white-space: nowrap; } /* 设置画布帮助提示。 */
+.editor { border: 1px solid var(--line); border-radius: 7px; padding: 9px; background: rgba(6, 15, 22, 0.74); display: grid; gap: 7px; font-size: 11px; } /* 设置对象编辑器。 */
+.editor.empty { color: var(--muted); min-height: 54px; place-items: center; } /* 设置空编辑器状态。 */
+.editor label { color: var(--muted); display: grid; gap: 3px; } /* 设置编辑器标签。 */
+.editor input, .editor select { width: 100%; min-height: 30px; font-size: 11px; } /* 设置编辑器控件。 */
+.editor .triple { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; } /* 设置三分量输入布局。 */
+.editor .actions { display: flex; gap: 7px; justify-content: flex-end; } /* 设置编辑器操作区。 */
+.section-title-row { display: flex; align-items: center; justify-content: space-between; } /* 设置章节标题行。 */
+.json-section { max-height: 245px; } /* 限制对象 JSON 区高度。 */
+.json-view { max-height: 190px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: #061018; color: #b8dce6; padding: 9px; font-size: 10px; line-height: 1.42; white-space: pre-wrap; word-break: break-word; } /* 设置对象 JSON 视图。 */
+.document-section { height: 260px; display: flex; flex-direction: column; } /* 设置全文文档区高度。 */
+#documentJson { width: 100%; min-height: 200px; flex: 1; } /* 设置全文 JSON 编辑器尺寸。 */
+.log-section { min-height: 170px; } /* 设置日志区最小高度。 */
+.log-view { display: grid; gap: 5px; max-height: 220px; overflow-y: auto; } /* 设置日志滚动容器。 */
+.log-entry { border-left: 2px solid var(--accent2); background: rgba(6, 15, 22, 0.76); padding: 6px 8px; color: var(--muted); font-size: 10px; line-height: 1.45; white-space: pre-wrap; word-break: break-word; } /* 设置日志条目。 */
+.log-entry.error { border-left-color: var(--danger); color: #ffc1c8; } /* 设置错误日志。 */
+.log-entry.success { border-left-color: var(--accent); color: #b9f5e8; } /* 设置成功日志。 */
+#downloadArea { margin-top: 8px; font-size: 11px; } /* 设置下载区。 */
+#downloadArea a { color: var(--accent2); text-decoration: none; } /* 设置下载链接。 */
+@media (max-width: 1180px) { .workspace { grid-template-columns: 240px minmax(400px, 1fr) 330px; } .toolbar button { padding: 7px 8px; } .toolbar select { width: 190px; } } /* 适配中等宽度屏幕。 */
+.full-control { width: 100%; margin-top: 6px; } /* 设置模板表单控件为全宽。 */
+.access-label { display: grid; gap: 3px; color: var(--muted); font-size: 10px; } /* 设置生产 API 密钥标签布局。 */
+.access-status { margin-top: 8px; } /* 设置访问控制状态卡与按钮间距。 */
+.access-status.available { border-color: rgba(53, 208, 186, 0.72); color: #b9f5e8; } /* 设置访问控制可用状态。 */
+.access-status.unavailable { border-color: rgba(244, 201, 93, 0.58); color: #ffe9a8; } /* 设置访问控制待配置状态。 */
+.template-editor { width: 100%; height: 116px; margin-top: 6px; } /* 设置结构化模板编辑器尺寸。 */
+.check-row { display: flex; align-items: center; gap: 7px; margin-top: 7px; color: var(--muted); font-size: 10px; } /* 设置默认模板复选行。 */
+.check-row input { min-height: auto; } /* 避免复选框继承普通输入高度。 */
+.compact-list { margin-top: 8px; max-height: 128px; } /* 限制模板版本列表高度。 */
+.mini-chart { width: 100%; height: 96px; display: block; margin-top: 7px; border: 1px solid var(--line); border-radius: 6px; } /* 设置试算过程曲线画布。 */
+.mobile-top-actions { display: none; } /* 桌面端隐藏手机顶部侧栏按钮。 */
+.mobile-panel-header { display: none; } /* 桌面端隐藏手机侧栏标题栏。 */
+.mobile-action-bar { display: none; } /* 桌面端隐藏手机底部操作栏。 */
+.mobile-backdrop { display: none; } /* 桌面端隐藏侧栏遮罩。 */
+.offline-banner { position: fixed; left: 50%; bottom: 18px; z-index: 80; transform: translateX(-50%); max-width: calc(100vw - 32px); border: 1px solid var(--warning); border-radius: 8px; background: rgba(32, 25, 6, 0.96); color: #ffe9a8; padding: 9px 13px; font-size: 12px; } /* 设置离线状态提示。 */
+#sceneCanvas { touch-action: none; user-select: none; -webkit-user-select: none; } /* 禁止浏览器手势抢占三维触摸操作。 */
+#ifcFile { width: 100%; padding: 5px; font-size: 11px; } /* 设置 IFC 文件选择器。 */
+#calculixStatus.available { border-color: rgba(53, 208, 186, 0.72); color: #b9f5e8; } /* 设置 CalculiX 可用状态。 */
+#calculixStatus.unavailable { border-color: rgba(244, 201, 93, 0.58); color: #ffe9a8; } /* 设置 CalculiX 不可用状态。 */
+@media (max-width: 900px) { /* 开始手机和平板窄屏布局。 */
+    html, body { min-height: 100%; height: 100%; overflow: hidden; } /* 固定移动视口并避免页面整体滚动。 */
+    .topbar { height: 58px; padding: max(7px, env(safe-area-inset-top)) 10px 7px; gap: 8px; } /* 适配移动顶部和刘海安全区。 */
+    .brand { min-width: 0; flex: 1; gap: 8px; } /* 压缩品牌区宽度。 */
+    .brand-mark { width: 34px; height: 34px; flex: 0 0 34px; } /* 缩小移动品牌标识。 */
+    .brand h1 { font-size: 14px; } /* 缩小移动标题。 */
+    .brand p { display: none; } /* 隐藏移动副标题以节省空间。 */
+    .mobile-top-actions { display: flex; gap: 6px; } /* 显示手机顶部侧栏按钮。 */
+    .mobile-top-actions button { min-width: 48px; min-height: 42px; padding: 6px 8px; } /* 提供可触摸按钮尺寸。 */
+    .toolbar { display: none; } /* 手机端把完整工具栏收纳到侧栏和底部。 */
+    .workspace { height: calc(100% - 58px - 62px - env(safe-area-inset-bottom)); display: block; } /* 让主视图占据移动可用空间。 */
+    .scene-panel { width: 100%; height: 100%; } /* 让三维场景填满主工作区。 */
+    .panel { position: fixed; top: 0; bottom: 0; z-index: 70; width: min(88vw, 390px); max-width: 390px; padding-top: env(safe-area-inset-top); box-shadow: 0 0 42px rgba(0, 0, 0, 0.52); transition: transform 0.22s ease; } /* 把侧栏转换成触屏抽屉。 */
+    .left-panel { left: 0; border-right: 1px solid var(--line); transform: translateX(-105%); } /* 默认隐藏左侧项目抽屉。 */
+    .right-panel { right: 0; left: auto; border-left: 1px solid var(--line); transform: translateX(105%); } /* 默认隐藏右侧对象抽屉。 */
+    body.mobile-left-open .left-panel { transform: translateX(0); } /* 打开左侧项目抽屉。 */
+    body.mobile-right-open .right-panel { transform: translateX(0); } /* 打开右侧对象抽屉。 */
+    .mobile-panel-header { position: sticky; top: 0; z-index: 4; display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 8px 12px; border-bottom: 1px solid var(--line); background: rgba(6, 15, 22, 0.98); } /* 显示移动侧栏标题和关闭按钮。 */
+    .mobile-panel-header button { min-height: 38px; } /* 提供侧栏关闭按钮触摸尺寸。 */
+    .panel section { padding: 14px 13px; } /* 增加移动面板内容留白。 */
+    .panel button, .panel select, .panel input { min-height: 44px; } /* 确保移动面板控件具备合理触摸尺寸。 */
+    .mobile-backdrop { position: fixed; inset: 0; z-index: 60; display: block; background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(2px); } /* 显示移动侧栏遮罩。 */
+    .mobile-action-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; min-height: calc(62px + env(safe-area-inset-bottom)); padding: 7px 7px calc(7px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: rgba(5, 13, 19, 0.97); backdrop-filter: blur(12px); } /* 显示手机底部快捷操作栏。 */
+    .mobile-action-bar button { min-width: 0; min-height: 46px; padding: 5px 2px; font-size: 10px; } /* 设置底部触屏按钮。 */
+    .top-left { top: 9px; left: 9px; max-width: calc(100% - 18px); } /* 调整移动场景标题位置。 */
+    .top-right { top: auto; right: 9px; bottom: 92px; display: grid; gap: 4px; } /* 把移动图例移到底部右侧。 */
+    .metric-strip { left: 8px; right: 8px; bottom: 54px; transform: none; gap: 5px; overflow-x: auto; justify-content: flex-start; } /* 让移动指标条可横向滚动。 */
+    .metric { min-width: 92px; padding: 6px 8px; } /* 缩小移动指标卡。 */
+    .scene-help { left: 9px; right: 9px; bottom: 10px; transform: none; white-space: normal; text-align: center; font-size: 9px; } /* 允许移动帮助文字换行。 */
+    .document-section { height: 360px; } /* 增加手机全文 JSON 编辑空间。 */
+    .json-section { max-height: 310px; } /* 增加手机对象 JSON 查看空间。 */
+    .offline-banner { bottom: calc(70px + env(safe-area-inset-bottom)); } /* 把离线提示放到底部操作栏上方。 */
+} /* 结束手机和平板窄屏布局。 */
+@media (max-width: 420px) { /* 开始小屏手机细化布局。 */
+    .panel { width: 94vw; } /* 扩大小屏抽屉可用宽度。 */
+    .legend { font-size: 9px; } /* 缩小小屏图例。 */
+    .top-left { font-size: 10px; } /* 缩小小屏场景标题。 */
+    .mobile-action-bar button { font-size: 9px; } /* 缩小小屏底部按钮文字。 */
+} /* 结束小屏手机细化布局。 */
