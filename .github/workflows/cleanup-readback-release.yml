@@ -1,0 +1,37 @@
+name: Clean BridgeMind readback release branch # 声明发布分支清理工作流名称。
+
+on: # 声明工作流触发条件。
+  push: # 在当前文件被提交时触发清理。
+    branches: # 限定触发分支。
+      - feature/bsdl-memory-readback-1.1.0 # 只清理经验读回链功能分支。
+    paths: # 限定触发路径。
+      - ".github/workflows/cleanup-readback-release.yml" # 只在清理工作流创建或修改时触发。
+  workflow_dispatch: # 允许从 GitHub 页面手动触发。
+
+permissions: # 声明 GitHub Token 权限。
+  contents: write # 允许提交清理结果。
+
+jobs: # 声明任务集合。
+  cleanup: # 定义清理和回写任务。
+    if: github.actor != 'github-actions[bot]' # 阻止机器人提交再次执行工作流。
+    runs-on: ubuntu-latest # 使用 GitHub 托管 Ubuntu 环境。
+    steps: # 声明线性执行步骤。
+      - name: Checkout release branch # 检出当前功能分支。
+        uses: actions/checkout@v4 # 使用官方检出动作。
+        with: # 配置检出行为。
+          fetch-depth: 0 # 获取完整历史以便回写。
+
+      - name: Remove build-only files # 删除源码展开目录、临时补丁和一次性工作流。
+        shell: bash # 明确使用 Bash 执行。
+        run: | # 执行清理命令。
+          set -euo pipefail # 任一命令失败时立即终止。
+          rm -rf BridgeMind_CalculiX_Web_Industrial_1.1.0 # 删除仅用于 CI 重建的展开源码目录。
+          rm -f readback.patch # 删除解压后的临时补丁。
+          rm -f readback_patch.b64 # 删除拼接后的临时 Base64 文件。
+          rm -f readback_patch.xz # 删除临时 xz 补丁文件。
+          rm -rf .github # 删除已经完成使命的一次性工作流目录。
+          git config user.name "github-actions[bot]" # 设置机器人提交者名称。
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com" # 设置机器人提交者邮箱。
+          git add -A # 暂存全部清理结果。
+          git commit -m "chore: keep only verified BridgeMind release artifacts" # 创建清洁发布提交。
+          git push origin "HEAD:${GITHUB_REF_NAME}" # 推送到当前功能分支。
