@@ -1,7 +1,0 @@
-BridgeMind Studio 1.1.0 source checks
-python_compileall=PASS
-javascript_web_app=PASS
-javascript_service_worker=PASS
-pytest=30 passed, 0 failed
-self_check=8 passed, 0 failed
-memory_readback=4 matched regions, 4 applied regions, needs_review enforced
