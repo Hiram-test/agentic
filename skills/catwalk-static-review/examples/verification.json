@@ -30,5 +30,8 @@
   "report_style_version": "1.1.0",
   "embedded_word_fonts": 4,
   "missing_pdf_glyphs": 0,
-  "six_case_numeric_summaries_unchanged": true
+  "six_case_numeric_summaries_unchanged": true,
+  "word_rendered_pages": 17,
+  "word_blank_pages": false,
+  "word_toc_visible": true
 }

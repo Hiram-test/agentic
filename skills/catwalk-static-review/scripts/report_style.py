@@ -56,9 +56,10 @@ class PDF(BaseDocTemplate):
         if d.page>1:
             c.setStrokeColor(colors.black);c.setLineWidth(.5);c.line(69.5,H-56.1,554.3,H-56.1);c.line(69.5,H-768.7,554.3,H-768.7)
             c.setFont('ReportSong',8);c.drawString(LEFT,61,'猫道及门架承重索静力复核 / P1—P6 六工况')
+    def beforeDocument(self):self.toc_entries=[]
     def afterFlowable(self,f):
         if isinstance(f,Paragraph) and f.style.name in ('H1','H2'):
-            self.notify('TOCEntry',(0 if f.style.name=='H1' else 1,f.getPlainText(),self.page))
+            entry=(0 if f.style.name=='H1' else 1,f.getPlainText(),self.page);self.toc_entries.append(entry);self.notify('TOCEntry',entry)
 
 def setfont(run,cn='宋体',size=12,bold=False):
     run.font.name='Times New Roman';run.font.size=Pt(size);run.bold=bold
@@ -168,7 +169,30 @@ class Writer:
         p=self.doc.add_paragraph();p.alignment=1;p.paragraph_format.first_line_indent=Pt(0);setfont(p.add_run(cap),size=10.5)
         style=ParagraphStyle('FigureCaption',parent=self.caption,keepWithNext=False,spaceAfter=10)
         self.story.append(KeepTogether([Image(str(path),width=WIDTH,height=WIDTH*3.8/12),Paragraph(rich(cap),style)]))
-    def page(self):self.doc.add_page_break();self.story.append(PageBreak())
+    def page(self):
+        from docx.enum.text import WD_BREAK
+        p=self.doc.add_paragraph();p.paragraph_format.line_spacing=Pt(1);p.paragraph_format.space_before=Pt(0);p.paragraph_format.space_after=Pt(0);p.paragraph_format.first_line_indent=Pt(0)
+        r=p.add_run();r.font.size=Pt(1);r.add_break(WD_BREAK.PAGE);self.story.append(PageBreak())
+    def fill_word_toc(self,entries):
+        from docx.text.paragraph import Paragraph as DocParagraph
+        from docx.enum.text import WD_TAB_ALIGNMENT,WD_TAB_LEADER
+        target=None
+        for p in self.doc.paragraphs:
+            if any('TOC ' in x.get(qn('w:instr'),'') for x in p._p.iter(qn('w:fldSimple'))):target=p;break
+        if target is None:return
+        target.clear();r=target.add_run();beg=OxmlElement('w:fldChar');beg.set(qn('w:fldCharType'),'begin');r._r.append(beg)
+        instruction=OxmlElement('w:instrText');instruction.set(qn('xml:space'),'preserve');instruction.text=' TOC \\o "1-2" \\h \\z \\u ';r._r.append(instruction)
+        sep=OxmlElement('w:fldChar');sep.set(qn('w:fldCharType'),'separate');r._r.append(sep)
+        current=target
+        for i,(level,text,page) in enumerate(entries):
+            if i:
+                node=OxmlElement('w:p');current._p.addnext(node);current=DocParagraph(node,target._parent)
+            current.paragraph_format.first_line_indent=Pt(0);current.paragraph_format.left_indent=Pt(level*10.5);current.paragraph_format.line_spacing=Pt(15.6);current.paragraph_format.space_before=Pt(6 if level==0 else 0);current.paragraph_format.space_after=Pt(0)
+            current.paragraph_format.tab_stops.add_tab_stop(Pt(WIDTH-level*10.5),WD_TAB_ALIGNMENT.RIGHT,WD_TAB_LEADER.DOTS)
+            setfont(current.add_run(text+'\t'+str(page)),size=10)
+        end=OxmlElement('w:fldChar');end.set(qn('w:fldCharType'),'end');current.add_run()._r.append(end)
+        update=OxmlElement('w:updateFields');update.set(qn('w:val'),'true');self.doc.settings.element.append(update)
+
     def embed_word_fonts(self):
         from docx.opc.part import Part
         from docx.opc.packuri import PackURI
@@ -189,5 +213,6 @@ class Writer:
         fontpart._blob=etree.tostring(tree,xml_declaration=True,encoding='UTF-8',standalone=True)
         self.doc.settings.element.append(OxmlElement('w:embedTrueTypeFonts'))
     def save(self):
-        self.embed_word_fonts()
-        self.doc.save(self.out/'catwalk_static_review.docx');PDF(self.out/'catwalk_static_review.pdf').multiBuild(self.story,canvasmaker=NumberedCanvas)
+        pdf=PDF(self.out/'catwalk_static_review.pdf');pdf.multiBuild(self.story,canvasmaker=NumberedCanvas)
+        self.fill_word_toc(pdf.toc_entries);self.embed_word_fonts()
+        self.doc.save(self.out/'catwalk_static_review.docx')
