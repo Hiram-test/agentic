@@ -26,5 +26,9 @@
   "notes": [
     "Original input warnings retained: default static time parameters; P3/P6 N_THERM upper bound truncated.",
     "Example run contains paths of the verification environment; package scripts themselves use relative asset resolution."
-  ]
+  ],
+  "report_style_version": "1.1.0",
+  "embedded_word_fonts": 4,
+  "missing_pdf_glyphs": 0,
+  "six_case_numeric_summaries_unchanged": true
 }

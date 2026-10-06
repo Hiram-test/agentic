@@ -101,3 +101,7 @@ Windows 路径、替代求解器、依赖、报错处理详见 01-execution。�
 ## 6. 扩展与变更
 
 本 Skill 默认 **原件复算**，不是自动优化/校准工具。需要新网格、新截面、新荷载或三维模型时，另建派生输入和新的来源清单；保留原基准。Gmsh 的 `--subdivisions 2` 可生成候选加密网格，但不自动迁移初应力、节点荷载、边界或输出分析 INP；不得将它作为已完成的加密求解。转换工作清单和验证要求见 03-gmsh。
+
+## 7. 报告字体与样式是固定要求
+
+严格使用 `report_style.py` 和 `assets/reference/report_style.json`，宋体正文12磅、黑体标题、Times New Roman数字、白底细线四跨验算表。字体文件随包携带并嵌入PDF/Word；不得退回STSong-Light、通用无衬线字体或自创彩色报告模板。详见06-report。

@@ -17,3 +17,5 @@ python scripts/run.py --out /absolute/path/to/new-run
 测试：`python -m unittest discover -s tests -v`。只重新排版已有完成结果：`python scripts/rebuild_report.py --run /path/to/completed-run`。
 
 本版默认保留原件计算，不更改网格或物理定义以拟合结果。Gmsh加密选项只输出候选网格，尚未包含新网格的物理卡片迁移，见[网格文档](references/03-gmsh.md)。
+
+1.1.0：字体、字号、封面、页码、四跨验算表及云图按用户原报告重新排版；PDF和Word均嵌入宋体、黑体及Times New Roman。六工况数值结果保持不变。

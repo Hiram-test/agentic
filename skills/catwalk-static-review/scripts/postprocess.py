@@ -33,13 +33,26 @@ def plot(path,m,u,values,title,units,elements=None,deformation=0,diverging=False
     es=elements or sorted(m['elements']);segments=[];colors=[]
     for e in es:
         ns=m['elements'][e]['nodes'];segments.append([[(m['nodes'][n][0]+deformation*u[n][0])/1000,(m['nodes'][n][2]+deformation*u[n][2])/1000] for n in ns]);colors.append(values[e])
-    fig,ax=plt.subplots(figsize=(12,3.8));cmap='coolwarm' if diverging else 'turbo'
-    lc=LineCollection(segments,array=np.asarray(colors),cmap=cmap,linewidths=1.5)
-    if diverging:
-        v=max(abs(min(colors)),abs(max(colors)),1e-12);lc.set_clim(-v,v)
-    ax.add_collection(lc);ax.autoscale();ax.set_xlabel('X (m)');ax.set_ylabel('Z (m)')
-    ax.set_title(title+f'\nX-Z projection; deformation scale={deformation}; axes scaled independently',fontsize=10)
-    fig.colorbar(lc,ax=ax,label=units,pad=.015);ax.grid(alpha=.2);fig.tight_layout();fig.savefig(path,dpi=170);plt.close(fig)
+    from matplotlib.font_manager import FontProperties
+    from matplotlib.colors import BoundaryNorm
+    font=FontProperties(fname=str(Path(__file__).resolve().parents[1]/'assets/fonts/simsun.ttf'))
+    fig,ax=plt.subplots(figsize=(12,3.8));fig.subplots_adjust(left=.025,right=.88,top=.91,bottom=.10)
+    vals=np.asarray(colors);lo=float(vals.min());hi=float(vals.max())
+    if diverging: hi=max(abs(lo),abs(hi),1e-12);lo=-hi
+    if hi-lo<1e-12:hi=lo+1
+    bounds=np.linspace(lo,hi,13);cmap=plt.get_cmap('jet',12)
+    lc=LineCollection(segments,array=vals,cmap=cmap,norm=BoundaryNorm(bounds,12),linewidths=1.05)
+    ax.add_collection(lc);ax.autoscale();ax.margins(x=.025,y=.30);ax.axis('off')
+    cb=fig.colorbar(lc,ax=ax,fraction=.027,pad=.035,spacing='uniform',ticks=bounds[::2],drawedges=True)
+    cb.ax.set_title(units,fontproperties=font,fontsize=15,pad=10);cb.ax.tick_params(labelsize=13,length=2)
+    ix=int(np.argmax(np.abs(vals))) if diverging else int(np.argmax(vals));seg=segments[ix]
+    xy=np.mean(seg,axis=0);ax.plot(*xy,'o',color='#c13a3a',markersize=2)
+    label=('最大绝对值' if diverging else '最大值')+f'：{vals[ix]:.3f}'
+    left,right=ax.get_xlim();ha='left' if xy[0]<left+.2*(right-left) else 'right' if xy[0]>right-.2*(right-left) else 'center'
+    ax.annotate(label,xy,xytext=(0,16),textcoords='offset points',color='#b54b4b',fontproperties=font,fontsize=16,ha=ha,arrowprops={'arrowstyle':'-','color':'#b54b4b','lw':.4})
+    note=f'X–Z投影；线形显示倍率 {deformation:g}；纵横比例独立；' + ('线段平均位移' if units=='mm' else '线单元结果')
+    fig.text(.03,.018,note,fontproperties=font,fontsize=12,color='#555555')
+    fig.savefig(path,dpi=200,facecolor='white');plt.close(fig)
 
 def process(folder,m,case,reference,groups):
     folder=Path(folder);t,u,s=dat_results(folder/'job.dat')
@@ -78,7 +91,7 @@ def process(folder,m,case,reference,groups):
         plot(folder/f'{name}.png',m,u,values,f'{case}: {name} (line colour = endpoint mean)',unit,diverging=div)
     for sec,label in [('E_SEC1','bottom'),('E_SEC2','portal')]:
         for key,unit in [('N_kN','kN'),('sigma_axial_MPa','MPa')]:
-            plot(folder/f'{label}_{key}.png',m,u,{e:v[key] for e,v in force.items()},f'{case}: {label} cable {key}',unit,m['sets'][sec])
+            plot(folder/f'{label}_{key}.png',m,u,{e:v[key] for e,v in force.items()},f'{case}: {label} cable {key}',unit,sorted({e for name,ids in groups.items() if name.startswith('门架索')==(label=='portal') for e in ids}))
     # Separate actual 1x deformed geometry export in the PNG; authoritative values remain in nodes.csv.
     plot(folder/'deformed_1x.png',m,u,{e:0 for e in m['elements']},f'{case}: deformed centreline','geometry only',deformation=1)
     return row

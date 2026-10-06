@@ -1,86 +1,20 @@
-"""Generate matching Chinese DOCX and PDF from computed results, never fixed success prose."""
+"""Report content; typography is measured from the user-provided source PDF."""
 from pathlib import Path
 from datetime import datetime,timezone
-from xml.sax.saxutils import escape
-import json
-from docx import Document
-from docx.shared import Cm, Pt
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.cidfonts import UnicodeCIDFont
-from reportlab.lib import colors
 from reportlab.lib.styles import ParagraphStyle
-from reportlab.lib.enums import TA_CENTER
-from reportlab.lib.pagesizes import A4
-from reportlab.platypus import (BaseDocTemplate,PageTemplate,Frame,Paragraph,Spacer,PageBreak,Table,TableStyle,Image)
 from reportlab.platypus.tableofcontents import TableOfContents
-
-class PDF(BaseDocTemplate):
-    def __init__(self,path):
-        super().__init__(str(path),pagesize=A4,leftMargin=48,rightMargin=48,topMargin=52,bottomMargin=48)
-        self.addPageTemplates(PageTemplate(id='normal',frames=Frame(48,48,A4[0]-96,A4[1]-100,id='body'),onPage=self.decorate))
-    def decorate(self,c,d):
-        c.setFont('STSong-Light',8);c.setStrokeColor(colors.grey)
-        if d.page>1:
-            c.drawString(48,A4[1]-30,'张靖皋长江大桥南航道桥｜猫道静力复算报告')
-            c.line(48,A4[1]-37,A4[0]-48,A4[1]-37)
-        c.line(48,36,A4[0]-48,36);c.drawString(48,24,'自动生成复算文件 · 依据原始 INP 与实际求解结果')
-        c.drawRightString(A4[0]-48,24,f'{d.page:03d}')
-    def afterFlowable(self,f):
-        if isinstance(f,Paragraph) and f.style.name in ('H1','H2'):
-            self.notify('TOCEntry',(0 if f.style.name=='H1' else 1,f.getPlainText(),self.page))
-
-class Writer:
-    def __init__(self,out):
-        self.out=Path(out);self.doc=Document();self.story=[]
-        pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))
-        self.normal=ParagraphStyle('Body',fontName='STSong-Light',fontSize=10,leading=17,spaceAfter=7,wordWrap='CJK')
-        self.cell=ParagraphStyle('Cell',parent=self.normal,fontSize=8,leading=11,spaceAfter=0)
-        self.head={i:ParagraphStyle(f'H{i}',parent=self.normal,fontSize=16 if i==1 else 12,leading=23 if i==1 else 18,spaceBefore=12,spaceAfter=10,keepWithNext=True) for i in (1,2,3)}
-        sec=self.doc.sections[0];sec.page_width=Cm(21);sec.page_height=Cm(29.7);sec.top_margin=Cm(2);sec.bottom_margin=Cm(2);sec.left_margin=Cm(1.8);sec.right_margin=Cm(1.8)
-        for name in ['Normal','Heading 1','Heading 2','Heading 3']:
-            sty=self.doc.styles[name];sty.font.name='SimSun';sty._element.rPr.rFonts.set(qn('w:eastAsia'),'宋体');sty.font.size=Pt(10.5 if name=='Normal' else 14)
-        sec.header.paragraphs[0].text='张靖皋长江大桥南航道桥｜猫道静力复算报告'
-        footer=sec.footer.paragraphs[0];footer.text='自动生成复算文件  |  '
-        field=OxmlElement('w:fldSimple');field.set(qn('w:instr'),'PAGE');footer._p.append(field)
-    def title(self,text):
-        p=self.doc.add_paragraph();p.alignment=1;r=p.add_run(text);r.bold=True;r.font.size=Pt(20)
-        style=ParagraphStyle('TitleNoTOC',parent=self.normal,fontSize=20,leading=30,spaceAfter=20,alignment=TA_CENTER)
-        self.story.append(Paragraph(escape(text),style))
-    def p(self,text):
-        self.doc.add_paragraph(str(text));self.story.append(Paragraph(escape(str(text)).replace('\n','<br/>'),self.normal))
-    def h(self,text,level=1):
-        self.doc.add_heading(text,level);self.story.append(Paragraph(escape(text),self.head[level]))
-    def table(self,headers,rows,widths=None):
-        t=self.doc.add_table(rows=1,cols=len(headers));t.style='Table Grid'
-        for c,s in zip(t.rows[0].cells,headers):c.text=str(s)
-        header=OxmlElement('w:tblHeader');t.rows[0]._tr.get_or_add_trPr().append(header)
-        for row in rows:
-            for c,s in zip(t.add_row().cells,row):c.text=str(s)
-        data=[[Paragraph(escape(str(x)),self.cell) for x in row] for row in [headers]+rows]
-        tab=Table(data,colWidths=widths or [(A4[0]-108)/len(headers)]*len(headers),repeatRows=1,hAlign='CENTER')
-        tab.setStyle(TableStyle([('GRID',(0,0),(-1,-1),.4,colors.grey),('BACKGROUND',(0,0),(-1,0),colors.HexColor('#eeeeee')),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('TOPPADDING',(0,0),(-1,-1),5),('BOTTOMPADDING',(0,0),(-1,-1),5)]));self.story.extend([tab,Spacer(1,10)])
-    def image(self,path,caption):
-        self.doc.add_picture(str(path),width=Cm(17));self.doc.add_paragraph(caption)
-        self.story.append(Image(str(path),width=A4[0]-108,height=(A4[0]-108)*3.8/12));self.p(caption)
-    def page(self):self.doc.add_page_break();self.story.append(PageBreak())
-    def save(self):
-        self.doc.save(self.out/'catwalk_static_review.docx');PDF(self.out/'catwalk_static_review.pdf').multiBuild(self.story)
+from report_style import Writer, W, H, WIDTH
+A4=(W,H)
 
 def generate(out,run,models,rows,bench):
     out=Path(out);w=Writer(out)
-    w.story.append(Spacer(1,100));w.title('张靖皋长江大桥南航道桥')
-    w.title('猫道结构静力复算报告');w.p('——六工况二维等效模型专项复核——')
-    w.p('输入版本：catwalk-static-20260826；计算标识：'+run['run_id'])
-    w.p('报告日期：'+datetime.now(timezone.utc).strftime('%Y年%m月%d日（UTC）'))
-    w.p('编制：AI 辅助计算流程；复核 / 审核：待签署。')
-    w.p('格式参照用户提供的《猫道结构复核计算报告0324.pdf》。本文件不沿用原编制单位署名，也不代表原报告修订版。')
-    w.p('本次范围：猫道及门架承重索整体索系六工况静力、位移与索力对照。')
+    w.cover(run)
     w.page();w.title('目 录')
-    toc=TableOfContents();toc.levelStyles=[ParagraphStyle('T0',fontName='STSong-Light',fontSize=11,leading=20),ParagraphStyle('T1',fontName='STSong-Light',fontSize=9,leading=16,leftIndent=16)];w.story.append(toc)
+    toc=TableOfContents();toc.levelStyles=[ParagraphStyle('T0',fontName='ReportSong',fontSize=10,leading=21),ParagraphStyle('T1',fontName='ReportSong',fontSize=10,leading=15.6,leftIndent=16)];w.story.append(toc)
     fld=OxmlElement('w:fldSimple');fld.set(qn('w:instr'),'TOC \\o "1-2" \\h \\z \\u');w.doc.add_paragraph()._p.append(fld)
-    w.doc.add_paragraph('Word 中按 Ctrl+A、F9 更新目录；PDF 目录已自动生成。');w.page()
+    w.page()
     w.h('第 1 章 工程概况');w.h('1.1 工程概况',2)
     w.p('依据原报告第4页：南航道桥主跨2300 m，主缆跨径660+2300+1220 m；猫道为四跨连续体系，左右幅间距42.9 m。当前输入是二维 MCT 等效整体索系，不能从其结果推断双幅横向联结、抗风扭转或局部板件强度。')
     w.h('1.2 依据性文件',2)
@@ -125,6 +59,7 @@ def generate(out,run,models,rows,bench):
     w.p('门架承重索为E_SEC2杆单元，与E_SEC3的B31门架等效杆件不同。下表仅验算承重索，不代表B31连接构件应力或稳定性通过。')
     add_forces(w,rows,'portal')
     w.h('2.6 后处理云图与数据解释',2)
+    w.p('轴力与应力云图采用与验算表一致的八个跨段分组；完整单元数据保存在CSV/VTU，未分组连接段不纳入四跨表统计。')
     w.p('线单元云图沿杆件着色；颜色不是实体截面应力云图。位移图使用端点均值着色，最大值以节点数据表为准。坐标显示单位m，位移mm、索力kN、应力MPa。横纵轴独立缩放并已标注，云图不是几何等比例照片。')
     w.p('索力恢复：末步每积分点全局Cauchy应力先取平均，沿变形后单元弦线投影，N=σaxial×A0。A0为原截面面积，是与既有复核保持一致的恢复约定，不声称严格等于所有求解器定义的当前截面真实轴力。未请求的B31应力在VTU中用NaN及有效性标记表示。')
     for r in rows:
@@ -144,4 +79,4 @@ def generate(out,run,models,rows,bench):
     w.save()
 
 def add_forces(w,rows,typ):
-    w.table(['工况/跨','本次/kN','报告/kN','差/%','K','要求','判定'],[[r['case']+'/'+s['span'],f"{s['N_kN']:.2f}",f"{s['report_kN']:.0f}",f"{s['error_percent']:.3f}",f"{s['safety_factor']:.3f}",s['required_factor'],'满足' if s['meets_report_factor'] else '不满足'] for r in rows for s in r['span_forces'] if s['type']==typ])
+    w.strength_table(rows,typ)

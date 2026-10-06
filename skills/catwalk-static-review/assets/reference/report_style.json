@@ -1,0 +1,42 @@
+{
+  "measured_from": "original_review_0324.pdf",
+  "page_pt": [
+    595.32,
+    842.04
+  ],
+  "body": {
+    "chinese_font": "SimSun",
+    "latin_font": "Times New Roman",
+    "font_size_pt": 12,
+    "line_pitch_pt": 23.4,
+    "first_line_indent_pt": 24
+  },
+  "cover": {
+    "font": "SimHei",
+    "title_sizes_pt": [
+      42,
+      36
+    ]
+  },
+  "headings": {
+    "font": "SimHei",
+    "sizes_pt": [
+      16,
+      14,
+      12
+    ]
+  },
+  "tables": {
+    "font_size_pt": 10.5,
+    "borders_pt": 0.4,
+    "background": "white",
+    "layout": "four span columns with merged load-case labels"
+  },
+  "margins_pt": {
+    "left": 70.87,
+    "right": 42.52
+  },
+  "rule_top_y_from_top_pt": 56.1,
+  "rule_bottom_y_from_top_pt": 768.7,
+  "footer_page_format": "000/000"
+}

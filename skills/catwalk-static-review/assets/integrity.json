@@ -1,4 +1,9 @@
 {
+  "assets/fonts/SOURCES.json": "c597cd90e16e5057f2bd9b43d83abb241bf353a9028d8998c04c22dce2bea270",
+  "assets/fonts/simhei.ttf": "336a838f4a78e150826be608dae69de59d50948c3d2b71760e096ae764154bdc",
+  "assets/fonts/simsun.ttf": "ca4da082cd970f0c8abaa79f213ddcbc475f7b5afabcb81b385998f9ebfbb53f",
+  "assets/fonts/times.ttf": "4e98adeff8ccc8ef4e3ece8d4547e288ff85fdc9c7ca711a4599c234874bbe86",
+  "assets/fonts/timesbd.ttf": "4357b63cef20c01661a53c5dae70ffd20cb4765503aaed6d38b17a57c5a90bff",
   "assets/inputs/migrate_P1.inp": "be533c5f3228aacf19aea4913b503c2c6fac6d6246f6e6ab7b1eba4720e630ae",
   "assets/inputs/migrate_P2.inp": "441f12d3abda82ede3038abf23df8bf13802a908dd2b52802d6651c5773c1593",
   "assets/inputs/migrate_P3.inp": "672749c99210c2ab3091651189d5c4cc2da7cc7066cd2aa29490c8e3c55a4050",
@@ -16,5 +21,6 @@
   "assets/reference/manifest.json": "0ad13e77602abdf8d4f7ead9730db219095016f8b8cc6a85e52769ca2ed00ecd",
   "assets/reference/original_review_0324.pdf": "8b2f0eb267216cd7d1e9746adb28f8973b4614d27fa1e2290eb12c2a6a45ca90",
   "assets/reference/original_review_text.txt": "213d2ca93ff294b93bc02713011750651301ce33a09377c2d0e74ad54da6e396",
+  "assets/reference/report_style.json": "dfe6128929a084d492ff1165aa0a39cef1b5c46d12a51d0e46a512f7fb360f08",
   "assets/reference/span_groups.json": "49b5dc15410bef6bcd5f533a807efb902fc3e638716309778bea66e0e8095714"
 }

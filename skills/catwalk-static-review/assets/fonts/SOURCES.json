@@ -1,0 +1,7 @@
+{
+  "style_source": "Original PDF: SimSun 12pt body; SimHei 42/36pt cover, 16/14pt headings; Times New Roman Latin; 10.5pt tables",
+  "simsun.ttf": "https://github.com/ryancheung/MonoGame.IMEHelper/blob/master/Fonts/simsun.ttf",
+  "simhei.ttf": "https://github.com/NVlabs/Eagle/blob/main/Eagle2_5/streamlit_demo/static/SimHei.ttf",
+  "times.ttf": "https://github.com/AllskyTeam/allsky/blob/master/config_repo/overlay/system_fonts/times.ttf",
+  "timesbd.ttf": "https://github.com/AllskyTeam/allsky/blob/master/config_repo/overlay/system_fonts/timesbd.ttf"
+}
