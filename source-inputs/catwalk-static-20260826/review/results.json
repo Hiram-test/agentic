@@ -1,0 +1,417 @@
+[
+  {
+    "case": 1,
+    "variant": "original",
+    "input_sha256": "be533c5f3228aacf19aea4913b503c2c6fac6d6246f6e6ab7b1eba4720e630ae",
+    "exit_code": 0,
+    "job_finished": true,
+    "umax_mm": 42.25864819934656,
+    "peak_node": 304,
+    "peak_displacement_mm": [
+      0.173994,
+      -1.522535e-15,
+      -42.25829
+    ],
+    "reference_umax_mm": 42.57771305336941,
+    "reference_peak_node": 304,
+    "relative_error_percent": -0.7493705770972525,
+    "force_comparison_to_mapdl": {
+      "n_compared": 1123,
+      "p50": 1.3080472901459605e-05,
+      "p95": 0.00012078609895670757,
+      "max": 0.0003163794398685856,
+      "worst_eid": 1058,
+      "named_1": {
+        "ccx_N": 15705132.084332483,
+        "table_N": 15706172.0
+      }
+    },
+    "cload_sums_N": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": -4725567.874
+      }
+    },
+    "span_force_comparison": [
+      {
+        "span": "北边跨",
+        "element_id": 153,
+        "ccx_kN": 11482.109516349365,
+        "report_kN": 11466.0,
+        "error_percent": 0.14049813665937272
+      },
+      {
+        "span": "主跨",
+        "element_id": 160,
+        "ccx_kN": 11027.958784603907,
+        "report_kN": 11005.0,
+        "error_percent": 0.20862139576471872
+      },
+      {
+        "span": "南边跨",
+        "element_id": 450,
+        "ccx_kN": 10944.123747750373,
+        "report_kN": 10928.0,
+        "error_percent": 0.14754527590019606
+      },
+      {
+        "span": "南辅跨",
+        "element_id": 608,
+        "ccx_kN": 10352.255159349865,
+        "report_kN": 10338.0,
+        "error_percent": 0.13789088169728902
+      }
+    ]
+  },
+  {
+    "case": 2,
+    "variant": "original",
+    "input_sha256": "441f12d3abda82ede3038abf23df8bf13802a908dd2b52802d6651c5773c1593",
+    "exit_code": 0,
+    "job_finished": true,
+    "umax_mm": 2662.041494459448,
+    "peak_node": 1176,
+    "peak_displacement_mm": [
+      17.49577,
+      -1.781946e-11,
+      -2661.984
+    ],
+    "reference_umax_mm": 2684.837902342347,
+    "reference_peak_node": 1176,
+    "relative_error_percent": -0.849079486810389,
+    "force_comparison_to_mapdl": {
+      "n_compared": 1123,
+      "p50": 0.0007020854437095463,
+      "p95": 0.005954584300036288,
+      "max": 0.01636454024296863,
+      "worst_eid": 1058,
+      "named_1": {
+        "ccx_N": 16743540.948129961,
+        "table_N": 16800788.0
+      }
+    },
+    "cload_sums_N": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": -4725567.874
+      },
+      "2": {
+        "1": 0,
+        "2": 0,
+        "3": -8069828.486
+      }
+    },
+    "span_force_comparison": [
+      {
+        "span": "北边跨",
+        "element_id": 153,
+        "ccx_kN": 12417.86425455611,
+        "report_kN": 12317.0,
+        "error_percent": 0.8189027730462817
+      },
+      {
+        "span": "主跨",
+        "element_id": 160,
+        "ccx_kN": 12623.693005086516,
+        "report_kN": 12624.0,
+        "error_percent": -0.0024318354997165947
+      },
+      {
+        "span": "南边跨",
+        "element_id": 450,
+        "ccx_kN": 11887.851849308545,
+        "report_kN": 11803.0,
+        "error_percent": 0.7189006973527423
+      },
+      {
+        "span": "南辅跨",
+        "element_id": 608,
+        "ccx_kN": 11194.432321390432,
+        "report_kN": 11140.0,
+        "error_percent": 0.4886204792677873
+      }
+    ]
+  },
+  {
+    "case": 3,
+    "variant": "original",
+    "input_sha256": "672749c99210c2ab3091651189d5c4cc2da7cc7066cd2aa29490c8e3c55a4050",
+    "exit_code": 0,
+    "job_finished": true,
+    "umax_mm": 1897.2227974710306,
+    "peak_node": 1176,
+    "peak_displacement_mm": [
+      12.44195,
+      -2.123316e-11,
+      -1897.182
+    ],
+    "reference_umax_mm": 1910.0116845522327,
+    "reference_peak_node": 1176,
+    "relative_error_percent": -0.669571143707437,
+    "force_comparison_to_mapdl": {
+      "n_compared": 1123,
+      "p50": 0.0009238015042676502,
+      "p95": 0.0037889353990825025,
+      "max": 0.014151185100905657,
+      "worst_eid": 1001,
+      "named_1": {
+        "ccx_N": 17103914.155231867,
+        "table_N": 17160376.0
+      }
+    },
+    "cload_sums_N": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": -4725567.874
+      },
+      "2": {
+        "1": 0,
+        "2": 0,
+        "3": -8069828.486
+      }
+    },
+    "span_force_comparison": [
+      {
+        "span": "北边跨",
+        "element_id": 153,
+        "ccx_kN": 12635.531788354954,
+        "report_kN": 12572.0,
+        "error_percent": 0.5053435281176855
+      },
+      {
+        "span": "主跨",
+        "element_id": 160,
+        "ccx_kN": 12669.31913980356,
+        "report_kN": 12657.0,
+        "error_percent": 0.09733064552073234
+      },
+      {
+        "span": "南边跨",
+        "element_id": 450,
+        "ccx_kN": 12101.591391173055,
+        "report_kN": 12047.0,
+        "error_percent": 0.45315340892384537
+      },
+      {
+        "span": "南辅跨",
+        "element_id": 608,
+        "ccx_kN": 11421.904506485589,
+        "report_kN": 11378.0,
+        "error_percent": 0.3858719149726575
+      }
+    ]
+  },
+  {
+    "case": 4,
+    "variant": "original",
+    "input_sha256": "f68ce772e4c9df5f98c8dc8a702a59b88a2bf244f46380f2c9a73d57d4131ceb",
+    "exit_code": 0,
+    "job_finished": true,
+    "umax_mm": 2846.2795317248147,
+    "peak_node": 1176,
+    "peak_displacement_mm": [
+      18.71548,
+      -2.46039e-11,
+      -2846.218
+    ],
+    "reference_umax_mm": 2870.9665987120216,
+    "reference_peak_node": 1176,
+    "relative_error_percent": -0.859886945333399,
+    "force_comparison_to_mapdl": {
+      "n_compared": 1123,
+      "p50": 0.0007412670695892487,
+      "p95": 0.006325001262289027,
+      "max": 0.017431375783380273,
+      "worst_eid": 1058,
+      "named_1": {
+        "ccx_N": 16817281.224776436,
+        "table_N": 16878562.0
+      }
+    },
+    "cload_sums_N": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": -4725567.874
+      },
+      "2": {
+        "1": 0,
+        "2": 2246926.048,
+        "3": -8312299.4553
+      }
+    },
+    "span_force_comparison": [
+      {
+        "span": "北边跨",
+        "element_id": 153,
+        "ccx_kN": 12484.670883308481,
+        "report_kN": 12380.0,
+        "error_percent": 0.8454837100846602
+      },
+      {
+        "span": "主跨",
+        "element_id": 160,
+        "ccx_kN": 12737.50160947046,
+        "report_kN": 12741.0,
+        "error_percent": -0.02745773902785853
+      },
+      {
+        "span": "南边跨",
+        "element_id": 450,
+        "ccx_kN": 11955.05212310384,
+        "report_kN": 11869.0,
+        "error_percent": 0.7250157814798319
+      },
+      {
+        "span": "南辅跨",
+        "element_id": 608,
+        "ccx_kN": 11254.213340891267,
+        "report_kN": 11200.0,
+        "error_percent": 0.4840476865291654
+      }
+    ]
+  },
+  {
+    "case": 5,
+    "variant": "original",
+    "input_sha256": "3ba72d5d9c50561f6cdde3b17930d4668151d66a0ef7f10540aa59091320fc1f",
+    "exit_code": 0,
+    "job_finished": true,
+    "umax_mm": 1325.3140931123403,
+    "peak_node": 306,
+    "peak_displacement_mm": [
+      10.17938,
+      1.73789e-12,
+      -1325.275
+    ],
+    "reference_umax_mm": 1335.7734445522826,
+    "reference_peak_node": 306,
+    "relative_error_percent": -0.7830183690654247,
+    "force_comparison_to_mapdl": {
+      "n_compared": 1123,
+      "p50": 0.0003691291375715092,
+      "p95": 0.003282421929685141,
+      "max": 0.008543547769813878,
+      "worst_eid": 1058,
+      "named_1": {
+        "ccx_N": 16221244.496991841,
+        "table_N": 16250411.0
+      }
+    },
+    "cload_sums_N": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": -4725567.874
+      },
+      "2": {
+        "1": 0,
+        "2": 15303735.373,
+        "3": -6377029.291
+      }
+    },
+    "span_force_comparison": [
+      {
+        "span": "北边跨",
+        "element_id": 153,
+        "ccx_kN": 11947.033508198043,
+        "report_kN": 11892.0,
+        "error_percent": 0.46277756641475154
+      },
+      {
+        "span": "主跨",
+        "element_id": 160,
+        "ccx_kN": 11813.098722494049,
+        "report_kN": 11802.0,
+        "error_percent": 0.09404103113073159
+      },
+      {
+        "span": "南边跨",
+        "element_id": 450,
+        "ccx_kN": 11414.284979707705,
+        "report_kN": 11368.0,
+        "error_percent": 0.4071514752613137
+      },
+      {
+        "span": "南辅跨",
+        "element_id": 608,
+        "ccx_kN": 10772.456457806564,
+        "report_kN": 10741.0,
+        "error_percent": 0.29286340011696055
+      }
+    ]
+  },
+  {
+    "case": 6,
+    "variant": "original",
+    "input_sha256": "177650a7fb09bcfe7a7f21d9336600b9c5156ebfd93ebbb22899a93e7af4fc67",
+    "exit_code": 0,
+    "job_finished": true,
+    "umax_mm": 927.2598677471814,
+    "peak_node": 1166,
+    "peak_displacement_mm": [
+      -13.45798,
+      -8.270164e-14,
+      -927.1622
+    ],
+    "reference_umax_mm": 927.4138039940444,
+    "reference_peak_node": 1166,
+    "relative_error_percent": -0.01659844248598219,
+    "force_comparison_to_mapdl": {
+      "n_compared": 1123,
+      "p50": 0.0012287980734596617,
+      "p95": 0.002812900884439677,
+      "max": 0.015144856044345492,
+      "worst_eid": 1001,
+      "named_1": {
+        "ccx_N": 17576110.02432326,
+        "table_N": 17632232.0
+      }
+    },
+    "cload_sums_N": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": -4725567.874
+      },
+      "2": {
+        "1": 0,
+        "2": 0,
+        "3": -8069828.486
+      }
+    },
+    "span_force_comparison": [
+      {
+        "span": "北边跨",
+        "element_id": 153,
+        "ccx_kN": 12923.95474721969,
+        "report_kN": 12906.0,
+        "error_percent": 0.13911938028583481
+      },
+      {
+        "span": "主跨",
+        "element_id": 443,
+        "ccx_kN": 12728.070966570907,
+        "report_kN": 12700.0,
+        "error_percent": 0.22103123284178405
+      },
+      {
+        "span": "南边跨",
+        "element_id": 450,
+        "ccx_kN": 12385.17997818165,
+        "report_kN": 12365.0,
+        "error_percent": 0.16320241149736514
+      },
+      {
+        "span": "南辅跨",
+        "element_id": 608,
+        "ccx_kN": 11721.809910936432,
+        "report_kN": 11689.0,
+        "error_percent": 0.2806904862386217
+      }
+    ]
+  }
+]

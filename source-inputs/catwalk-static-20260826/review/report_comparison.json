@@ -1,0 +1,603 @@
+[
+  {
+    "case": 1,
+    "variant": "original",
+    "input_sha256": "be533c5f3228aacf19aea4913b503c2c6fac6d6246f6e6ab7b1eba4720e630ae",
+    "exit_code": 0,
+    "job_finished": true,
+    "umax_mm": 42.25864819934656,
+    "peak_node": 304,
+    "peak_displacement_mm": [
+      0.173994,
+      -1.522535e-15,
+      -42.25829
+    ],
+    "reference_umax_mm": 42.57771305336941,
+    "reference_peak_node": 304,
+    "relative_error_percent": -0.7493705770972525,
+    "force_comparison_to_mapdl": {
+      "n_compared": 1123,
+      "p50": 1.3080472901459605e-05,
+      "p95": 0.00012078609895670757,
+      "max": 0.0003163794398685856,
+      "worst_eid": 1058,
+      "named_1": {
+        "ccx_N": 15705132.084332483,
+        "table_N": 15706172.0
+      }
+    },
+    "cload_sums_N": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": -4725567.874
+      }
+    },
+    "span_force_comparison": [
+      {
+        "span": "北边跨",
+        "element_id": 153,
+        "ccx_kN": 11482.109823737523,
+        "report_kN": 11466.0,
+        "error_percent": 0.1405008175259237
+      },
+      {
+        "span": "主跨",
+        "element_id": 160,
+        "ccx_kN": 11027.95889893035,
+        "report_kN": 11005.0,
+        "error_percent": 0.20862243462380636
+      },
+      {
+        "span": "南边跨",
+        "element_id": 450,
+        "ccx_kN": 10944.12407938693,
+        "report_kN": 10928.0,
+        "error_percent": 0.147548310641743
+      },
+      {
+        "span": "南辅跨",
+        "element_id": 608,
+        "ccx_kN": 10352.255296016127,
+        "report_kN": 10338.0,
+        "error_percent": 0.1378922036769925
+      }
+    ],
+    "force_recovery_method": "average global Cauchy stress projected on deformed chord, multiplied by original section area",
+    "portal_force_comparison": [
+      {
+        "span": "门架索北边跨",
+        "element_id": 1062,
+        "ccx_kN": 3557.971518464663,
+        "report_kN": 3554.0,
+        "error_percent": 0.1117478465014976
+      },
+      {
+        "span": "门架索主跨",
+        "element_id": 1279,
+        "ccx_kN": 3358.8794957187356,
+        "report_kN": 3348.0,
+        "error_percent": 0.32495506925733775
+      },
+      {
+        "span": "门架索南边跨",
+        "element_id": 1283,
+        "ccx_kN": 3385.5356879889096,
+        "report_kN": 3381.0,
+        "error_percent": 0.13415226231616728
+      },
+      {
+        "span": "门架索南辅跨",
+        "element_id": 1393,
+        "ccx_kN": 3238.337269603057,
+        "report_kN": 3233.0,
+        "error_percent": 0.16508721320931397
+      }
+    ]
+  },
+  {
+    "case": 2,
+    "variant": "original",
+    "input_sha256": "441f12d3abda82ede3038abf23df8bf13802a908dd2b52802d6651c5773c1593",
+    "exit_code": 0,
+    "job_finished": true,
+    "umax_mm": 2662.041494459448,
+    "peak_node": 1176,
+    "peak_displacement_mm": [
+      17.49577,
+      -1.781946e-11,
+      -2661.984
+    ],
+    "reference_umax_mm": 2684.837902342347,
+    "reference_peak_node": 1176,
+    "relative_error_percent": -0.849079486810389,
+    "force_comparison_to_mapdl": {
+      "n_compared": 1123,
+      "p50": 0.0007020854437095463,
+      "p95": 0.005954584300036288,
+      "max": 0.01636454024296863,
+      "worst_eid": 1058,
+      "named_1": {
+        "ccx_N": 16743540.948129961,
+        "table_N": 16800788.0
+      }
+    },
+    "cload_sums_N": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": -4725567.874
+      },
+      "2": {
+        "1": 0,
+        "2": 0,
+        "3": -8069828.486
+      }
+    },
+    "span_force_comparison": [
+      {
+        "span": "北边跨",
+        "element_id": 153,
+        "ccx_kN": 12418.735465440639,
+        "report_kN": 12317.0,
+        "error_percent": 0.8259760123458637
+      },
+      {
+        "span": "主跨",
+        "element_id": 160,
+        "ccx_kN": 12623.998556113525,
+        "report_kN": 12624.0,
+        "error_percent": -1.1437630498267737e-05
+      },
+      {
+        "span": "南边跨",
+        "element_id": 450,
+        "ccx_kN": 11888.78895550946,
+        "report_kN": 11803.0,
+        "error_percent": 0.7268402567945476
+      },
+      {
+        "span": "南辅跨",
+        "element_id": 608,
+        "ccx_kN": 11194.87585169628,
+        "report_kN": 11140.0,
+        "error_percent": 0.4926019003256732
+      }
+    ],
+    "force_recovery_method": "average global Cauchy stress projected on deformed chord, multiplied by original section area",
+    "portal_force_comparison": [
+      {
+        "span": "门架索北边跨",
+        "element_id": 1057,
+        "ccx_kN": 3815.1759679678566,
+        "report_kN": 3856.0,
+        "error_percent": -1.0587145236551687
+      },
+      {
+        "span": "门架索主跨",
+        "element_id": 1066,
+        "ccx_kN": 4003.219722109428,
+        "report_kN": 3962.0,
+        "error_percent": 1.040376630727602
+      },
+      {
+        "span": "门架索南边跨",
+        "element_id": 1290,
+        "ccx_kN": 3655.778130193383,
+        "report_kN": 3688.0,
+        "error_percent": -0.8736949513724834
+      },
+      {
+        "span": "门架索南辅跨",
+        "element_id": 1393,
+        "ccx_kN": 3551.139266741509,
+        "report_kN": 3514.0,
+        "error_percent": 1.0568943295819366
+      }
+    ]
+  },
+  {
+    "case": 3,
+    "variant": "original",
+    "input_sha256": "672749c99210c2ab3091651189d5c4cc2da7cc7066cd2aa29490c8e3c55a4050",
+    "exit_code": 0,
+    "job_finished": true,
+    "umax_mm": 1897.2227974710306,
+    "peak_node": 1176,
+    "peak_displacement_mm": [
+      12.44195,
+      -2.123316e-11,
+      -1897.182
+    ],
+    "reference_umax_mm": 1910.0116845522327,
+    "reference_peak_node": 1176,
+    "relative_error_percent": -0.669571143707437,
+    "force_comparison_to_mapdl": {
+      "n_compared": 1123,
+      "p50": 0.0009238015042676502,
+      "p95": 0.0037889353990825025,
+      "max": 0.014151185100905657,
+      "worst_eid": 1001,
+      "named_1": {
+        "ccx_N": 17103914.155231867,
+        "table_N": 17160376.0
+      }
+    },
+    "cload_sums_N": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": -4725567.874
+      },
+      "2": {
+        "1": 0,
+        "2": 0,
+        "3": -8069828.486
+      }
+    },
+    "span_force_comparison": [
+      {
+        "span": "北边跨",
+        "element_id": 153,
+        "ccx_kN": 12635.990766641547,
+        "report_kN": 12572.0,
+        "error_percent": 0.5089943258156815
+      },
+      {
+        "span": "主跨",
+        "element_id": 160,
+        "ccx_kN": 12669.48643620539,
+        "report_kN": 12657.0,
+        "error_percent": 0.09865241530686575
+      },
+      {
+        "span": "南边跨",
+        "element_id": 450,
+        "ccx_kN": 12102.059247431269,
+        "report_kN": 12047.0,
+        "error_percent": 0.4570370003425639
+      },
+      {
+        "span": "南辅跨",
+        "element_id": 608,
+        "ccx_kN": 11422.115110987994,
+        "report_kN": 11378.0,
+        "error_percent": 0.3877228949551226
+      }
+    ],
+    "force_recovery_method": "average global Cauchy stress projected on deformed chord, multiplied by original section area",
+    "portal_force_comparison": [
+      {
+        "span": "门架索北边跨",
+        "element_id": 1062,
+        "ccx_kN": 3941.882100186758,
+        "report_kN": 3963.0,
+        "error_percent": -0.5328766039172761
+      },
+      {
+        "span": "门架索主跨",
+        "element_id": 1066,
+        "ccx_kN": 4014.186546434924,
+        "report_kN": 3974.0,
+        "error_percent": 1.0112366994193156
+      },
+      {
+        "span": "门架索南边跨",
+        "element_id": 1283,
+        "ccx_kN": 3774.146318407136,
+        "report_kN": 3788.0,
+        "error_percent": -0.3657254908359109
+      },
+      {
+        "span": "门架索南辅跨",
+        "element_id": 1393,
+        "ccx_kN": 3649.3579488150876,
+        "report_kN": 3613.0,
+        "error_percent": 1.006309128565941
+      }
+    ]
+  },
+  {
+    "case": 4,
+    "variant": "original",
+    "input_sha256": "f68ce772e4c9df5f98c8dc8a702a59b88a2bf244f46380f2c9a73d57d4131ceb",
+    "exit_code": 0,
+    "job_finished": true,
+    "umax_mm": 2846.2795317248147,
+    "peak_node": 1176,
+    "peak_displacement_mm": [
+      18.71548,
+      -2.46039e-11,
+      -2846.218
+    ],
+    "reference_umax_mm": 2870.9665987120216,
+    "reference_peak_node": 1176,
+    "relative_error_percent": -0.859886945333399,
+    "force_comparison_to_mapdl": {
+      "n_compared": 1123,
+      "p50": 0.0007412670695892487,
+      "p95": 0.006325001262289027,
+      "max": 0.017431375783380273,
+      "worst_eid": 1058,
+      "named_1": {
+        "ccx_N": 16817281.224776436,
+        "table_N": 16878562.0
+      }
+    },
+    "cload_sums_N": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": -4725567.874
+      },
+      "2": {
+        "1": 0,
+        "2": 2246926.048,
+        "3": -8312299.4553
+      }
+    },
+    "span_force_comparison": [
+      {
+        "span": "北边跨",
+        "element_id": 153,
+        "ccx_kN": 12485.669615557477,
+        "report_kN": 12380.0,
+        "error_percent": 0.8535510141961078
+      },
+      {
+        "span": "主跨",
+        "element_id": 160,
+        "ccx_kN": 12737.855698553454,
+        "report_kN": 12741.0,
+        "error_percent": -0.02467860800993149
+      },
+      {
+        "span": "南边跨",
+        "element_id": 450,
+        "ccx_kN": 11956.12755900317,
+        "report_kN": 11869.0,
+        "error_percent": 0.7340766619190253
+      },
+      {
+        "span": "南辅跨",
+        "element_id": 608,
+        "ccx_kN": 11254.723018967448,
+        "report_kN": 11200.0,
+        "error_percent": 0.4885983836379282
+      }
+    ],
+    "force_recovery_method": "average global Cauchy stress projected on deformed chord, multiplied by original section area",
+    "portal_force_comparison": [
+      {
+        "span": "门架索北边跨",
+        "element_id": 1057,
+        "ccx_kN": 3835.341147612958,
+        "report_kN": 3879.0,
+        "error_percent": -1.125518236324874
+      },
+      {
+        "span": "门架索主跨",
+        "element_id": 1066,
+        "ccx_kN": 4048.9535751790672,
+        "report_kN": 4007.0,
+        "error_percent": 1.047007117021903
+      },
+      {
+        "span": "门架索南边跨",
+        "element_id": 1290,
+        "ccx_kN": 3676.644744014434,
+        "report_kN": 3710.0,
+        "error_percent": -0.899063503654074
+      },
+      {
+        "span": "门架索南辅跨",
+        "element_id": 1393,
+        "ccx_kN": 3573.285449201128,
+        "report_kN": 3535.0,
+        "error_percent": 1.0830395813614668
+      }
+    ]
+  },
+  {
+    "case": 5,
+    "variant": "original",
+    "input_sha256": "3ba72d5d9c50561f6cdde3b17930d4668151d66a0ef7f10540aa59091320fc1f",
+    "exit_code": 0,
+    "job_finished": true,
+    "umax_mm": 1325.3140931123403,
+    "peak_node": 306,
+    "peak_displacement_mm": [
+      10.17938,
+      1.73789e-12,
+      -1325.275
+    ],
+    "reference_umax_mm": 1335.7734445522826,
+    "reference_peak_node": 306,
+    "relative_error_percent": -0.7830183690654247,
+    "force_comparison_to_mapdl": {
+      "n_compared": 1123,
+      "p50": 0.0003691291375715092,
+      "p95": 0.003282421929685141,
+      "max": 0.008543547769813878,
+      "worst_eid": 1058,
+      "named_1": {
+        "ccx_N": 16221244.496991841,
+        "table_N": 16250411.0
+      }
+    },
+    "cload_sums_N": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": -4725567.874
+      },
+      "2": {
+        "1": 0,
+        "2": 15303735.373,
+        "3": -6377029.291
+      }
+    },
+    "span_force_comparison": [
+      {
+        "span": "北边跨",
+        "element_id": 153,
+        "ccx_kN": 11947.265712949069,
+        "report_kN": 11892.0,
+        "error_percent": 0.4647301795246195
+      },
+      {
+        "span": "主跨",
+        "element_id": 160,
+        "ccx_kN": 11813.179231585123,
+        "report_kN": 11802.0,
+        "error_percent": 0.0947231959424144
+      },
+      {
+        "span": "南边跨",
+        "element_id": 450,
+        "ccx_kN": 11414.536701023535,
+        "report_kN": 11368.0,
+        "error_percent": 0.4093657725504407
+      },
+      {
+        "span": "南辅跨",
+        "element_id": 608,
+        "ccx_kN": 10772.577071927566,
+        "report_kN": 10741.0,
+        "error_percent": 0.2939863320693181
+      }
+    ],
+    "force_recovery_method": "average global Cauchy stress projected on deformed chord, multiplied by original section area",
+    "portal_force_comparison": [
+      {
+        "span": "门架索北边跨",
+        "element_id": 1062,
+        "ccx_kN": 3680.2140429607803,
+        "report_kN": 3705.0,
+        "error_percent": -0.6689866947157785
+      },
+      {
+        "span": "门架索主跨",
+        "element_id": 1066,
+        "ccx_kN": 3675.689863385922,
+        "report_kN": 3650.0,
+        "error_percent": 0.7038318735868909
+      },
+      {
+        "span": "门架索南边跨",
+        "element_id": 1283,
+        "ccx_kN": 3516.227423710698,
+        "report_kN": 3534.0,
+        "error_percent": -0.5029025548755506
+      },
+      {
+        "span": "门架索南辅跨",
+        "element_id": 1393,
+        "ccx_kN": 3393.6034367885118,
+        "report_kN": 3374.0,
+        "error_percent": 0.5810147240222774
+      }
+    ]
+  },
+  {
+    "case": 6,
+    "variant": "original",
+    "input_sha256": "177650a7fb09bcfe7a7f21d9336600b9c5156ebfd93ebbb22899a93e7af4fc67",
+    "exit_code": 0,
+    "job_finished": true,
+    "umax_mm": 927.2598677471814,
+    "peak_node": 1166,
+    "peak_displacement_mm": [
+      -13.45798,
+      -8.270164e-14,
+      -927.1622
+    ],
+    "reference_umax_mm": 927.4138039940444,
+    "reference_peak_node": 1166,
+    "relative_error_percent": -0.01659844248598219,
+    "force_comparison_to_mapdl": {
+      "n_compared": 1123,
+      "p50": 0.0012287980734596617,
+      "p95": 0.002812900884439677,
+      "max": 0.015144856044345492,
+      "worst_eid": 1001,
+      "named_1": {
+        "ccx_N": 17576110.02432326,
+        "table_N": 17632232.0
+      }
+    },
+    "cload_sums_N": {
+      "1": {
+        "1": 0,
+        "2": 0,
+        "3": -4725567.874
+      },
+      "2": {
+        "1": 0,
+        "2": 0,
+        "3": -8069828.486
+      }
+    },
+    "span_force_comparison": [
+      {
+        "span": "北边跨",
+        "element_id": 153,
+        "ccx_kN": 12924.077954315579,
+        "report_kN": 12906.0,
+        "error_percent": 0.1400740300292691
+      },
+      {
+        "span": "主跨",
+        "element_id": 443,
+        "ccx_kN": 12728.121839744223,
+        "report_kN": 12700.0,
+        "error_percent": 0.22143180900962012
+      },
+      {
+        "span": "南边跨",
+        "element_id": 450,
+        "ccx_kN": 12385.282705559554,
+        "report_kN": 12365.0,
+        "error_percent": 0.16403320306956903
+      },
+      {
+        "span": "南辅跨",
+        "element_id": 608,
+        "ccx_kN": 11721.84745837179,
+        "report_kN": 11689.0,
+        "error_percent": 0.2810117064914852
+      }
+    ],
+    "force_recovery_method": "average global Cauchy stress projected on deformed chord, multiplied by original section area",
+    "portal_force_comparison": [
+      {
+        "span": "门架索北边跨",
+        "element_id": 1062,
+        "ccx_kN": 4117.98226649593,
+        "report_kN": 4102.0,
+        "error_percent": 0.38962131876962847
+      },
+      {
+        "span": "门架索主跨",
+        "element_id": 1066,
+        "ccx_kN": 4027.898419187925,
+        "report_kN": 3989.0,
+        "error_percent": 0.9751421205295818
+      },
+      {
+        "span": "门架索南边跨",
+        "element_id": 1283,
+        "ccx_kN": 3935.177128946742,
+        "report_kN": 3919.0,
+        "error_percent": 0.4127871637341629
+      },
+      {
+        "span": "门架索南辅跨",
+        "element_id": 1393,
+        "ccx_kN": 3778.335735264083,
+        "report_kN": 3743.0,
+        "error_percent": 0.944048497571015
+      }
+    ]
+  }
+]
