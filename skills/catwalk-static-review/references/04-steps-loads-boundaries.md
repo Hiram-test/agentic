@@ -1,19 +1,19 @@
-# 04 分析步、荷载、温度与支承
+# 04 Steps, loads, temperatures and supports
 
-## 六工况和加载历史
+## Six independent cases
 
-|工况|最终组合|步数|温度|
+| Case | Final combination | Steps | Temperature |
 |---|---|---:|---|
-|P1|恒载|1|无温度卡|
-|P2|恒载+施工|2|无温度卡|
-|P3|恒载+施工+温降15℃|2|从0到-15℃|
-|P4|恒载+施工+施工风|2|无温度卡|
-|P5|恒载+最大阵风|2|无温度卡|
-|P6|恒载+施工+温降34℃|2|从0到-34℃|
+| P1 | Dead load | 1 | No temperature card |
+| P2 | Dead + construction | 2 | No temperature card |
+| P3 | Dead + construction + 15°C cooling | 2 | 0 to -15°C |
+| P4 | Dead + construction + construction wind | 2 | No temperature card |
+| P5 | Dead + maximum gust | 2 | No temperature card |
+| P6 | Dead + construction + 34°C cooling | 2 | 0 to -34°C |
 
-每个文件是**独立完整分析**。P2不接着P1目录的restart求解，P3也不接着P2。每个两步文件内部先达到恒载状态，再加载目标总组合。
+Each file defines an independent complete analysis. Every two-step case first establishes its own dead-load state, then applies its final total combination.
 
-所有步 `*STEP, NLGEOM`。首步 `*STATIC` 后没有显式时间参数，锁定求解器采用默认1、1并给警告；原件复算保留此行为。第二步：
+All steps use `*STEP, NLGEOM`. The first `*STATIC` card has no explicit time parameters; the locked solver uses defaults (1, 1) and records a warning. Preserve this original behavior. The second step is:
 
 ```text
 *STEP, NLGEOM
@@ -21,11 +21,11 @@
 1., 1., 1e-6, 1.
 ```
 
-依次为初始增量、步时间、最小增量、最大增量，静力伪时间不代表实际施工持续1秒。没有验证过的自动稳定化、数值阻尼和额外弹簧不能随便添加。
+The entries are initial increment, step duration, minimum increment and maximum increment. These are static load-path parameters. Retain the supplied solution controls for baseline reproduction.
 
-## 自重与CLOAD总量
+## Gravity and total nodal loads
 
-每一步重力：
+Each step applies:
 
 ```text
 *DLOAD
@@ -33,24 +33,24 @@ E_CABLE, GRAV, 9806, 0.0, 0.0, -1.0
 E_FRAME, GRAV, 9806, 0.0, 0.0, -1.0
 ```
 
-节点CLOAD合力（N；不含上述自重）：
+Nodal CLOAD resultants in N, excluding gravity:
 
-|步/工况|ΣFx|ΣFy|ΣFz|
+| Step/case | Sum Fx | Sum Fy | Sum Fz |
 |---|---:|---:|---:|
-|所有文件首步|0|0|-4725567.874|
-|P2/P3/P6第二步|0|0|-8069828.486|
-|P4第二步|0|2246926.048|-8312299.4553|
-|P5第二步|0|15303735.373|-6377029.291|
+| First step, every file | 0 | 0 | -4725567.874 |
+| Second step, P2/P3/P6 | 0 | 0 | -8069828.486 |
+| Second step, P4 | 0 | 2246926.048 | -8312299.4553 |
+| Second step, P5 | 0 | 15303735.373 | -6377029.291 |
 
-第二步CLOAD是该步终态**总值**，包括二期恒载。对于同节点/同自由度的跨步定义，不能假定新卡片自动叠加为增量。旧版同名输入曾将增量写成总值，造成首步恒载被覆盖；本版已处理。首步后再次将CLOAD全加一遍会重复计载。
+Second-step CLOAD records specify the final **total**, including the permanent nodal load. Apply that total once. The earlier daughter-file version supplied an increment where a total was required, replacing the first-step permanent contribution; the packaged inputs carry the corrected totals.
 
-原件CLOAD同一步多条同自由度记录按其实际卡片语义处理，本专用解析器汇总本固定文件的记录；若用户提供带Amplitude、复杂OP、多个独立荷载块的其他版本，不允许未经验证套用当前解析器。
+The parser's load summation follows the supplied files' card semantics. For new inputs containing amplitudes, different OP behavior or multiple independent load blocks, extend and verify parsing against those semantics first.
 
-`P*_input_audit.json` 同时记录每步CLOAD关于全局原点的合力矩(N·mm)，用来发现力位置偏移；这不是支反力平衡核查。节点荷载清单以INP为准，不从报告的均布荷载表再重复生成一次。
+Each input audit records CLOAD moments about the global origin in N·mm, allowing load-position checks. Preserve the actual nodal-load list from the INP.
 
-## 温度
+## Temperature
 
-P3/P6三种材料都有α=1.2e-5/℃。原件：
+P3/P6 use alpha = 1.2e-5 /°C for all three materials:
 
 ```text
 *NSET, NSET=N_THERM, GENERATE
@@ -59,7 +59,7 @@ P3/P6三种材料都有α=1.2e-5/℃。原件：
 N_THERM, 0.
 ```
 
-首步 `N_THERM, 0.`。末步：
+The first step sets `N_THERM, 0.`. The final P3 step sets:
 
 ```text
 *TEMPERATURE
@@ -67,24 +67,24 @@ N_THERM, 0.
 N_MCT, -15
 ```
 
-P6把-15换为-34。这里是先给大集合基温，再给原始N_MCT节点温降。N_THERM含超出实际节点范围的ID，当前求解器截断并给warning。这是原件行为；不能悄悄“清理”集合后仍称输入哈希相同。B31/T3D2内部扩展节点与温度传递可能影响不同CalculiX版本的结果，P3/P6需特别检查。
+P6 uses -34. This first assigns the base temperature to the broad set, then the temperature change to the original N_MCT nodes. The locked solver clips the N_THERM range beyond existing nodes and issues a warning. Preserve the original set definition. When evaluating another solver build, explicitly check temperature transfer through expanded T3D2/B31 elements and compare P3/P6 results.
 
-## 边界：明确全局方向
+## Global support directions
 
-DOF1=UX，DOF2=UY，DOF3=UZ。所有1125个原始节点UY固定为0。
+DOF 1 = UX; DOF 2 = UY; DOF 3 = UZ. All 1,125 original nodes have UY = 0.
 
-额外UX=0的节点：
+Additional UX = 0 nodes:
 
 `1, 154, 450, 728, 729, 730, 1001, 1066, 1280, 1395`
 
-额外UZ=0的节点：
+Additional UZ = 0 nodes:
 
 `1, 3, 6, 154, 157, 447, 450, 608, 723, 726, 728, 729, 730, 1001, 1003, 1063, 1066, 1280, 1283, 1347, 1393, 1395`
 
-按脚本解析得到的实际集合为最终依据。不要把每个UZ约束点都改成UX/UY/UZ全固结；这会改变索滑移/纵向响应。B31转角也不能按“固定支座”直觉全部锁死。
+Use the parsed input sets as the executable source. Preserve freedom in all remaining translational/rotational DOFs.
 
-## 输出卡与后处理契约
+## Output contract
 
-原件对 `N_MCT` 请求节点U，对 `E_CABLE` 请求打印S，并对文件请求S、E。P2—P6第二步设置FREQUENCY=99，锁定求解器仍输出末步结果，必须实际检查最终时间，而不是假定第99步才有结果。
+The input requests nodal U for N_MCT, printed S for E_CABLE, and file output S/E. P2–P6 specify FREQUENCY=99 in the second step; the locked solver produces final output. Verify its actual time and completeness.
 
-当前DAT后处理只使用原节点U和索单元S。没有RF，不能编造支座反力；没有B31的DAT截面内力，不能把CABLE的S借给B31。需要这些量时，新建输出增强派生算例，按实际CalculiX版本手册配置相应卡片，保存改动与哈希并核验对原位移/索力无影响。
+The DAT postprocessor reads original-node U and cable-element S. To obtain support reactions or B31 section forces, create an output-enhanced derived input, configure the relevant cards for the actual solver version, record its hash and verify the unchanged baseline displacement/cable-force response.

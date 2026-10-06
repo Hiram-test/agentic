@@ -1,7 +1,9 @@
 {
-  "skill_version": "1.1.0",
+  "skill_version": "1.2.0",
   "created_utc": "2026-10-06",
   "scope": "Locked P1-P6 two-dimensional overall cable system static reproduction",
   "input_archive": "catwalk-static-20260826",
-  "solver_sha256": "b498dad80b0415d53ab112409adc85b8a1fd19eb7846dc31e778f4c83b437a0e"
+  "solver_sha256": "b498dad80b0415d53ab112409adc85b8a1fd19eb7846dc31e778f4c83b437a0e",
+  "documentation_language": "en",
+  "report_language": "zh-CN"
 }

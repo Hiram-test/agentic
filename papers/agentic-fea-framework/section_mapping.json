@@ -1,0 +1,141 @@
+[
+  {
+    "section": "I. Introduction",
+    "reference": "I. Introduction, pp. 1–2",
+    "paragraph_plan": [
+      "Paragraph 1 — Introduce agentic engineering workflows through the sequence used in FeaGPT: language-based task specification, tool execution and computational engineering results. Cite FeaGPT at the transition to finite element analysis.",
+      "Paragraph 2 — Move from the reference aircraft/component setting to bridge catwalk verification. Describe the practical input chain: a prestressed INP model, six load combinations, an existing engineering report and a required reproducible calculation package.",
+      "Paragraph 3 — Define the central workflow problem: preserving model identity, prestress, stepwise total loads and result-group definitions across automated execution. Use the P5 file-version/load-history episode as the motivating example.",
+      "Paragraph 4 — Introduce the Skill as the executable analysis specification, then list the paper contributions in the reference order: structured task execution; Gmsh–CalculiX integration; six-case quantitative verification; automatic engineering-report delivery."
+    ]
+  },
+  {
+    "section": "II.A. System overview",
+    "reference": "II.A. System Overview, p. 3; Fig. 1",
+    "paragraph_plan": [
+      "Describe the four workflow modules and their file interfaces using Figure 1. The assistant reads the English Skill and invokes the packaged tools; each tool produces named, machine-readable evidence.",
+      "Identify the model asset manifest, original PDF, benchmark JSON and font/style assets. Trace one request from asset verification to the report and raw solver package."
+    ]
+  },
+  {
+    "section": "II.B. Skill-guided planning and task orchestration",
+    "reference": "II.B. Engineering Analysis Planning and Task Orchestration, pp. 3–6; Algorithm 1",
+    "paragraph_plan": [
+      "Replace the reference geometry-design JSON with the catwalk task schema: input manifest, cases P1–P6, solver identity, units, execution stages, comparison criteria and report outputs.",
+      "Present Algorithm 1 as the executable order: validate → reconstruct mesh → solve each case → read final fields → recover forces → compare → generate report → hash outputs. State the stage-specific completion conditions.",
+      "For the planned GLM execution experiment, record provider/model identifier, request, tool calls, elapsed time, retries and final artifact status in a session log. Fill the model identifier from the actual run."
+    ]
+  },
+  {
+    "section": "II.C. Versioned model reconstruction and engineering knowledge",
+    "reference": "II.C. Intelligent Geometry Generation with Knowledge Augmentation, pp. 6–7; Fig. 2",
+    "paragraph_plan": [
+      "Describe reconstruction from the original coordinates and connectivity, followed by material/section/support audit. Use Figure 2 to connect global geometry, structural families and a local connection.",
+      "Give the equivalent material values from the INP: MAT1/MAT2 E = 120 GPa, areas 22298.692/8402.9797 mm² and their equivalent densities; MAT3 E = 206 GPa, rectangular section 98.954535 × 98.954535 mm and near-zero assigned density.",
+      "Describe 8,984 initial-stress records across 1,123 cable elements, the global tensor convention and the retained reference geometry. Link numerical values to the material table and asset hashes."
+    ]
+  },
+  {
+    "section": "II.D. Gmsh mesh generation and identity mapping",
+    "reference": "II.D. Adaptive Mesh Generation, pp. 7–8; Fig. 3; Table II",
+    "paragraph_plan": [
+      "Explain point/line creation from INP IDs, section physical groups, setTransfiniteCurve(eid, 2), first-order generate(1), and MSH 4.1 export.",
+      "Distinguish geometric tags from mesh tags. Describe the explicit node/element mapping and checks: node count, element count, coordinates and ordered endpoints. Table II reports the measured mesh identity results."
+    ]
+  },
+  {
+    "section": "II.E. Nonlinear static analysis and load-history execution",
+    "reference": "II.E. Automated FEA Simulation and Analysis, pp. 8–9",
+    "paragraph_plan": [
+      "Write equilibrium as R(u, λ) = fint(u, σ0, T) − fext(λ) = 0. Describe geometric nonlinearity, initial prestress, gravity and prescribed supports within the planar X–Z system.",
+      "State the six combinations in Table I. P1 contains one dead-load step; P2–P6 independently establish dead load before their target total combination. Explain the second-step CLOAD total convention, with P5 as the worked example.",
+      "Give g = 9806 mm/s², alpha = 1.2e-5 /°C for P3/P6, temperature changes −15/−34°C and the 1,125 UY constraints. Identify the locked solver build and final-time checks."
+    ]
+  },
+  {
+    "section": "II.F. Field recovery and automated verification",
+    "reference": "II.F. Intelligent Data Analysis and Batch Processing, p. 9",
+    "paragraph_plan": [
+      "Define Umax = max sqrt(UX²+UY²+UZ²) over original nodes. Define the deformed chord n and recover N = A0 nᵀ σbar n / 1000 in kN, averaging the eight integration-point tensors.",
+      "Define eight reporting span groups, their maxima and K = Nbreak/Nmax. Set Nbreak = 38080/14280 kN and give the case-specific K requirements.",
+      "Define signed relative difference δ = 100(qcalc/qref − 1). Identify the independent MAPDL displacement source and the report force tables separately. Describe Figure 4 and the machine-readable evidence files."
+    ]
+  },
+  {
+    "section": "II.G. Reproducible batch execution and report generation",
+    "reference": "II.G. Scalable Batch Processing Architecture, pp. 9–10",
+    "paragraph_plan": [
+      "Describe independent case directories, common geometry audit, recorded solver commands, failure preservation and per-stage status.",
+      "Trace one final response value into CSV, VTU, PNG and the engineering report. Describe the shared result model used for Word/PDF and the style/font assets reproducing the reference report.",
+      "State the deliverable structure: six solved cases, 42 field plots, comparison data, Gmsh mapping, hashes and a 17-page engineering report in both formats."
+    ]
+  },
+  {
+    "section": "III.A. Task specification and six-case execution",
+    "reference": "III.A. Natural Language Input and System Understanding, p. 11; Table I",
+    "paragraph_plan": [
+      "Present the task request and its mapped case/output specification. Table I enumerates the six combinations and required safety factors.",
+      "For the GLM session, insert the recorded model ID and stage-completion log. Report execution and retry counts from that log."
+    ]
+  },
+  {
+    "section": "III.B. Model reconstruction results",
+    "reference": "III.B. Geometry Generation Results, pp. 11–12; Fig. 2",
+    "paragraph_plan": [
+      "Report 1,125 original nodes, 1,123 T3D2 cable elements and 71 B31 equivalent members. Show the complete geometry and member assignments in Figure 2.",
+      "Report the common geometric/physical definitions across cases and the preserved initial-stress record count."
+    ]
+  },
+  {
+    "section": "III.C. Mesh identity and mapping results",
+    "reference": "III.C. Mesh Generation and Quality Analysis, pp. 12–13; Table II; Fig. 3",
+    "paragraph_plan": [
+      "Report identical node/element counts, zero coordinate discrepancy and matching ordered connectivity between the input and the Gmsh mesh. Use the local inset to display the mapping.",
+      "Explain how this identity connects solved fields to the displayed geometry and reporting groups."
+    ]
+  },
+  {
+    "section": "III.D. Nonlinear response and benchmark comparison",
+    "reference": "III.D. FEA Simulation and Results Analysis, p. 14; Table III",
+    "paragraph_plan": [
+      "Report completion of all six cases and matching peak-displacement node IDs. Present the six numerical rows in Table III.",
+      "Give maximum absolute differences: displacement 0.859887%, bottom-cable span force 0.853551% and portal-cable span force 1.125518%. Identify the controlling case/span from the supplied evidence table.",
+      "Discuss P4 as the largest peak-displacement response, P5 peak at node 306, and the P3/P6 cooling responses using the solved fields."
+    ]
+  },
+  {
+    "section": "III.E. Cable response interpretation and safety assessment",
+    "reference": "III.E. Intelligent Result Analysis and Autonomous Design Evaluation, pp. 14–16; Fig. 4",
+    "paragraph_plan": [
+      "Follow the four panels in order: global displacement agreement, span-force agreement, cable safety factors and the spatial/case distribution of signed differences.",
+      "Compare the governing bottom/portal factors by case with Table I requirements. Use the heatmap to locate differences while retaining cable family and span identity.",
+      "Explain the load-history correction through the P5 input audit: second-step total nodal load includes the first-step permanent contribution. Connect the input definition with the current node-306 downward response."
+    ]
+  },
+  {
+    "section": "III.F. Execution performance and automation accounting",
+    "reference": "III.F. Computational Performance and Scalability, pp. 16–17",
+    "paragraph_plan": [
+      "Report the recorded solver wall times by case and their sum, with Python/platform/solver identity. Label timing boundaries explicitly.",
+      "Add the planned GLM session measurements in a separate table: planning time, tool time, report-generation time, total session time, token usage when exposed by the provider, retries and completion count.",
+      "For repeated-session evaluation, use the same six inputs and output contract; record each session independently before calculating completion rate and timing distributions."
+    ]
+  },
+  {
+    "section": "III.G. Engineering case presentation and report delivery",
+    "reference": "III.G. Industrial Validation: CalculiX Configuration Generation, pp. 17–18; Fig. 5",
+    "paragraph_plan": [
+      "Present Figure 5 as the engineering field plate: three representative cases and two response quantities. Compare shared field scales within each row.",
+      "Show how the prescribed report style is generated from the same result set, and point to the supplementary six-case contour plates, Word/PDF report and raw result archive."
+    ]
+  },
+  {
+    "section": "IV. Conclusions",
+    "reference": "IV. Conclusions, pp. 18–19",
+    "paragraph_plan": [
+      "Conclusion 1 — Summarize the Skill-guided sequence connecting versioned bridge inputs to mesh verification, nonlinear solution and engineering-report generation.",
+      "Conclusion 2 — State the measured mesh identity and six-case response differences with their actual values.",
+      "Conclusion 3 — State the cable safety-factor outcomes and delivered evidence package. Add session-level GLM findings after inserting the measured session table."
+    ]
+  }
+]

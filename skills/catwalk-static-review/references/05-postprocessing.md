@@ -1,22 +1,22 @@
-# 05 结果校验、索力恢复与云图
+# 05 Result validation, force recovery and contours
 
-## 读取真正的最终结果
+## Select the final state
 
-DAT可能按分析步、增量重复输出U与S。读取“最后一个位移块”与“最后一个索应力块”，但还必须核对两块时间一致，且等于最终分析总时间：P1为1、P2—P6为2。仅拿最后一个数字或取全文件最大值不正确，因为可能混入首步、积分点号或时间列。
+DAT can contain repeated U/S blocks for different steps or increments. Select the last displacement block and last cable-stress block, require matching times and compare with the expected total time: 1 for P1; 2 for P2–P6.
 
-必须满足：1125个原始节点U，1123个索单元S，每个8个积分点；节点/单元ID集合与模型对应。U分量为UX/UY/UZ；S顺序为Sxx/Syy/Szz/Sxy/Sxz/Syz。数值必须有限，禁止将空结果用0补齐。
+Require U for 1,125 original nodes and S at eight integration points of all 1,123 cable elements. Match actual node/element ID sets. U component order is UX/UY/UZ; S order is Sxx/Syy/Szz/Sxy/Sxz/Syz. Require every value to be finite.
 
-`run.py` 先检查STA完成情况和日志，再调用 `dat_results()`、`process()`。任何数据数量或时刻不一致都会中止成功判定。
+`run.py` validates STA/log completion before invoking `dat_results()` and `process()`. An incorrect count or time fails the result contract.
 
-## 位移与峰值
+## Displacements
 
-节点 `Uabs=sqrt(UX²+UY²+UZ²)`，每工况在1125节点范围内寻找最大Uabs，记录节点ID及该节点三分量。最大USUM节点不一定是最大|UZ|节点，不能混用。
+Compute `Uabs = sqrt(UX² + UY² + UZ²)` and identify its maximum over the 1,125 original nodes. Record the node ID and all three components. Compute the maximum absolute UZ separately when needed.
 
-云图中的颜色用线段两端节点值的平均，是一阶线段的显示约定；精确极值以nodes.csv与summary.json为准。所有UY被约束，计算后最大|UY|应接近零，当前门槛1e-6 mm用于发现模型/后处理错误，不是允许横风位移。
+Line-contour colors use the mean of endpoint nodal values. Exact nodal extrema remain in `nodes.csv` and `summary.json`. Require maximum absolute UY below 1e-6 mm as a check on the planar constraint and result mapping.
 
-## 全局应力到索力
+## Signed cable-force recovery
 
-对每个索单元e，原节点坐标Xi、Xj和末步位移ui、uj：
+For original coordinates Xi/Xj and final displacements ui/uj:
 
 ```text
 xi = Xi + ui
@@ -27,45 +27,41 @@ sigma_axial = n.T @ Sbar @ n
 N_kN = sigma_axial * A0_mm2 / 1000
 ```
 
-展开为：
+Expanded tensor projection:
 
 ```text
-σ = Sxx nx² + Syy ny² + Szz nz²
-  + 2 Sxy nx ny + 2 Sxz nx nz + 2 Syz ny nz
+sigma = Sxx*nx² + Syy*ny² + Szz*nz²
+      + 2*Sxy*nx*ny + 2*Sxz*nx*nz + 2*Syz*ny*nz
 ```
 
-输出DAT的S按全局Cauchy应力解释。投影方向用**变形后弦线**，不要固定投影X向。使用A0为当前基准的轴力恢复约定；Cauchy应力严格对应当前截面面积，若改做严格有限应变内力恢复，应另校核A_current及应力度量转换，不能悄悄修改口径后与本表混比。
+Interpret output S as the global Cauchy tensor. Use the deformed chord direction and original area A0, which define the benchmark's recovery convention. A derived finite-strain recovery using current area requires explicit area/stress-measure conversion and a separately identified comparison series.
 
-不要取von Mises应力×面积代替有符号轴力，也不要对所有应力分量直接求和。不取绝对值掩盖压索；保存最小索力并检查全为正。
+Retain signed force, save the minimum cable force and require positive tension throughout the cable set. Use the six-component axial projection rather than an equivalent-stress scalar.
 
-B31不在E_CABLE应力打印集合内，其截面正应力/弯矩本次不恢复。VTU里对应N和σ为NaN，`cable_result_valid=0`，避免把“未输出”画成“零应力”。
+B31 lies outside the E_CABLE DAT stress set. Its cable-force/stress VTU values are NaN with `cable_result_valid=0`.
 
-## 跨度分组
+## Span maxima and safety factors
 
-使用 `span_groups.json` 的8组元素ID。底索四组：北边跨149、主跨295、南边跨160、南辅跨115个；门架索四组分别64、216、67、47个。它们是原MCT用于报告对照的跨度分组，并非1123索单元的完整无遗漏分割，部分转折连接段不属于这些统计组。
+Read the eight explicit element groups from `span_groups.json`. Bottom-cable group sizes, ordered north side/main/south side/south auxiliary, are 149/295/160/115. Portal-cable sizes are 64/216/67/47. Together these reporting groups contain 1,113 elements; the remaining ten cable connection elements are retained in full-system CSV/VTU.
 
-每组取该组单元的最大正轴力，与报告表中同一索族、同一跨、同一工况比较。不要按全模型最大值同时填进四个跨，也不要将门架索与门架B31混淆。
+For each case/group, find the maximum positive axial force. Compare it with the same cable family and span in the original report. Calculate `K = Nbreak / Nmax` using 38,080 kN for bottom cables and 14,280 kN for portal cables. Preserve both the governing element and signed comparison error.
 
-## 输出文件
+## Per-case graphics
 
-每工况7张PNG：
+Generate seven PNGs:
 
-1. `USUM.png`：总位移标量线图，单位mm。
-2. `UZ.png`：有符号竖向位移线图，单位mm，对称色标便于识别上抬/下挠。
-3. `bottom_N_kN.png`：猫道承重索轴力，单位kN。
-4. `portal_N_kN.png`：门架承重索轴力，单位kN。
-5. `bottom_sigma_axial_MPa.png`：底索轴向应力。
-6. `portal_sigma_axial_MPa.png`：门架索轴向应力。
-7. `deformed_1x.png`：位移倍率1的变形后中心线，不将放大示意误称实际形状。
+1. `USUM.png`: total displacement, mm.
+2. `UZ.png`: signed vertical displacement, mm, with a symmetric color scale.
+3. `bottom_N_kN.png`: bottom-cable axial force, kN.
+4. `portal_N_kN.png`: portal-cable axial force, kN.
+5. `bottom_sigma_axial_MPa.png`: bottom-cable axial stress, MPa.
+6. `portal_sigma_axial_MPa.png`: portal-cable axial stress, MPa.
+7. `deformed_1x.png`: deformed centerlines at displacement scale factor 1.
 
-所有图注明工况、单位、X–Z投影、变形倍率，X/Z轴显示m。X/Z独立缩放已在图标题中注明；原桥很长，不应从显示纵横比例反推真实坡度。色彩绘在线单元上，不填充成不存在的实体板面。
+Identify the case, units, X–Z projection and deformation scale. Display X/Z coordinates in metres and label independently scaled axes. Draw colors on line members. Force/stress graphics use the union of each family's four reporting groups, aligning plotted extrema with the span tables. Retain all cable elements in CSV/VTU.
 
-## ParaView交互查看
+## ParaView
 
-打开 `results.vtu`，Apply。Points坐标为mm；`U_mm`是节点三维位移；`N_kN`和`sigma_axial_MPa`为Cell Data。显示线太细可增加Line Width或使用Tube过滤器作示意，但Tube半径只是可视化参数，不代表实际绳截面。
+Open `results.vtu` and select Apply. Point coordinates and `U_mm` are in mm; `N_kN` and `sigma_axial_MPa` are cell fields. Increase Line Width for clarity. A Tube filter can improve visibility; document its display radius.
 
-使用Warp By Vector，Vectors选U_mm，Scale Factor=1显示实际变形；若为了演示用更大倍率，截图标题必须注明。选择N_kN前按`cable_result_valid`筛选有效索单元。门架B31的NaN不应该插值成有数据。
-
-保存原始VTU与CSV，截图不能替代可审计数据。
-
-1.1.0图示采用原报告相同跨度分组：底索/门架索的轴力与应力图只显示各自四跨组的并集，极值与四跨表一致。未归组连接段仍完整保存在CSV/VTU，不能将四跨最大值表述为所有单元的全模型最大值。
+For deformation, use Warp By Vector with `U_mm` and Scale Factor=1. Label any larger display factor. Filter on `cable_result_valid` before displaying cable-force fields. Preserve CSV/VTU alongside screenshots.

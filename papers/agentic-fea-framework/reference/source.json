@@ -1,0 +1,33 @@
+{
+  "title": "FeaGPT: an End-to-End agentic-AI for Finite Element Analysis",
+  "authors": [
+    "Yupeng Qi",
+    "Ran Xu",
+    "Xu Chu"
+  ],
+  "arxiv": "2510.21993v1",
+  "url": "https://arxiv.org/abs/2510.21993v1",
+  "pdf_url": "https://arxiv.org/pdf/2510.21993",
+  "pdf_title_date": "October 28, 2025",
+  "pdf_sha256": "bb5a1bbcd36559fabcdab91ab92772f62b4f32fec362211d34bbb2cac1c8dcb2",
+  "pages": 21,
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "figure_pages": [
+    4,
+    12,
+    13,
+    15,
+    18
+  ],
+  "table_pages": [
+    11,
+    13,
+    14
+  ],
+  "algorithm_pages": [
+    5
+  ],
+  "downloaded_utc": "2026-10-06",
+  "use": "Structural and visual reference for the catwalk paper framework; reproduced reference page previews are unchanged."
+}

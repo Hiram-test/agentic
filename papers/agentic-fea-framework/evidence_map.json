@@ -1,0 +1,40 @@
+{
+  "run_id": "20261006T174516Z",
+  "summary_sha256": "d88958c6692aa9b0bbd22c8323941c2b5569ededa83ba2578b369c49388a0ef4",
+  "max_abs_displacement_difference_percent": 0.859886945333399,
+  "governing_force_differences": {
+    "bottom": {
+      "case": "P4",
+      "type": "bottom",
+      "span": "北边跨",
+      "element": 153,
+      "N_kN": 12485.669811821343,
+      "report_kN": 12380.0,
+      "error_percent": 0.8535525995261972,
+      "breaking_force_kN": 38080,
+      "safety_factor": 3.049896447201105,
+      "required_factor": 2.7,
+      "meets_report_factor": true
+    },
+    "portal": {
+      "case": "P4",
+      "type": "portal",
+      "span": "门架索北边跨",
+      "element": 1057,
+      "N_kN": 3835.3411302795703,
+      "report_kN": 3879.0,
+      "error_percent": -1.1255186831768405,
+      "breaking_force_kN": 14280,
+      "safety_factor": 3.723267244016723,
+      "required_factor": 2.7,
+      "meets_report_factor": true
+    }
+  },
+  "solver_wall_time_sum_s": 9.633834,
+  "figure_4_source": "../../skills/catwalk-static-review/examples/summary.json",
+  "session_experiment": {
+    "provider_preference": "GLM",
+    "status": "planned",
+    "fields": "See manuscript framework session table"
+  }
+}

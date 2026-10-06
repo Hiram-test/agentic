@@ -1,10 +1,10 @@
-# 猫道静力复核 Skill
+# Catwalk static verification skill
 
-入口：[SKILL.md](SKILL.md)。本包包括详细执行指令、7份专题文档、独立Python脚本、六份已核验INP、原始118页报告PDF和机器可读基准。
+Start with [SKILL.md](SKILL.md). The self-contained package includes seven detailed execution references, Python scripts, six verified INP files, the original 118-page engineering report and machine-readable benchmarks.
 
-**已实跑验证**：Gmsh生成1125节点/1194线单元，坐标与连接关系完全一致；CalculiX完成P1—P6；位移最大差0.860%，底索最大差0.854%，门架索最大差1.126%。这些是随包示例运行结果，不替代下一次运行。
+The bundled validation run completed P1–P6 with CalculiX. Gmsh reproduced 1,125 nodes and 1,194 line elements with identical coordinates and connectivity. Maximum absolute differences were 0.860% for displacement, 0.854% for bottom-cable force and 1.126% for portal-cable force.
 
-示例：[17页PDF](examples/catwalk_static_review.pdf) / [Word](examples/catwalk_static_review.docx) / [完整运行证据ZIP](examples/validated-run.zip)。报告仅包含猫道及门架承重索整体静力，不含用户已排除的局部构件章节。
+Examples: [17-page PDF](examples/catwalk_static_review.pdf), [Word report](examples/catwalk_static_review.docx), [complete validation evidence](examples/validated-run.zip).
 
 ```bash
 python -m pip install -r requirements.txt
@@ -12,10 +12,9 @@ python scripts/run.py --verify-only
 python scripts/run.py --out /absolute/path/to/new-run
 ```
 
-自动下载求解器仅支持Linux x86_64；离线及Windows执行详见[执行文档](references/01-execution.md)。目录可以整体复制，脚本不依赖外部model仓库。
+Automatic solver download supports Linux x86_64. See [execution instructions](references/01-execution.md) for offline and Windows use. The folder is relocatable and carries its own inputs and references.
 
-测试：`python -m unittest discover -s tests -v`。只重新排版已有完成结果：`python scripts/rebuild_report.py --run /path/to/completed-run`。
+Contract tests: `python -m unittest discover -s tests -v`.
+Rebuild a completed run's report: `python scripts/rebuild_report.py --run /path/to/completed-run`.
 
-本版默认保留原件计算，不更改网格或物理定义以拟合结果。Gmsh加密选项只输出候选网格，尚未包含新网格的物理卡片迁移，见[网格文档](references/03-gmsh.md)。
-
-1.1.0：字体、字号、封面、页码、四跨验算表及云图按用户原报告重新排版；PDF和Word均嵌入宋体、黑体及Times New Roman。六工况数值结果保持不变。
+Version 1.2.0 provides English skill instructions and technical references. Numerical inputs, executable scripts, benchmark results and the approved Chinese report typography retain the version 1.1.0 definitions. Mesh refinement follows the migration procedure in [reference 03](references/03-gmsh.md).

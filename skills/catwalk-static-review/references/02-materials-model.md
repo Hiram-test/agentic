@@ -1,26 +1,26 @@
-# 02 材料、截面、初应力与单位
+# 02 Materials, sections, initial stresses and units
 
-## 单位
+## Units
 
-一致单位体系：长度mm，力N，时间s，质量tonne，应力MPa=N/mm²，温度℃。因此密度单位tonne/mm³、重力9806 mm/s²。1 kN=1000 N；1 m=1000 mm；1 tonne/mm³=10¹² kg/m³。
+Use a consistent system: length mm, force N, time s, mass tonne, stress MPa = N/mm² and temperature °C. Density is tonne/mm³ and gravity is 9,806 mm/s². Conversions: 1 kN = 1,000 N; 1 m = 1,000 mm; 1 tonne/mm³ = 10¹² kg/m³.
 
-Gmsh使用无量纲坐标，本流程传入INP原始mm，不自动缩放。图上X/Z除以1000显示m；CSV/VTU坐标仍为mm。应力乘面积得到N，然后除1000得到kN。
+Pass the original millimetre coordinates to Gmsh. Plot X/Z in metres by dividing by 1,000; CSV/VTU coordinates remain millimetres. Stress times area gives N; divide by 1,000 for kN.
 
-## INP中的实际参数
+## Actual INP properties
 
-|集合|单元|材料|E/MPa|ν|ρ/(tonne/mm³)|截面|
+| Set | Element | Material | E / MPa | Poisson ratio | Density / tonne/mm³ | Section |
 |---|---|---|---:|---:|---:|---|
-|E_SEC1|T3D2|MAT1|120000|0.3|1.26484805e-08|A=22298.692 mm²|
-|E_SEC2|T3D2|MAT2|120000|0.3|8.59881705e-09|A=8402.9797 mm²|
-|E_SEC3|B31|MAT3|206000|0.31|1.01978381e-17|矩形98.954535×98.954535 mm|
+| E_SEC1 | T3D2 | MAT1 | 120000 | 0.3 | 1.26484805e-08 | A = 22298.692 mm² |
+| E_SEC2 | T3D2 | MAT2 | 120000 | 0.3 | 8.59881705e-09 | A = 8402.9797 mm² |
+| E_SEC3 | B31 | MAT3 | 206000 | 0.31 | 1.01978381e-17 | Rectangle 98.954535 × 98.954535 mm |
 
-P3/P6三材料均有 `*EXPANSION`，α=1.2e-5 /℃；P1/P2/P4/P5无此卡。B31截面方向向量是(1,1,1)。截面积程序从实际宽高相乘得到，不能四舍五入后回写输入。
+P3/P6 define `*EXPANSION` with alpha = 1.2e-5 /°C for all three materials. P1/P2/P4/P5 omit that card. The B31 orientation vector is (1, 1, 1). Calculate its area from the supplied dimensions at full precision.
 
-MAT1是底部猫道等效索束、MAT2是门架承重索束，MAT3是门架等效杆。报告说明底索包含15根常规绳及1根智慧芯绳，门架索6根，等效截面与报告圆整的单根截面略有差异；**计算以INP面积为准，不根据直径50mm改为圆面积**。
+MAT1 represents the equivalent bottom cable bundle, MAT2 the portal support cable bundle and MAT3 the equivalent portal members. The report describes 15 conventional bottom ropes plus one smart-core rope, and six portal ropes. Use the INP equivalent areas directly.
 
-MAT1密度换算约12648.48 kg/m³、MAT2约8598.82 kg/m³，属于现有等效模型的重量口径；不能无理由换回7850 kg/m³。MAT3极小密度用于等效模型中避免重复自重，不能解释为钢材实际密度。报告中其他门架自重已通过节点荷载体现，不能擅自再补一次。
+MAT1/MAT2 densities correspond to approximately 12648.48/8598.82 kg/m³ and implement the supplied equivalent-weight model. MAT3's near-zero density assigns negligible member self-weight; other portal weight is already represented by nodal loads. Retain these weight definitions together.
 
-### 对应卡片示例（真实参数；示例不是让你覆盖原件）
+### Card example
 
 ```text
 *MATERIAL, NAME=MAT1
@@ -32,35 +32,31 @@ MAT1密度换算约12648.48 kg/m³、MAT2约8598.82 kg/m³，属于现有等效�
 22298.692
 ```
 
-温度工况在相应材料下增加的原始定义为：
+Temperature cases include this card under each material:
 
 ```text
 *EXPANSION
 1.2e-05
 ```
 
-不能在材料定义顺序被打乱后把密度/膨胀系数附到错误材料。脚本通过当前 `*MATERIAL` 上下文解析。
+Parse properties within the current `*MATERIAL` context so density and expansion remain associated with the correct material.
 
-## 连接、几何与模型局限
+## Geometry and element semantics
 
-1123个T3D2、71个B31，总1194。节点ID不连续，最大ID大于节点数，不可用 `range(1,1126)` 替代真实节点集合。不得统一编号后仍使用旧荷载、初应力和边界编号。
+The model contains 1,123 T3D2 elements and 71 B31 elements. Node IDs are non-contiguous and their maximum exceeds the node count. Preserve actual node/element IDs across geometry, loads, initial stresses, boundaries and output groups.
 
-报告整体模型原来使用索单元与桁架等效门架，而本迁移INP中门架是B31。B31有弯曲与截面方向影响，不能称为完全相同的单元公式。当前一致性是数值复算证据，不是宣称算法逐项等价。
+The migrated INP uses B31 equivalent portal members, including their bending stiffness and section orientation. Retain that formulation when describing or reconstructing the model. T3D2 supports signed axial force; check all recovered cable forces for positive tension and investigate any zero/negative force before acceptance.
 
-T3D2为杆单元，可受压。本流程检查所有恢复索力为正；若有负值，真实索松弛可能要求只受拉求解，不能将负力截零后继续计算安全系数。
+## Initial stress
 
-## 初始应力
-
-`*INITIAL CONDITIONS, TYPE=STRESS` 后为：
+Each record following `*INITIAL CONDITIONS, TYPE=STRESS` contains:
 
 `element, integration_point, Sxx, Syy, Szz, Sxy, Sxz, Syz`
 
-1123个索单元，每个8条积分点，共8984条。原件注释标识初应力按该版本的全局PK2张量口径写入。原件复算只保留这些卡片，不重新把报告最大索力反算进去。
+There are eight records per cable element: 1,123 × 8 = 8,984. Original comments identify a global PK2 initial-stress tensor compatible with the locked solver. Preserve all supplied records in the reproduction run.
 
-来源是MCT初始单元力/初始索力，按局部轴线形成全局张量。一般方向n、轴向初应力s时，张量为s·n⊗n；离轴索不能只赋Sxx。初应力的测度与求解器版本相容性应以锁定求解器和实际基准验证为依据；不能把输出Cauchy应力不加转换直接回填初始PK2卡。
+The source is the MCT initial element/cable force. For an axial initial stress s and unit direction n, the global tensor is `s * n ⊗ n`, including off-diagonal terms for inclined cables. Initial stress and initial geometry together define the reference state. During a derived-mesh conversion, migrate parent-element identity, direction, integration points and stress measure. Convert between stress measures explicitly if using output Cauchy stress to construct a new initial state.
 
-初应力与初始几何共同定义参考状态。不要删除初应力后用相同几何声称“从零生成同一模型”。更换网格时要迁移方向、单元所属、积分点、应力度量，并重做平衡与回归。
+## Cable resistance
 
-## 不能从材料表推导的结论
-
-原报告绳强度等级1960 MPa并不等于可直接使用的容许应力；本次索束破断力取报告38080/14280 kN。没有独立材料强度折减和条文核对时，不能将整体索力相符描述为所有钢构件、连接和局部结构强度通过。
+The original rope strength grade is 1960 MPa. The report's bundle breaking forces used for this verification are 38,080 kN and 14,280 kN. Evaluate cable safety through those breaking forces and the calculated span maxima, following reference 05.

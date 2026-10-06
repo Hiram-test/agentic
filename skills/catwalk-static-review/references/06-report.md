@@ -1,62 +1,59 @@
-# 06 原报告格式与自动报告
+# 06 Engineering-report typography and generation
 
-## 格式来源与本次裁剪
+## Source and contents
 
-用户原始报告118页，封面、目录、正文均为A4纵向，带页眉/页脚、细边框表格、独立图题、按工程内容分节。参考实物保存在 `assets/reference/original_review_0324.pdf`。
+Use `assets/reference/original_review_0324.pdf` as the layout reference: A4 portrait, ruled headers/footers, thin table borders, separate figure captions and engineering-topic sections.
 
-按用户最新要求，本报告**只含整体猫道和门架承重索静力**。原报告的转索鞍、锚固等局部构件章节不保留，不列为待办或占位。新目录为：
+Generate the requested overall catwalk and portal support cable report with this contents structure:
 
-- 封面、可更新目录；
-- 第1章 工程概况：1.1工程概况、1.2依据文件、1.3规范与口径、1.4材料截面、1.5主要荷载；
-- 第2章 猫道及门架承重索计算：2.1控制点/边界、2.2模型/网格/步骤、2.3组合与完整性、2.4底索计算、2.5门架索计算、2.6后处理图；
-- 第3章 结论：实际结果、对照判定、适用范围；
-- 附录A：输入哈希与执行追溯。
+- Cover and updatable table of contents.
+- Chapter 1, Project overview: 1.1 Overview; 1.2 Source documents; 1.3 Criteria and conventions; 1.4 Materials and sections; 1.5 Principal loads.
+- Chapter 2, Catwalk and portal cable analysis: 2.1 Control points and supports; 2.2 Model, mesh and steps; 2.3 Combinations and completeness; 2.4 Bottom cables; 2.5 Portal cables; 2.6 Result graphics.
+- Chapter 3, Conclusions: calculated results, comparison outcomes and model definition.
+- Appendix A, Input hashes and execution provenance.
 
-字体、字号、边距、线宽按原PDF测量值固定；正文内容和篇幅不同，因此不追求原118页的分页。封面不沿用原公司的署名、印章和审核人，日期为实际生成日期。
+Retain the approved Chinese report language. Use the actual generation date and the current report identity on its cover. The generated report has its own pagination.
 
-## 数据来源必须分栏
+## Reference and calculated values
 
-报告索力来自用户PDF表1-11/1-14（物理第30、39页）；安全系数限值来自表1-7（第11页）。位移基准来自既有独立MAPDL复现，不是PDF中的位移读数。
+Cable-force references come from Tables 1-11/1-14 on physical PDF pages 30/39. Safety-factor requirements come from Table 1-7 on page 11. Displacement references come from the separately documented MAPDL reproduction.
 
-表格至少列：工况/跨度、本次N、报告N、相对差%、本次K、所需K、判定。位移表列本次USUM、MAPDL基准、相对差%、峰值节点。
+Force tables carry case/span, current N, report N, signed difference %, current K, required K and acceptance. Displacement tables carry current USUM, MAPDL reference, signed difference % and peak node.
 
-`相对差%=100×(本次/参考-1)`。用绝对值判断是否越过回归阈值，但保留有符号差，便于辨认偏大/偏小。报告中整数形式的参考索力本身有圆整，不应以过多小数假装参考精度更高。
+Calculate `difference_percent = 100 * (current/reference - 1)`. Use absolute differences for regression acceptance and retain the signed values in tables. Preserve the original integer-kN reference precision.
 
-## 自动生成
+## Generation
 
-`run.py` 默认对六工况实际求解后调用 `report.generate()`。DOCX与PDF使用同一数据构造流程，禁止先生成Word后手改PDF导致两者矛盾。
+After solving all six cases, `run.py` invokes `report.generate()`. Build DOCX/PDF from the same result data. PDF generation embeds the bundled SimSun, SimHei and Times New Roman fonts through ReportLab; Word uses and embeds the same fonts.
 
-PDF由ReportLab嵌入真实SimSun（宋体）、SimHei（黑体）和Times New Roman字体生成，不使用STSong-Light或系统替代字体。Word也设置并嵌入相同字体。白底细线表格、重复表头、自动分页、目录与三位页码均按原报告风格；Word中Ctrl+A/F9更新目录。云图使用宋体中文说明、白底、离散色标、红色极值注记，取消默认坐标网格和英文长标题。
+Use white tables, thin rules, repeating headers, automatic page breaks, a contents field and three-digit page numbers. Update DOCX fields in Word with Ctrl+A/F9. Contours use SimSun Chinese labels, a white background, discrete color scales and red extrema annotations.
 
-模型真实初应力状态与“空索”并非同义。自动报告的空索线形/无应力长度小节只说明本次口径及未重新找形，不生成假的下料长度。完整节点线形CSV已输出，可用于进一步复核。
+Describe the supplied initial-stress/reference-geometry state consistently. The delivered coordinate CSV represents the calculated line geometry; any separate unstressed-length or form-finding calculation needs its own solved data.
 
-## 数值输出和图片
+Embed UZ, bottom N and portal N for each case in the engineering report. Keep the other four PNGs per case in the result directory. Captions identify endpoint-average coloring, coordinate units m, displacement units mm, force units kN and independent axis scaling. Generate every result graphic from that run's final DAT fields.
 
-每工况报告嵌入UZ、底索N、门架索N三张主要图，其他4张PNG保留在结果目录。所有图可追溯到同工况DAT中的末步结果。报告正文说明端点平均着色、坐标m/位移mm/索力kN、非等比例坐标轴。
+## Fixed style parameters
 
-不能用原报告的云图作为本次计算云图，也不能将参考数值贴到新图色标上。原PDF仅作版式与基准来源，原始云图不是本次成果。
+Source: `assets/reference/report_style.json`; implementation: `scripts/report_style.py`; fonts and provenance: `assets/fonts/`.
 
-## 报告签发前机器与视觉检查
+- Page size: 595.32 × 842.04 pt. Left/right margins: 70.87/42.52 pt.
+- Cover: centered two-line SimHei, 42/36 pt.
+- Chapter/section/subsection headings: SimHei 16/14/12 pt.
+- Body: SimSun 12 pt; Latin characters/numerals: Times New Roman; line spacing 23.4 pt; first-line indent 24 pt.
+- Tables/captions: SimSun 10.5 pt; rule width 0.4 pt; white background.
+- Safety-factor numerals: bold. Strength tables: approximately 409 pt wide, four span columns and vertically merged case labels.
+- Header/footer horizontal rules: 56.1/768.7 pt from page top.
+- Page numbering: three-digit current page / total pages.
+- Use actual superscript formatting and verify glyph coverage for symbols, brackets and underscores.
 
-1. run.json.status=completed，六工况summary齐全；若失败，明确失败项。
-2. 报告中的P5数字应来自新运行，不硬编码1325.314。
-3. 本次和参考分别标注；没有将二维约束模型写成三维。
-4. 检查中文是否可读、表格是否越过页边距、图题与图是否错位、目录页码是否生成。
-5. 搜索报告不应出现转索鞍或锚固计算章节；描述工程来源时不构成此类验算。
-6. 不声称已完成RF平衡、局部模型、模态或抖振等未执行工作。
-7. 最终文件哈希更新到SHA256SUMS，再制作分发压缩包。
+## Pre-delivery checks
 
-如仅调整报告文案而不改变数值输入，可在原run上重新调用report.generate，重新核验输出哈希，无需无理由重跑六个工况。
+1. Read `run.json.status`, all six summaries and any failed criteria.
+2. Verify report values against the current summaries, including P5.
+3. Check reference/current column labels and the planar model description.
+4. Visually inspect Chinese glyphs, margins, table width, captions and contents pagination.
+5. Match chapters to the contents list above.
+6. Match every reported response quantity to its output evidence.
+7. Refresh SHA256SUMS and package the deliverables.
 
-## 1.1.0 固定的排版参数
-
-参数文件：`assets/reference/report_style.json`；实现：`scripts/report_style.py`；字体来源及本体：`assets/fonts/`。
-
-- 纸张595.32×842.04 pt；左边距70.87 pt，右边距42.52 pt。
-- 封面黑体42/36 pt，两行居中；章标题黑体16 pt，小节14 pt，次级12 pt。
-- 正文宋体12 pt，西文及数字Times New Roman，行距23.4 pt，首行缩进24 pt。
-- 表格与图题宋体10.5 pt，细线0.4 pt，白底。安全系数数字加粗；强度表约409 pt宽、四跨横排、工况纵向合并。
-- 页顶横线距顶56.1 pt，页底横线距顶768.7 pt；页码001/总页数。
-- 上下标用真正的上标排版；字体必须覆盖百分号、方括号、下划线等，不得输出缺字方框。
-
-禁止把这些参数改成通用现代模板、蓝灰表头、无衬线正文或缩小正文来强行减页数。修改格式后仅重建报告与图，不重跑求解；检查六工况summary完全相同，再更新输出哈希和分发包。
+For typography-only changes, execute `scripts/rebuild_report.py --run /path/to/completed-run`. Rebuild from the completed data, verify unchanged numerical summaries and refresh output hashes.

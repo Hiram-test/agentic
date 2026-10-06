@@ -1,58 +1,60 @@
-# 07 失败诊断与回归验收
+# 07 Troubleshooting and regression acceptance
 
-## 故障顺序：先文件，再物理定义，再求解器，再后处理
+Diagnose in this order: file identity, physical definitions, solver execution, postprocessing.
 
-### 文件版本错误
+## Wrong input version
 
-表现：P5得到约3m上抬、节点302附近；或材料/网格数量看似相同但位移方向不符。
+A historical symptom is approximately 3 m upward P5 displacement near node 302. First verify SHA256. The packaged P5 hash is:
 
-处理：先对SHA256，不要修改力学模型来“修复”。已核验P5哈希是 `3ba72d5d9c50561f6cdde3b17930d4668151d66a0ef7f10540aa59091320fc1f`。来源为model的 `feat/catwalk-ccx-20260826` 固定提交 `ebd0e3d8eea740de6d2d4539feda51885d80e3f8`。旧daughters版本不能混用。
+`3ba72d5d9c50561f6cdde3b17930d4668151d66a0ef7f10540aa59091320fc1f`
 
-### Gmsh网格不一致
+Its source is branch `feat/catwalk-ccx-20260826`, commit `ebd0e3d8eea740de6d2d4539feda51885d80e3f8`, in the model repository. Resolve the correct file before changing any physical parameter.
 
-检查是否使用2D/3D网格生成、二阶单元、节点合并、几何自动修复，或者将Gmsh生成Tag当原INP编号。默认应为1125节点、1194条一阶线单元。任何差异均停止原件运行路径。
+## Gmsh mismatch
 
-### 无法启动求解器
+Check mesh dimension, element order, entity merging and tag namespaces. The default result is 1,125 nodes and 1,194 first-order line elements with identical ordered connectivity. Restore this contract before continuing baseline execution.
 
-文件不存在、不可执行、平台格式不符、动态库缺失先单独修复；这些错误不需要修改INP。Linux ELF不能当Windows EXE。锁定哈希不匹配应停止或显式选择替代版本试算，不能静默回退不明版本。
+## Solver startup failure
 
-### 不收敛或奇异
+Check file existence, execute permission, platform binary format and native dependencies. Use WSL for the locked Linux ELF on Windows, or explicitly select a native solver variant and record its identity.
 
-保存首次失败log/dat/sta。检查是否丢失初应力、单位错了1000倍、UY约束漏失、节点合并、某截面未分配、B31方向无效或荷载重复。只有这些检查通过后，才另建派生算例调整增量/迭代参数；原件保留，不将不同参数结果混为同一输入。
+## Nonconvergence or singularity
 
-### 已知警告
+Retain the first failed log/DAT/STA. Check initial stress, units, UY constraints, node identity, section assignment, B31 orientation and repeated loading. After verifying these, create a separate derived case if solution-control changes are needed; preserve the original input and identify each parameter set.
 
-首步STATIC无参数，求解器使用默认(1,1)；P3/P6 N_THERM上限超出实际节点、截断。这两类在已验证原件存在，不等同失败；仍逐条记录。不能将所有带WARNING的输出一律忽略，新警告必须阅读。
+## Expected warnings
 
-### P3/P6与历史略有差异
+The first STATIC step uses default parameters (1, 1). P3/P6 clip the N_THERM range beyond existing nodes. Record both messages. Read every additional warning and diagnose its cause.
 
-不同CalculiX版本的温度/展开单元实现可能造成变化。核对EXPANSION、初温、N_MCT温降、N_THERM、求解器版本及末步读取。记录差值，不调整α以强行贴合。
+## P3/P6 version sensitivity
 
-### 索力正确但位移错
+Check EXPANSION, initial temperature, final N_MCT temperature, N_THERM membership, solver version and final output time. Expanded-element temperature handling can vary between solver builds; quantify the resulting response difference with unchanged physical properties.
 
-检查取了首步还是末步、是否用UZ代替USUM、峰值节点是否来自原节点集合。检查DAT时间与STA，禁止从FRD内部扩展节点中无差别搜索而与原1125节点基准比较。
+## Correct forces but wrong displacements
 
-### 索力偏差大
+Check final-step selection, USUM versus UZ and the original-node peak search domain. Compare DAT times with STA. Use the original 1,125 nodes for comparison with the displacement benchmark.
 
-应力列顺序、单位、面积、投影方向、索族和跨度分组逐项核查。需要六分量张量投影；不能用von Mises或Sxx代替。确认用变形后弦线；不要把B31当索。
+## Large cable-force difference
 
-## 已有基准的合理量级（仅诊断，不是计算来源）
+Check stress-component order, units, area, deformed chord direction, cable family and span group. Recover signed axial stress with all six tensor components. Match T3D2 results to the cable sets.
 
-|工况|USUM约值/mm|峰值节点|
+## Bundled validation values for diagnosis
+
+| Case | Approximate USUM / mm | Peak node |
 |---|---:|---:|
-|P1|42.259|304|
-|P2|2662.041|1176|
-|P3|1897.223|1176|
-|P4|2846.280|1176|
-|P5|1325.314|306|
-|P6|927.260|1166|
+| P1 | 42.259 | 304 |
+| P2 | 2662.041 | 1176 |
+| P3 | 1897.223 | 1176 |
+| P4 | 2846.280 | 1176 |
+| P5 | 1325.314 | 306 |
+| P6 | 927.260 | 1166 |
 
-锁定求解器当前基准：最大位移差约0.86%，底索差约0.85%，门架索差约1.13%。每次运行必须重新求得这些量，不能拷贝表格充当实跑。
+The bundled run's maximum absolute differences are approximately 0.86% for displacement, 0.85% for bottom-cable force and 1.13% for portal-cable force. Recompute these metrics from each new run.
 
-## 测试与可重复性
+## Tests and reproducibility
 
-`python -m unittest discover -s tests -v` 执行针对关键物理投影与错误输入的检查。完整端到端测试是按run.py实际执行六个工况，不能用单元测试替代。
+Run `python -m unittest discover -s tests -v` for the input-contract and tensor-projection checks. Run `scripts/run.py` for complete six-case execution.
 
-输入验证、Gmsh几何/连接一致性、求解器完成及DAT完整性为硬门槛。量值比较是回归门槛；报告安全系数是另外的工程计算口径。最终报告同时呈现三者。
+Evaluate asset identity, mesh equivalence, solver completion and DAT completeness before numerical regression and cable safety factors. Present each acceptance category in the report.
 
-不得设置 `python -O`，因为本版脚本使用assert执行内部一致性断言；主入口会拒绝优化模式运行。
+Use normal Python execution. The scripts rely on internal assertions; the entry point rejects optimized `python -O` execution.

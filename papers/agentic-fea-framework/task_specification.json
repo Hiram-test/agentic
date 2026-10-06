@@ -1,0 +1,44 @@
+{
+  "skill": "catwalk-static-review",
+  "skill_version": "1.2.0",
+  "cases": [
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "P6"
+  ],
+  "units": {
+    "length": "mm",
+    "force": "N",
+    "stress": "MPa",
+    "mass": "tonne",
+    "temperature": "degC"
+  },
+  "input_manifest": "../../skills/catwalk-static-review/assets/reference/manifest.json",
+  "solver_sha256": "b498dad80b0415d53ab112409adc85b8a1fd19eb7846dc31e778f4c83b437a0e",
+  "stages": [
+    "Read task and resolve the versioned six-case manifest.",
+    "Verify asset hashes and audit material, section, prestress, load and support cards.",
+    "Regenerate the Gmsh line mesh and verify original-to-mesh identity.",
+    "For each case P1\u2013P6: copy its complete INP into a new case directory and execute the recorded solver command.",
+    "Validate final step/time and complete finite U/S fields.",
+    "Recover deformed-chord cable forces; evaluate span maxima, safety factors and benchmark differences.",
+    "Write CSV, VTU and seven field plots per case.",
+    "Generate the Chinese engineering report from the common result object and prescribed style assets.",
+    "Write execution status and output hashes; return the report and evidence links."
+  ],
+  "outputs": [
+    "DOCX",
+    "PDF",
+    "CSV",
+    "VTU",
+    "PNG",
+    "DAT",
+    "FRD",
+    "STA",
+    "JSON",
+    "SHA256SUMS"
+  ]
+}

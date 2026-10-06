@@ -1,27 +1,25 @@
-# 03 Gmsh调用、编号映射与加密网格
+# 03 Gmsh API, tag mapping and mesh refinement
 
-## 为什么不能直接重新划一个“看起来一样”的模型
+## Default meshing contract
 
-本模型已包含逐单元初应力、逐节点荷载、支承以及后处理分组。网格一改，这些编号就可能失效。只导出一个Gmsh Abaqus网格没有材料、初应力、载荷历史等完整计算语义，不能直接替换本INP。
+Reconstruct the original line geometry in Gmsh and generate the identical first-order, one-dimensional mesh. Verify topology and coordinates, then solve the complete original INP with its physical cards. This preserves the association of every node and element with its initial stress, loading, support and reporting group.
 
-默认流程使用Gmsh**重新生成与原始线网完全相同的一阶一维网格**，以验证几何/拓扑和实现可视化交换；验证后计算仍使用完整原INP。因此这是完整的“几何建网—一致性验证—保留物理卡片求解”路径，不是丢弃物理信息的网格替换。
-
-## 实际API顺序
+## API sequence
 
 ```python
 import gmsh
 gmsh.initialize()
 gmsh.model.add('catwalk_static')
-# nodes: {原节点ID: [X,Y,Z]}；单位为mm
+# nodes: {original_node_id: [X, Y, Z]}, in mm
 for nid, xyz in nodes.items():
     gmsh.model.geo.addPoint(*xyz, 0, nid)
-# elements: {原单元ID: {'nodes':[起点ID,终点ID], ...}}
+# elements: {original_element_id: {'nodes': [start_id, end_id], ...}}
 for eid, el in elements.items():
     gmsh.model.geo.addLine(*el['nodes'], eid)
 gmsh.model.geo.synchronize()
 for eid in elements:
     gmsh.model.mesh.setTransfiniteCurve(eid, 2)
-# 为E_SEC1/2/3建立一维PhysicalGroup，组内是原线实体ID
+# Create a 1D physical group for each E_SEC1/E_SEC2/E_SEC3 line set:
 # gmsh.model.addPhysicalGroup(1, element_ids, physical_id)
 # gmsh.model.setPhysicalName(1, physical_id, 'E_SEC1')
 gmsh.option.setNumber('Mesh.ElementOrder', 1)
@@ -31,47 +29,47 @@ gmsh.write('catwalk.msh')
 gmsh.finalize()
 ```
 
-完整、已连接到输入解析的实现是 `scripts/mesh_gmsh.py`，不要让AI从示例自行拼出另一个未验证版本。二维结构的杆件用 `generate(1)`，不是 `generate(2)`；平面结构不等于平面实体网格。
+Execute the complete implementation in `scripts/mesh_gmsh.py`. The planar structural system consists of line members, so mesh dimension is 1.
 
-## 映射与验证
+## Tag mapping and verification
 
-几何Point Tag、Gmsh Mesh Node Tag、INP Node ID是不同命名空间；Line Tag、Mesh Element Tag、INP Element ID同理。即使本流程令Point/Line Tag等于原ID，也不能假定生成的Mesh Tag相同。
+Treat geometric point tags, mesh-node tags and INP node IDs as separate namespaces. Likewise distinguish geometric line tags, mesh-element tags and INP element IDs.
 
-本脚本逐个读取 `getNodes(0, nid)`，得到几何点对应的唯一网格节点，再建立 `gmsh_node_to_inp_node`。逐线读取 `getElements(1, eid)`，建立 `inp_element_to_gmsh_elements`。
+For each geometric point, `getNodes(0, nid)` identifies its unique mesh node. Build `gmsh_node_to_inp_node`. For each line, `getElements(1, eid)` identifies its mesh elements. Build `inp_element_to_gmsh_elements`.
 
-默认每线两个节点（一段）：
+With two nodes per original curve, require:
 
-- 必须1125个网格节点、1194个一阶线单元，Gmsh类型1。
-- 每原始节点位置误差≤1e-7 mm。
-- 每单元两个端点经过映射后必须与原INP**同一顺序**一致。
-- 不做`removeAllDuplicates()`、`removeDuplicateNodes()`或OCC布尔合并；相近/相同坐标不自动意味着物理连接。
-- 物理组表示截面归属，不能把它当成材料、边界或荷载的完整定义。
+- 1,125 mesh nodes and 1,194 first-order line elements, Gmsh element type 1.
+- Coordinate error at each original node at most 1e-7 mm.
+- Each mapped element's endpoints matching the original ordered INP connectivity.
+- Preservation of separate topological nodes even when their coordinates coincide.
+- Physical groups matching the section sets, with all material/load/support definitions retained in the complete INP.
 
-输出 `mesh/catwalk.msh`、`catwalk.geo_unrolled`、`mesh_map.json`。后者记录Gmsh版本、映射、误差和是否可用于本原件复算路径。
+Keep geometric entities separate throughout this operation; node deduplication and Boolean merging would change the topology contract.
 
-独立调用：
+Outputs: `mesh/catwalk.msh`, `catwalk.geo_unrolled` and `mesh_map.json`. The mapping records the Gmsh version, tag associations, coordinate error and eligibility for baseline reproduction.
 
 ```bash
 python scripts/mesh_gmsh.py --inp assets/inputs/migrate_P1.inp --out /new/mesh
 ```
 
-## 可选加密：只生成候选网格，不自动求解
+## Candidate refinement
 
 ```bash
 python scripts/mesh_gmsh.py --inp assets/inputs/migrate_P1.inp --out /new/refined-mesh --subdivisions 2
 ```
 
-每条原线分成2段，原节点仍保留，但中间节点和新单元没有原始物理卡片；输出明确标记 `refined_mesh_is_unsolved_candidate=true`。不得拿该结果宣称完成网格收敛分析。
+This splits each original line into two elements and marks the output `refined_mesh_is_unsolved_candidate=true`. Original nodes remain. New nodes/elements require physical-card migration before analysis.
 
-若任务明确要求加密计算，应另写派生INP转换器，并完成以下工作后才能求解：
+For a requested refinement study, implement a derived-INP converter with this sequence:
 
-1. 保留所有锚点、转折点、荷载点、门架节点及重合但不同拓扑的点，生成新旧节点/单元对应表。
-2. 每个子单元继承父单元材料、截面及B31方向向量；不能把B31改成无弯曲杆。
-3. 初始应力按父单元物理状态映射到子单元积分点；弦线方向改变时重新处理全局张量，不能仅拷贝Sxx。
-4. 原节点集中力保留在原物理位置。由分布荷载离散来的节点力如需重离散，要用原线荷载重新积分，不能将原节点力简单复制到新节点造成总力翻倍。
-5. 检查各步总力与关于同一原点的总力矩守恒；继承二期恒载的总量语义。
-6. 处理重力、温度集合和B31内部扩展节点温度；新节点边界只按物理约束赋值。
-7. 扩展N_MCT输出集合、8个跨度分组及单元应力输出，不许遗漏新增单元。
-8. 生成独立manifest、audit，执行恒载平衡、反力核对与六工况回归，再比较网格1/2/4分段时位移、索力变化。
+1. Preserve anchors, corners, loading points, portal nodes and coincident but topologically distinct points. Save parent/child node and element mappings.
+2. Inherit material, section and B31 orientation for every child element.
+3. Transfer initial stress to child integration points using the parent physical state and appropriate global tensor direction/measure.
+4. Keep original point loads at their physical locations. If re-discretizing a distributed load, integrate the original line load over the new mesh.
+5. Verify total force and moment about the same global origin for every step, including the permanent-load contribution in second-step totals.
+6. Transfer gravity, temperature sets and internal expanded-element temperature behavior. Apply supports to new nodes according to physical constraints.
+7. Extend N_MCT, cable stress output and all eight span groups to include their child entities.
+8. Write a separate manifest/audit; verify dead-load equilibrium, reactions and six-case response; compare displacement and cable force for 1/2/4 subdivisions.
 
-此加密转换器不属于本次交付的已验证自动运行路径。用户要求原INP复核时直接使用默认一段路径，不制造不必要的新模型。
+The supplied default execution uses one element per original line. The refinement option supplies the geometric candidate for the conversion sequence above.
