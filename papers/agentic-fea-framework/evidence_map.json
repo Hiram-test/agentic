@@ -35,6 +35,6 @@
   "session_experiment": {
     "provider_preference": "GLM",
     "status": "planned",
-    "fields": "See manuscript framework session table"
+    "fields": "Provider, model, tool trace, timing, token usage and completion status"
   }
 }

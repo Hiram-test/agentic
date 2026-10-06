@@ -7,114 +7,92 @@
 \date{}
 \begin{document}
 \maketitle
-\noindent Reference-led manuscript outline. Compile with XeLaTeX or LuaLaTeX.
 \section*{I. Introduction}
-\textit{Reference anchor: I. Introduction, pp. 1–2}
-\begin{enumerate}
-\item Paragraph 1 — Introduce agentic engineering workflows through the sequence used in FeaGPT: language-based task specification, tool execution and computational engineering results. Cite FeaGPT at the transition to finite element analysis.
-\item Paragraph 2 — Move from the reference aircraft/component setting to bridge catwalk verification. Describe the practical input chain: a prestressed INP model, six load combinations, an existing engineering report and a required reproducible calculation package.
-\item Paragraph 3 — Define the central workflow problem: preserving model identity, prestress, stepwise total loads and result-group definitions across automated execution. Use the P5 file-version/load-history episode as the motivating example.
-\item Paragraph 4 — Introduce the Skill as the executable analysis specification, then list the paper contributions in the reference order: structured task execution; Gmsh–CalculiX integration; six-case quantitative verification; automatic engineering-report delivery.
-\end{enumerate}
+Agentic finite element analysis connects engineering task specifications with geometry processing, mesh generation, numerical solution and result interpretation. FeaGPT organizes these operations into an end-to-end workflow supported by engineering knowledge and computational tools [1]. For bridge catwalk verification, the workflow must carry prestress, support definitions and load history consistently from the input model to the calculation report.
+
+The Zhangjinggao Bridge catwalk provides a six-case application involving permanent loads, construction loads, wind and temperature changes. Its verification requires a common treatment of model identity, nonlinear loading and span-based cable-force assessment.
+
+This study organizes the analysis through an executable Skill containing the input manifest, material and load definitions, tool sequence, result checks and report specification. The workflow connects Gmsh mesh reconstruction with CalculiX nonlinear analysis and generates displacement fields, cable-force comparisons and an engineering report from a shared result set.
+
 \section*{II.A. System overview}
-\textit{Reference anchor: II.A. System Overview, p. 3; Fig. 1}
-\begin{enumerate}
-\item Describe the four workflow modules and their file interfaces using Figure 1. The assistant reads the English Skill and invokes the packaged tools; each tool produces named, machine-readable evidence.
-\item Identify the model asset manifest, original PDF, benchmark JSON and font/style assets. Trace one request from asset verification to the report and raw solver package.
-\end{enumerate}
+The workflow consists of four modules: input and model audit, Gmsh mesh reconstruction, nonlinear CalculiX analysis, and field recovery with report generation. The Skill specifies each module’s inputs, operations and completion criteria. A versioned asset set supplies the six INP files, engineering-report benchmarks and report-format definitions.
+
+Each case produces a solver log and numerical fields. These fields feed the comparison tables, visualization files and Word/PDF report, preserving the connection between calculated values and their source outputs.
+
 \section*{II.B. Skill-guided planning and task orchestration}
-\textit{Reference anchor: II.B. Engineering Analysis Planning and Task Orchestration, pp. 3–6; Algorithm 1}
-\begin{enumerate}
-\item Replace the reference geometry-design JSON with the catwalk task schema: input manifest, cases P1–P6, solver identity, units, execution stages, comparison criteria and report outputs.
-\item Present Algorithm 1 as the executable order: validate → reconstruct mesh → solve each case → read final fields → recover forces → compare → generate report → hash outputs. State the stage-specific completion conditions.
-\item For the planned GLM execution experiment, record provider/model identifier, request, tool calls, elapsed time, retries and final artifact status in a session log. Fill the model identifier from the actual run.
-\end{enumerate}
+The task specification identifies cases P1–P6, the input manifest, solver executable, unit system and required outputs. Execution follows the ordered stages in Algorithm 1. Input hashes and model audits are checked before meshing; mesh identity is checked before solution; final-step field completeness is checked before result recovery.
+
+Each case runs in an independent directory. The execution record stores the solver command, return code, elapsed time and warnings, together with the common model audit and final comparison status.
+
 \section*{II.C. Versioned model reconstruction and engineering knowledge}
-\textit{Reference anchor: II.C. Intelligent Geometry Generation with Knowledge Augmentation, pp. 6–7; Fig. 2}
-\begin{enumerate}
-\item Describe reconstruction from the original coordinates and connectivity, followed by material/section/support audit. Use Figure 2 to connect global geometry, structural families and a local connection.
-\item Give the equivalent material values from the INP: MAT1/MAT2 E = 120 GPa, areas 22298.692/8402.9797 mm² and their equivalent densities; MAT3 E = 206 GPa, rectangular section 98.954535 × 98.954535 mm and near-zero assigned density.
-\item Describe 8,984 initial-stress records across 1,123 cable elements, the global tensor convention and the retained reference geometry. Link numerical values to the material table and asset hashes.
-\end{enumerate}
+The finite element geometry is reconstructed from the original node coordinates and element connectivity. The model contains bottom catwalk cables, portal support cables and equivalent portal members in the X–Z plane. Original entity identifiers link geometry with sections, supports, loads and reporting groups.
+
+The bottom and portal cable materials have an elastic modulus of 120 GPa and equivalent areas of 22298.692 and 8402.9797 mm², respectively. Their assigned densities are 1.26484805e-8 and 8.59881705e-9 tonne/mm³. The equivalent B31 members use an elastic modulus of 206 GPa, a 98.954535 × 98.954535 mm rectangular section and an assigned density of 1.01978381e-17 tonne/mm³.
+
+The initial state combines the supplied geometry with 8,984 global initial-stress records at eight integration points of each of the 1,123 cable elements. These records remain associated with their original elements throughout execution.
+
 \section*{II.D. Gmsh mesh generation and identity mapping}
-\textit{Reference anchor: II.D. Adaptive Mesh Generation, pp. 7–8; Fig. 3; Table II}
-\begin{enumerate}
-\item Explain point/line creation from INP IDs, section physical groups, setTransfiniteCurve(eid, 2), first-order generate(1), and MSH 4.1 export.
-\item Distinguish geometric tags from mesh tags. Describe the explicit node/element mapping and checks: node count, element count, coordinates and ordered endpoints. Table II reports the measured mesh identity results.
-\end{enumerate}
+Gmsh constructs points and lines from the input coordinates and connectivity. Each original line receives two mesh nodes through setTransfiniteCurve(eid, 2), followed by first-order one-dimensional mesh generation and MSH 4.1 export. Section sets define the physical groups.
+
+Explicit mappings connect Gmsh mesh tags to the original node and element identifiers. Verification checks node and element counts, coordinate differences and the ordered endpoints of every line element.
+
 \section*{II.E. Nonlinear static analysis and load-history execution}
-\textit{Reference anchor: II.E. Automated FEA Simulation and Analysis, pp. 8–9}
-\begin{enumerate}
-\item Write equilibrium as R(u, λ) = fint(u, σ0, T) − fext(λ) = 0. Describe geometric nonlinearity, initial prestress, gravity and prescribed supports within the planar X–Z system.
-\item State the six combinations in Table I. P1 contains one dead-load step; P2–P6 independently establish dead load before their target total combination. Explain the second-step CLOAD total convention, with P5 as the worked example.
-\item Give g = 9806 mm/s², alpha = 1.2e-5 /°C for P3/P6, temperature changes −15/−34°C and the 1,125 UY constraints. Identify the locked solver build and final-time checks.
-\end{enumerate}
+The static solution satisfies R(u, λ) = fint(u, σ0, T) − fext(λ) = 0, accounting for geometric nonlinearity, initial stress and thermal strain. P1 applies dead load in one step. Each of P2–P6 first establishes its own dead-load state, then applies the target total combination in a second step.
+
+Gravity is 9806 mm/s². The second-step nodal loads include the permanent-load contribution. P5 has a final vertical CLOAD resultant of −6377029.291 N, compared with −4725567.874 N in its first step. P3 and P6 apply temperature changes of −15 and −34°C with a thermal expansion coefficient of 1.2e-5 /°C.
+
+All 1,125 original nodes have UY constrained. The remaining supports follow the input UX and UZ sets. CalculiX 2.23-UCOR6-UCAB3-FT14 solves the six cases using the recorded nonlinear-static controls.
+
 \section*{II.F. Field recovery and automated verification}
-\textit{Reference anchor: II.F. Intelligent Data Analysis and Batch Processing, p. 9}
-\begin{enumerate}
-\item Define Umax = max sqrt(UX²+UY²+UZ²) over original nodes. Define the deformed chord n and recover N = A0 nᵀ σbar n / 1000 in kN, averaging the eight integration-point tensors.
-\item Define eight reporting span groups, their maxima and K = Nbreak/Nmax. Set Nbreak = 38080/14280 kN and give the case-specific K requirements.
-\item Define signed relative difference δ = 100(qcalc/qref − 1). Identify the independent MAPDL displacement source and the report force tables separately. Describe Figure 4 and the machine-readable evidence files.
-\end{enumerate}
+Maximum displacement is evaluated as Umax = max sqrt(UX² + UY² + UZ²) over the original nodes. Cable axial stress is obtained by projecting the mean of the eight integration-point stress tensors onto the deformed element chord. Cable force is recovered as N = A0 nᵀ σbar n / 1000, in kN.
+
+Four bottom-cable groups and four portal-cable groups define the span maxima. The cable safety factor is K = Nbreak/Nmax, using breaking forces of 38080 and 14280 kN, respectively. Required factors are 3.2 for P1, 2.7 for P2/P3/P4/P6 and 2.5 for P5.
+
+Signed relative difference is calculated as 100(qcalc/qref − 1). Displacement comparisons use the independent MAPDL results; span-force comparisons use Tables 1-11 and 1-14 of the engineering report.
+
 \section*{II.G. Reproducible batch execution and report generation}
-\textit{Reference anchor: II.G. Scalable Batch Processing Architecture, pp. 9–10}
-\begin{enumerate}
-\item Describe independent case directories, common geometry audit, recorded solver commands, failure preservation and per-stage status.
-\item Trace one final response value into CSV, VTU, PNG and the engineering report. Describe the shared result model used for Word/PDF and the style/font assets reproducing the reference report.
-\item State the deliverable structure: six solved cases, 42 field plots, comparison data, Gmsh mapping, hashes and a 17-page engineering report in both formats.
-\end{enumerate}
+The six cases share a common geometry audit and retain separate input copies, solver outputs and result files. Final displacement and cable-stress fields are exported to CSV and VTU. Seven field plots are generated per case.
+
+A common result object supplies the comparison tables and the Word/PDF calculation report. The report uses the prescribed SimSun, SimHei and Times New Roman fonts, four-span calculation tables and field-plot captions. The resulting package contains 42 plots, both report formats and input/output hashes.
+
 \section*{III.A. Task specification and six-case execution}
-\textit{Reference anchor: III.A. Natural Language Input and System Understanding, p. 11; Table I}
-\begin{enumerate}
-\item Present the task request and its mapped case/output specification. Table I enumerates the six combinations and required safety factors.
-\item For the GLM session, insert the recorded model ID and stage-completion log. Report execution and retry counts from that log.
-\end{enumerate}
+Table I lists the six combinations. The case set covers dead load, construction loading, construction wind, maximum gust and two cooling levels. All cases use the same audited geometry, sections, prestress and support definitions.
+
 \section*{III.B. Model reconstruction results}
-\textit{Reference anchor: III.B. Geometry Generation Results, pp. 11–12; Fig. 2}
-\begin{enumerate}
-\item Report 1,125 original nodes, 1,123 T3D2 cable elements and 71 B31 equivalent members. Show the complete geometry and member assignments in Figure 2.
-\item Report the common geometric/physical definitions across cases and the preserved initial-stress record count.
-\end{enumerate}
+The reconstructed model contains 1,125 nodes and 1,194 elements: 1,123 T3D2 cable elements and 71 B31 equivalent members. The original node identifiers, section assignments and 8,984 initial-stress records are retained across the six cases.
+
 \section*{III.C. Mesh identity and mapping results}
-\textit{Reference anchor: III.C. Mesh Generation and Quality Analysis, pp. 12–13; Table II; Fig. 3}
-\begin{enumerate}
-\item Report identical node/element counts, zero coordinate discrepancy and matching ordered connectivity between the input and the Gmsh mesh. Use the local inset to display the mapping.
-\item Explain how this identity connects solved fields to the displayed geometry and reporting groups.
-\end{enumerate}
+Gmsh reproduces all 1,125 nodes and 1,194 line elements with zero coordinate discrepancy. The mapped, ordered connectivity agrees for every element. Table II summarizes the identity checks linking the original analysis model with its mesh representation.
+
 \section*{III.D. Nonlinear response and benchmark comparison}
-\textit{Reference anchor: III.D. FEA Simulation and Results Analysis, p. 14; Table III}
-\begin{enumerate}
-\item Report completion of all six cases and matching peak-displacement node IDs. Present the six numerical rows in Table III.
-\item Give maximum absolute differences: displacement 0.859887\%, bottom-cable span force 0.853551\% and portal-cable span force 1.125518\%. Identify the controlling case/span from the supplied evidence table.
-\item Discuss P4 as the largest peak-displacement response, P5 peak at node 306, and the P3/P6 cooling responses using the solved fields.
-\end{enumerate}
+All six nonlinear static analyses reach their final states. The peak-displacement node agrees with the MAPDL benchmark in every case. The maximum absolute displacement difference is 0.859887\%; maximum absolute span-force differences are 0.853551\% for bottom cables and 1.125518\% for portal cables.
+
+P4 produces the largest displacement, 2846.280 mm at node 1176. P5 reaches 1325.314 mm at node 306. The P3 and P6 cooling combinations produce peak displacements of 1897.223 and 927.260 mm. Table III presents the complete six-case response.
+
 \section*{III.E. Cable response interpretation and safety assessment}
-\textit{Reference anchor: III.E. Intelligent Result Analysis and Autonomous Design Evaluation, pp. 14–16; Fig. 4}
-\begin{enumerate}
-\item Follow the four panels in order: global displacement agreement, span-force agreement, cable safety factors and the spatial/case distribution of signed differences.
-\item Compare the governing bottom/portal factors by case with Table I requirements. Use the heatmap to locate differences while retaining cable family and span identity.
-\item Explain the load-history correction through the P5 input audit: second-step total nodal load includes the first-step permanent contribution. Connect the input definition with the current node-306 downward response.
-\end{enumerate}
+Figure 4 compares the six peak displacements, 48 span-force pairs, minimum cable safety factors and signed span-force differences. Calculated safety factors exceed the required value in every reported case and span.
+
+P6 governs the minimum safety factor in both cable families: 2.9464 for the bottom cables and 3.4677 for the portal cables, against a requirement of 2.7. P5 gives minimum factors of 3.1873 and 3.8802, against a requirement of 2.5.
+
+The P5 load sequence retains the permanent nodal-load contribution in the second-step total. Its resulting vertical displacement at the peak node is −1325.275 mm. The input audit records the load resultants and their application points alongside this response.
+
 \section*{III.F. Execution performance and automation accounting}
-\textit{Reference anchor: III.F. Computational Performance and Scalability, pp. 16–17}
-\begin{enumerate}
-\item Report the recorded solver wall times by case and their sum, with Python/platform/solver identity. Label timing boundaries explicitly.
-\item Add the planned GLM session measurements in a separate table: planning time, tool time, report-generation time, total session time, token usage when exposed by the provider, retries and completion count.
-\item For repeated-session evaluation, use the same six inputs and output contract; record each session independently before calculating completion rate and timing distributions.
-\end{enumerate}
+The six solver subprocesses complete in a combined wall time of 9.633834 s. Individual times range from 0.768065 s for P1 to 1.870485 s for P4. Table III reports these timings alongside the case responses.
+
+The execution record identifies the Python environment, operating system, solver hash and case-specific commands. Input audits, mesh mappings and result summaries accompany the timing data.
+
 \section*{III.G. Engineering case presentation and report delivery}
-\textit{Reference anchor: III.G. Industrial Validation: CalculiX Configuration Generation, pp. 17–18; Fig. 5}
-\begin{enumerate}
-\item Present Figure 5 as the engineering field plate: three representative cases and two response quantities. Compare shared field scales within each row.
-\item Show how the prescribed report style is generated from the same result set, and point to the supplementary six-case contour plates, Word/PDF report and raw result archive.
-\end{enumerate}
+The field presentation groups P1, P5 and P6 as representative dead-load, maximum-gust and cooling cases. Vertical displacement and bottom-cable axial force provide the two response fields, with consistent units and scales within each field group.
+
+The engineering report presents the calculated four-span forces, reference values, signed differences and safety factors. Its tables and contours derive from the same six-case result set as the machine-readable files.
+
 \section*{IV. Conclusions}
-\textit{Reference anchor: IV. Conclusions, pp. 18–19}
-\begin{enumerate}
-\item Conclusion 1 — Summarize the Skill-guided sequence connecting versioned bridge inputs to mesh verification, nonlinear solution and engineering-report generation.
-\item Conclusion 2 — State the measured mesh identity and six-case response differences with their actual values.
-\item Conclusion 3 — State the cable safety-factor outcomes and delivered evidence package. Add session-level GLM findings after inserting the measured session table.
-\end{enumerate}
+The executable Skill integrates versioned input verification, Gmsh mesh reconstruction, nonlinear CalculiX solution, field recovery and engineering-report generation for the bridge catwalk.
+
+The reconstructed mesh retains all original coordinates and connectivity. Across six cases, maximum absolute differences are 0.859887\% for peak displacement, 0.853551\% for bottom-cable span force and 1.125518\% for portal-cable span force. All peak-displacement node identifiers match the benchmarks.
+
+The calculated cable safety factors satisfy the requirements for all reported cases and spans. The workflow produces the six-case numerical evidence, 42 field plots and an automatically formatted Word/PDF calculation report.
+
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{figures/figure_4_six_case_verification.pdf}
