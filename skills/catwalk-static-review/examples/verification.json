@@ -1,0 +1,30 @@
+{
+  "validation": "Actual end-to-end Gmsh generation, six original INP solver runs, DAT parsing, plots, DOCX/PDF generation; final report formatting rebuilt without changing numerical outputs",
+  "unit_tests": {
+    "passed": 6,
+    "checks": [
+      "deformed chord projection and compression sign",
+      "six input locks",
+      "one byte mutation rejected",
+      "external include rejected",
+      "mismatched result times rejected",
+      "missing stress rejected"
+    ]
+  },
+  "report_pages": 17,
+  "png_count": 42,
+  "mesh_coordinate_error_mm": 0.0,
+  "mesh_connectivity_identical": true,
+  "dependencies": {
+    "gmsh": "4.13.1",
+    "numpy": "2.3.5",
+    "matplotlib": "3.10.8",
+    "python-docx": "1.2.0",
+    "reportlab": "4.4.9"
+  },
+  "platform_tested": "Linux x86_64; Windows/macOS instructions provided but not executed",
+  "notes": [
+    "Original input warnings retained: default static time parameters; P3/P6 N_THERM upper bound truncated.",
+    "Example run contains paths of the verification environment; package scripts themselves use relative asset resolution."
+  ]
+}

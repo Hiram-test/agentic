@@ -1,0 +1,147 @@
+"""Generate matching Chinese DOCX and PDF from computed results, never fixed success prose."""
+from pathlib import Path
+from datetime import datetime,timezone
+from xml.sax.saxutils import escape
+import json
+from docx import Document
+from docx.shared import Cm, Pt
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+from reportlab.lib import colors
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib.enums import TA_CENTER
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import (BaseDocTemplate,PageTemplate,Frame,Paragraph,Spacer,PageBreak,Table,TableStyle,Image)
+from reportlab.platypus.tableofcontents import TableOfContents
+
+class PDF(BaseDocTemplate):
+    def __init__(self,path):
+        super().__init__(str(path),pagesize=A4,leftMargin=48,rightMargin=48,topMargin=52,bottomMargin=48)
+        self.addPageTemplates(PageTemplate(id='normal',frames=Frame(48,48,A4[0]-96,A4[1]-100,id='body'),onPage=self.decorate))
+    def decorate(self,c,d):
+        c.setFont('STSong-Light',8);c.setStrokeColor(colors.grey)
+        if d.page>1:
+            c.drawString(48,A4[1]-30,'张靖皋长江大桥南航道桥｜猫道静力复算报告')
+            c.line(48,A4[1]-37,A4[0]-48,A4[1]-37)
+        c.line(48,36,A4[0]-48,36);c.drawString(48,24,'自动生成复算文件 · 依据原始 INP 与实际求解结果')
+        c.drawRightString(A4[0]-48,24,f'{d.page:03d}')
+    def afterFlowable(self,f):
+        if isinstance(f,Paragraph) and f.style.name in ('H1','H2'):
+            self.notify('TOCEntry',(0 if f.style.name=='H1' else 1,f.getPlainText(),self.page))
+
+class Writer:
+    def __init__(self,out):
+        self.out=Path(out);self.doc=Document();self.story=[]
+        pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))
+        self.normal=ParagraphStyle('Body',fontName='STSong-Light',fontSize=10,leading=17,spaceAfter=7,wordWrap='CJK')
+        self.cell=ParagraphStyle('Cell',parent=self.normal,fontSize=8,leading=11,spaceAfter=0)
+        self.head={i:ParagraphStyle(f'H{i}',parent=self.normal,fontSize=16 if i==1 else 12,leading=23 if i==1 else 18,spaceBefore=12,spaceAfter=10,keepWithNext=True) for i in (1,2,3)}
+        sec=self.doc.sections[0];sec.page_width=Cm(21);sec.page_height=Cm(29.7);sec.top_margin=Cm(2);sec.bottom_margin=Cm(2);sec.left_margin=Cm(1.8);sec.right_margin=Cm(1.8)
+        for name in ['Normal','Heading 1','Heading 2','Heading 3']:
+            sty=self.doc.styles[name];sty.font.name='SimSun';sty._element.rPr.rFonts.set(qn('w:eastAsia'),'宋体');sty.font.size=Pt(10.5 if name=='Normal' else 14)
+        sec.header.paragraphs[0].text='张靖皋长江大桥南航道桥｜猫道静力复算报告'
+        footer=sec.footer.paragraphs[0];footer.text='自动生成复算文件  |  '
+        field=OxmlElement('w:fldSimple');field.set(qn('w:instr'),'PAGE');footer._p.append(field)
+    def title(self,text):
+        p=self.doc.add_paragraph();p.alignment=1;r=p.add_run(text);r.bold=True;r.font.size=Pt(20)
+        style=ParagraphStyle('TitleNoTOC',parent=self.normal,fontSize=20,leading=30,spaceAfter=20,alignment=TA_CENTER)
+        self.story.append(Paragraph(escape(text),style))
+    def p(self,text):
+        self.doc.add_paragraph(str(text));self.story.append(Paragraph(escape(str(text)).replace('\n','<br/>'),self.normal))
+    def h(self,text,level=1):
+        self.doc.add_heading(text,level);self.story.append(Paragraph(escape(text),self.head[level]))
+    def table(self,headers,rows,widths=None):
+        t=self.doc.add_table(rows=1,cols=len(headers));t.style='Table Grid'
+        for c,s in zip(t.rows[0].cells,headers):c.text=str(s)
+        header=OxmlElement('w:tblHeader');t.rows[0]._tr.get_or_add_trPr().append(header)
+        for row in rows:
+            for c,s in zip(t.add_row().cells,row):c.text=str(s)
+        data=[[Paragraph(escape(str(x)),self.cell) for x in row] for row in [headers]+rows]
+        tab=Table(data,colWidths=widths or [(A4[0]-108)/len(headers)]*len(headers),repeatRows=1,hAlign='CENTER')
+        tab.setStyle(TableStyle([('GRID',(0,0),(-1,-1),.4,colors.grey),('BACKGROUND',(0,0),(-1,0),colors.HexColor('#eeeeee')),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('TOPPADDING',(0,0),(-1,-1),5),('BOTTOMPADDING',(0,0),(-1,-1),5)]));self.story.extend([tab,Spacer(1,10)])
+    def image(self,path,caption):
+        self.doc.add_picture(str(path),width=Cm(17));self.doc.add_paragraph(caption)
+        self.story.append(Image(str(path),width=A4[0]-108,height=(A4[0]-108)*3.8/12));self.p(caption)
+    def page(self):self.doc.add_page_break();self.story.append(PageBreak())
+    def save(self):
+        self.doc.save(self.out/'catwalk_static_review.docx');PDF(self.out/'catwalk_static_review.pdf').multiBuild(self.story)
+
+def generate(out,run,models,rows,bench):
+    out=Path(out);w=Writer(out)
+    w.story.append(Spacer(1,100));w.title('张靖皋长江大桥南航道桥')
+    w.title('猫道结构静力复算报告');w.p('——六工况二维等效模型专项复核——')
+    w.p('输入版本：catwalk-static-20260826；计算标识：'+run['run_id'])
+    w.p('报告日期：'+datetime.now(timezone.utc).strftime('%Y年%m月%d日（UTC）'))
+    w.p('编制：AI 辅助计算流程；复核 / 审核：待签署。')
+    w.p('格式参照用户提供的《猫道结构复核计算报告0324.pdf》。本文件不沿用原编制单位署名，也不代表原报告修订版。')
+    w.p('本次范围：猫道及门架承重索整体索系六工况静力、位移与索力对照。')
+    w.page();w.title('目 录')
+    toc=TableOfContents();toc.levelStyles=[ParagraphStyle('T0',fontName='STSong-Light',fontSize=11,leading=20),ParagraphStyle('T1',fontName='STSong-Light',fontSize=9,leading=16,leftIndent=16)];w.story.append(toc)
+    fld=OxmlElement('w:fldSimple');fld.set(qn('w:instr'),'TOC \\o "1-2" \\h \\z \\u');w.doc.add_paragraph()._p.append(fld)
+    w.doc.add_paragraph('Word 中按 Ctrl+A、F9 更新目录；PDF 目录已自动生成。');w.page()
+    w.h('第 1 章 工程概况');w.h('1.1 工程概况',2)
+    w.p('依据原报告第4页：南航道桥主跨2300 m，主缆跨径660+2300+1220 m；猫道为四跨连续体系，左右幅间距42.9 m。当前输入是二维 MCT 等效整体索系，不能从其结果推断双幅横向联结、抗风扭转或局部板件强度。')
+    w.h('1.2 依据性文件',2)
+    w.table(['文件','用途'],[['原报告0324.pdf，118页','格式、材料说明、表1-7/1-11/1-14及原结论对照'],['P1—P6 INP + manifest.json','计算输入、固定版本、逐文件哈希'],['benchmarks.json','独立MAPDL位移基准；原PDF索力表'],['run.json、input_audit、job.dat/sta/log','本次执行事实及审计证据']])
+    w.p('原报告PDF SHA256：'+run['original_pdf_sha256'])
+    w.h('1.3 主要规范与复核口径',2)
+    w.p('原报告采用 JTG D60-2015、JTG D64-2015、JTG/T 3650-2020、JTG/T 3360-01-2018、JTG/T D65-05-2015、GB 50017-2017、GB/T 20118-2025、GB 8918-2006、GB/T 33943-2017。这里只转录原报告依据，未宣称逐条重新验证全部规范。')
+    w.p('安全系数 Nbreak / Nmax，破断力沿用报告表1-11与1-14的整体索束口径。工况6按表1-7要求2.7；原报告部分正文写2.5，与表格不一致，本次采用2.7。')
+    m=models['P1'];w.h('1.4 主要材料及截面',2)
+    w.table(['材料/截面','E / MPa','ν','ρ / t·mm⁻³','A / mm²'],[[s['material']+'/'+name,m['materials'][s['material']]['elastic'][0],m['materials'][s['material']]['elastic'][1],m['materials'][s['material']]['density'][0],f"{s['area_mm2']:.6f}"] for name,s in m['sections'].items()])
+    w.p('P3/P6 的三种材料均指定 α=1.2×10⁻⁵ /℃；其他工况没有热膨胀卡。MAT1、MAT2 为等效钢丝绳材料；MAT3为门架等效连接杆，B31矩形截面98.954535×98.954535 mm，方向向量(1,1,1)。MAT3密度近零属于输入建模口径，不是普通结构钢物理密度。')
+    w.p('钢丝强度等级1960 MPa不等于整根绳或索束设计允许应力，不能用1960×等效面积替代报告破断力。')
+    w.h('1.5 主要荷载',2)
+    w.p('单位体系为 mm、N、s、tonne、MPa。重力加速度9806 mm/s²，方向(0,0,-1)，施加于E_CABLE与E_FRAME。下表仅统计各步CLOAD，不含DLOAD自重。第二步数据为总荷载，不再额外加一次第一步CLOAD。')
+    w.table(['工况','分析步','ΣFx/N','ΣFy/N','ΣFz/N'],[[k,s['step'],f"{s['cload_sum_N']['1']:.3f}",f"{s['cload_sum_N']['2']:.3f}",f"{s['cload_sum_N']['3']:.3f}"] for k,a in run['audits'].items() for s in a['steps']])
+    w.p('P4/P5 有横向风力但所有UY被约束，横向力主要进入约束反力；本次不提供横风位移或三维抗风安全结论。原报告基本风速34.3 m/s、施工风速13.8 m/s，仅作来源说明，不再重复换算并叠加载荷。')
+    w.page();w.h('第 2 章 猫道及门架承重索计算')
+    w.h('2.1 计算控制点与边界条件',2)
+    w.p('原始节点坐标来自INP，节点编号不连续。全部1125节点的UY固定，另外约束如下。UX、UZ未列出的自由度保持输入原状，不擅自增加固结或释放约束。')
+    w.table(['节点','固定自由度'],[[n,','.join('U'+{1:'X',2:'Y',3:'Z'}.get(d,str(d)) for nn,d,v in run['audits']['P1']['boundary_except_UY'] if nn==n)] for n in sorted({x[0] for x in run['audits']['P1']['boundary_except_UY']})])
+    w.p('完整坐标、位移与变形后坐标关系见每工况nodes.csv。输入几何未重新定义为空索线形；当前初应力状态的含义必须与原MCT找形过程一起解释。')
+    w.h('2.2 计算模型、网格和分析步骤',2)
+    w.p('1125节点、1194单元：1123个T3D2索杆与71个B31梁。T3D2是可承受拉压的杆单元，不能仅凭名称认定其带有只受拉算法；本次额外检查各工况索力是否全部为正。')
+    mesh=run['mesh'];w.p(f"Gmsh {mesh['gmsh_version']} 实际调用geo建点、连线、每条原始边设置2个节点并generate(1)：{mesh['node_count']}个节点、{mesh['line_element_count']}个线单元。按显式编号映射检验坐标及连接关系，最大坐标误差 {mesh['maximum_coordinate_error_mm']:.3g} mm。材料、初应力、荷载保留原INP，未使用Gmsh裸网格覆盖分析卡片。")
+    w.p('初始应力包含1123单元×8积分点=8984条六分量张量记录。每工况独立从初应力状态开始；P1一静力步，P2—P6先恒载步再目标组合步，均采用NLGEOM。第一步未显式给时间参数；第二步为1,1,1e-6,1。')
+    w.p('求解器：'+run['solver_path']+'；SHA256='+run['solver_sha256']+'。OMP_NUM_THREADS=1；每工况结果写入独立目录，禁止跨工况覆盖或错误串接。')
+    w.h('2.3 荷载组合与结果完整性',2)
+    w.table(['工况','组合','报告要求K','末步时间','计算状态'],[[r['case'],bench[r['case']]['name'],bench[r['case']]['required_factor'],r['final_time'],'完成；数据校验通过'] for r in rows])
+    for x in run['executions']:w.p(x['case']+'：'+('; '.join(x['warnings']) if x['warnings'] else '无求解警告'))
+    w.p('没有将进程退出码单独作为成功依据：同时检查Job finished、末步sta时间、U/S同一末时刻、1125个位移记录、1123×8应力记录及有限数值。原件未请求RF，故本次总反力与力矩平衡为未核查项，不能伪称已完成。')
+    w.h('2.4 猫道承重索计算',2)
+    w.h('2.4.1 空索线形与成型线形口径',3)
+    w.p('本流程输出原始几何及各工况变形后线形。原报告空索找形、成型迭代与控制点拟合没有在本次重新执行，不将静力位移结果冒充空索找形验证。')
+    w.h('2.4.2 位移复核',3)
+    w.table(['工况','USUM/mm','MAPDL/mm','差/%','峰值节点'],[[r['case'],f"{r['umax_mm']:.3f}",f"{r['reference_umax_mm']:.3f}",f"{r['displacement_error_percent']:.3f}",r['peak_node']] for r in rows])
+    w.p('以上位移基准来自既有二维MCT的MAPDL独立复现，不是原PDF直接读取的位移结果。USUM=sqrt(UX²+UY²+UZ²)，不能用最大UZ绝对值代替。')
+    w.h('2.4.3 无应力长度',3)
+    w.p('本次不输出可用于下料的无应力长度。近似L0=L/(1+N/(EA)+αΔT)仅适用于相容的小弹性应变口径；这里有预应力和有限变形，未单独验证应力度量、参考几何及索鞍修正，不能据此声称复现原报告表1-10/1-13。')
+    w.h('2.4.4 猫道承重索强度验算',3)
+    add_forces(w,rows,'bottom')
+    w.h('2.5 门架承重索计算',2)
+    w.p('门架承重索为E_SEC2杆单元，与E_SEC3的B31门架等效杆件不同。下表仅验算承重索，不代表B31连接构件应力或稳定性通过。')
+    add_forces(w,rows,'portal')
+    w.h('2.6 后处理云图与数据解释',2)
+    w.p('线单元云图沿杆件着色；颜色不是实体截面应力云图。位移图使用端点均值着色，最大值以节点数据表为准。坐标显示单位m，位移mm、索力kN、应力MPa。横纵轴独立缩放并已标注，云图不是几何等比例照片。')
+    w.p('索力恢复：末步每积分点全局Cauchy应力先取平均，沿变形后单元弦线投影，N=σaxial×A0。A0为原截面面积，是与既有复核保持一致的恢复约定，不声称严格等于所有求解器定义的当前截面真实轴力。未请求的B31应力在VTU中用NaN及有效性标记表示。')
+    for r in rows:
+        k=r['case'];w.page();w.h(k+' '+bench[k]['name']+'：位移与索力',2)
+        w.p(f"峰值节点 {r['peak_node']}，USUM={r['umax_mm']:.3f} mm，UX/UY/UZ={r['peak_displacement_mm']} mm；最小索力={r['minimum_cable_force_kN']:.3f} kN。")
+        for f,caption in [('UZ.png','竖向位移分布'),('bottom_N_kN.png','猫道承重索轴力'),('portal_N_kN.png','门架承重索轴力')]:w.image(out/k/f,k+' '+caption)
+    w.page();w.h('第 3 章 结论');w.h('3.1 本次计算结果',2)
+    w.p(f"六工况位移最大绝对相对差为 {max(abs(r['displacement_error_percent']) for r in rows):.3f}%；底索最大差 {max(abs(s['error_percent']) for r in rows for s in r['span_forces'] if s['type']=='bottom'):.3f}%；门架承重索最大差 {max(abs(s['error_percent']) for r in rows for s in r['span_forces'] if s['type']=='portal'):.3f}%。")
+    w.p('回归对照判定：'+('全部达到本流程1%位移/1.5%索力及峰值节点一致标准。' if all(r['comparison_pass'] for r in rows) else '存在未达到回归标准的工况，需核查，不得签发通过结论。'))
+    w.p('报告索束安全系数口径：'+('所有列出的跨度与工况满足表1-7要求。' if all(s['meets_report_factor'] for r in rows for s in r['span_forces']) else '存在不满足项，详见表格。'))
+    w.p('拉力状态检查：'+('本次所有T3D2恢复索力为正。' if all(r['tension_only_assumption_ok'] for r in rows) else '发现零/负索力，需重新核实只受拉模型及松弛处理。'))
+    w.h('3.2 适用范围与复核口径',2)
+    w.p('结论仅适用于固定哈希的二维六工况输入。未完成三维抗风、扭转、动力/抖振、空索重新找形、下料长度或支座反力平衡验证。P5不是对C0–C5系列名称的自动映射。回归误差阈值不是规范安全限值。')
+    w.h('附录 A 文件与执行追溯')
+    w.table(['工况','INP SHA256'],[[k,a['input_sha256']] for k,a in run['audits'].items()],widths=[45,A4[0]-153])
+    w.p('证据目录：run.json记录执行命令、求解器哈希、时间与警告；mesh包含Gmsh网格与编号映射；P1—P6包含原件job.inp、job.dat/frd/sta/cvg、solver.log、summary.json、nodes.csv、cables.csv、results.vtu与7张图；SHA256SUMS锁定本次输出。')
+    w.save()
+
+def add_forces(w,rows,typ):
+    w.table(['工况/跨','本次/kN','报告/kN','差/%','K','要求','判定'],[[r['case']+'/'+s['span'],f"{s['N_kN']:.2f}",f"{s['report_kN']:.0f}",f"{s['error_percent']:.3f}",f"{s['safety_factor']:.3f}",s['required_factor'],'满足' if s['meets_report_factor'] else '不满足'] for r in rows for s in r['span_forces'] if s['type']==typ])

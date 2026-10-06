@@ -27,3 +27,7 @@ P2–P6 来自 Hiram-test/model 的 `feat/catwalk-ccx-20260826` 分支，固定�
 - `review/catwalk-archive-original-review.zip`：完整本次输入、求解输出和日志。压缩包保留归档时原始说明与脚本；脚本中的 /workspace 路径属于原复算环境，移机需调整。包内“未推送 GitHub”为打包时状态，以本目录说明为准。
 
 运行示例（需安装兼容 CalculiX）：将某份 INP 复制到独立工作目录为 job.inp，然后 `OMP_NUM_THREADS=1 ccx -i job`。本次求解器 SHA256：`b498dad80b0415d53ab112409adc85b8a1fd19eb7846dc31e778f4c83b437a0e`。
+
+## 自动执行
+
+[猫道静力复核 Skill](../../skills/catwalk-static-review/README.md) 已封装本目录同哈希的六份输入，包含用户原始PDF、Gmsh网格核验、CalculiX求解、云图及Word/PDF生成，可整体安装到助手的skills目录。

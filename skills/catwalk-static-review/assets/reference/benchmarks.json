@@ -1,0 +1,115 @@
+{
+  "displacement_source": "Existing independent 2D MCT MAPDL audit, not direct PDF displacement values",
+  "force_source": "User uploaded PDF pages 30 and 39, tables 1-11 and 1-14",
+  "safety_requirement_source": "User uploaded PDF page 11 table 1-7; P6 uses 2.7 despite conflicting 2.5 in prose",
+  "cases": {
+    "P1": {
+      "name": "恒载",
+      "umax_mm": 42.57771305336941,
+      "peak_node": 304,
+      "required_factor": 3.2,
+      "bottom_kN": [
+        11466.0,
+        11005.0,
+        10928.0,
+        10338.0
+      ],
+      "portal_kN": [
+        3554.0,
+        3348.0,
+        3381.0,
+        3233.0
+      ]
+    },
+    "P2": {
+      "name": "恒载+施工",
+      "umax_mm": 2684.837902342347,
+      "peak_node": 1176,
+      "required_factor": 2.7,
+      "bottom_kN": [
+        12317.0,
+        12624.0,
+        11803.0,
+        11140.0
+      ],
+      "portal_kN": [
+        3856.0,
+        3962.0,
+        3688.0,
+        3514.0
+      ]
+    },
+    "P3": {
+      "name": "恒载+施工+温降15℃",
+      "umax_mm": 1910.0116845522327,
+      "peak_node": 1176,
+      "required_factor": 2.7,
+      "bottom_kN": [
+        12572.0,
+        12657.0,
+        12047.0,
+        11378.0
+      ],
+      "portal_kN": [
+        3963.0,
+        3974.0,
+        3788.0,
+        3613.0
+      ]
+    },
+    "P4": {
+      "name": "恒载+施工+施工风",
+      "umax_mm": 2870.9665987120216,
+      "peak_node": 1176,
+      "required_factor": 2.7,
+      "bottom_kN": [
+        12380.0,
+        12741.0,
+        11869.0,
+        11200.0
+      ],
+      "portal_kN": [
+        3879.0,
+        4007.0,
+        3710.0,
+        3535.0
+      ]
+    },
+    "P5": {
+      "name": "恒载+最大阵风",
+      "umax_mm": 1335.7734445522826,
+      "peak_node": 306,
+      "required_factor": 2.5,
+      "bottom_kN": [
+        11892.0,
+        11802.0,
+        11368.0,
+        10741.0
+      ],
+      "portal_kN": [
+        3705.0,
+        3650.0,
+        3534.0,
+        3374.0
+      ]
+    },
+    "P6": {
+      "name": "恒载+施工+温降34℃",
+      "umax_mm": 927.4138039940444,
+      "peak_node": 1166,
+      "required_factor": 2.7,
+      "bottom_kN": [
+        12906.0,
+        12700.0,
+        12365.0,
+        11689.0
+      ],
+      "portal_kN": [
+        4102.0,
+        3989.0,
+        3919.0,
+        3743.0
+      ]
+    }
+  }
+}

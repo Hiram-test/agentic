@@ -1,0 +1,20 @@
+{
+  "assets/inputs/migrate_P1.inp": "be533c5f3228aacf19aea4913b503c2c6fac6d6246f6e6ab7b1eba4720e630ae",
+  "assets/inputs/migrate_P2.inp": "441f12d3abda82ede3038abf23df8bf13802a908dd2b52802d6651c5773c1593",
+  "assets/inputs/migrate_P3.inp": "672749c99210c2ab3091651189d5c4cc2da7cc7066cd2aa29490c8e3c55a4050",
+  "assets/inputs/migrate_P4.inp": "f68ce772e4c9df5f98c8dc8a702a59b88a2bf244f46380f2c9a73d57d4131ceb",
+  "assets/inputs/migrate_P5.inp": "3ba72d5d9c50561f6cdde3b17930d4668151d66a0ef7f10540aa59091320fc1f",
+  "assets/inputs/migrate_P6.inp": "177650a7fb09bcfe7a7f21d9336600b9c5156ebfd93ebbb22899a93e7af4fc67",
+  "assets/reference/COMPARE.json": "2ec7aa9c804bf788ac52f7c6acf1e5860601b15ac7a3c72d5a013b3e982807be",
+  "assets/reference/P1_input_audit.json": "f1511e2fa63a91d7a9c5b1119e7a6a0731e309ef22428102b84676f53ed0ab27",
+  "assets/reference/P2_input_audit.json": "83e5a6377601421000a5633618e6d5ec666b20cafcbe8b3c23741bf37362d332",
+  "assets/reference/P3_input_audit.json": "5ca8d1f486d2e1e95f686607eec611d31f2d9e20987cd27b762dd8afd705b87c",
+  "assets/reference/P4_input_audit.json": "3381f36f47fb4357231653730819df5de900954247e669445719eac718e5ce80",
+  "assets/reference/P5_input_audit.json": "99b6a849f71b0eaf0b771b7eec5e431fa4fd98f9bd22a2460e9e81c907451039",
+  "assets/reference/P6_input_audit.json": "8e4d38f3f91a34a0e92b545d4611cc84ba15b58778e106a604ac40f7c29f08fa",
+  "assets/reference/benchmarks.json": "8963397ff3f9d213cba63babdde617625be4c063d085af74c4bccff54dd39d67",
+  "assets/reference/manifest.json": "0ad13e77602abdf8d4f7ead9730db219095016f8b8cc6a85e52769ca2ed00ecd",
+  "assets/reference/original_review_0324.pdf": "8b2f0eb267216cd7d1e9746adb28f8973b4614d27fa1e2290eb12c2a6a45ca90",
+  "assets/reference/original_review_text.txt": "213d2ca93ff294b93bc02713011750651301ce33a09377c2d0e74ad54da6e396",
+  "assets/reference/span_groups.json": "49b5dc15410bef6bcd5f533a807efb902fc3e638716309778bea66e0e8095714"
+}
