@@ -1,5 +1,5 @@
 ---
-name: catwalk-static-review
+name: catwalk-static-review-coarse
 description: Read the model-relevant catwalk construction drawings into fixed component, property, weight and state tables, then execute end-to-end nonlinear static verification of the Zhangjinggao Bridge catwalk and portal support cables using the version-locked P1–P6 INP files. Audit materials, sections, initial stresses, loads and constraints; regenerate and verify the one-dimensional mesh with Gmsh; run CalculiX; recover cable forces; generate contours, CSV/VTU data and Word/PDF engineering reports.
 ---
 
@@ -26,7 +26,7 @@ Use `assets/inputs/migrate_P1.inp` through `migrate_P6.inp`. The historical `mod
 
 ## Drawing-readback contract shared by all three versions
 
-Read [08 Drawing-to-model input contract](references/08-drawing-input-contract.md) before the sequence below. It fixes the component families, property names, eight table layouts, source locators, units and comparison checkpoints for V1, V2 and V3. Select one version for the task. All three perform the same work and produce the same deliverables; only the size of each written operation differs.
+Read [08 Drawing-to-model input contract](../../references/08-drawing-input-contract.md) before the sequence below. It fixes the component families, property names, eight table layouts, source locators, units and comparison checkpoints for V1, V2 and V3. Select one version for the task. All three perform the same work and produce the same deliverables; only the size of each written operation differs.
 
 Resolve `SKILL_ROOT` to the directory containing `assets/inputs`, `references` and `scripts/run.py`. For a version inside `variants/`, use the enclosing `catwalk-static-review` directory. Set `INPUT_READBACK_DIR` to a separate working output directory and reserve a new/empty `SOLVER_RUN_DIR` for the solver. Each variant shares the same assets and scripts.
 
@@ -47,91 +47,43 @@ Write these tables in this fixed order:
 
 Use the exact columns in reference 08. Keep all source facts available by row ID. Use `input_readback.md` to display the same records. Record differences as values and source locations. For an absent source value, leave the numeric cell empty and identify the requested source in its row.
 
-## Fixed sequence - V2 (18 operations)
+## Fixed sequence - V1 (6 stages)
 
-### 01. Register the source set
+### 01. Identify sources and the executed model
 
-Enumerate the actual drawings, report, confirmation sheets and P1-P6 input files. Record names, hashes, revisions, units and usable views in T01. Give each source/view a stable ID. Reuse the supplied report and input identities from the existing asset manifest.
+Register the drawings, the original report, confirmation sheets and locked P1-P6 inputs in T01. Read the report and corresponding drawing views in the order in reference 08. Parse the actual INP definitions with scripts/model.py; check hashes, node/element families, materials, sections and stages against the stored input audits. Output the source register and the model-side starting records for T04/T07/T08.
 
-### 02. Read the report and select drawing views
+### 02. Read geometry, control points and supports
 
-Follow the page order in reference 08, then read the corresponding general arrangement, longitudinal profile, standard section, rope/portal details, load-bearing assemblies and supports. Render the relevant views. Save source crops for geometry, material, quantity and weight entries.
+Establish station units and the input coordinate transform. Read bottom and portal control points, main and auxiliary tower saddles, anchorages and both down-pull branches. Separate control targets, fixed supports and state labels. Map each point to its node and connected segments, preserving printed coordinates and input coordinates in separate T02 rows. Output the complete named-point and boundary map.
 
-### 03. Parse the executed INP model
+### 03. Read physical components and properties
 
-Read nodes, connectivity, set membership, materials, sections, initial stresses, boundary conditions and each analysis step from the actual input cards. Use scripts/model.py to compare all six files with their audit JSON. Seed T04/T07/T08 with the parsed input-side records and actual IDs.
+Read only the structural and weight-carrying families listed in reference 08. Record quantities and physical properties for the conventional/smart-core bottom ropes, upper ropes, portal assemblies, deck and handrail parts, crossbeams, cross passages and equipment. Populate T03/T04 with member or assembly basis, source references and the equivalent-model correspondence. Output an inventory that distinguishes physical pieces from finite elements.
 
-### 04. Establish the coordinate convention
+### 04. Calculate permanent weights and assign them
 
-Read drawing units, station notation and elevation datum. Check the relation station_m=x_mm/1000+16000 at the lower north anchorage and two tower points. Record the transformation and residuals. Retain original values alongside converted coordinates.
+Calculate distributed and concentrated weights from unit masses, panel areas, repetition intervals and located assemblies. Apply each walkway share once. Use the documented arc-length or projected-length basis. Populate T05/T06 and map every contribution to the existing density/gravity or nodal-load representation. Check assigned force and moment totals. Output the complete physical weight ledger and its model mapping.
 
-### 05. Read rope control geometry
+### 05. Read actions and reconcile the inputs
 
-Read the bottom and portal anchor, saddle, split and span-control points into T02. Match points by name, cable system and adjacent segments. Keep specified formed targets, reported empty/formed profiles and INP reference coordinates under separate state labels. Check all named points, including the bottom midspan station discrepancy.
+Read construction, temperature and wind actions and the six combinations into T08. Record initial-stress blocks and geometry states explicitly. Compare areas, member definitions, coordinates, supports and weight/load totals in T07. Preserve report, drawing and input values, including the documented mesh and midspan-station differences. Output the reconciled tables with numerical differences and exact source locators.
 
-### 06. Read supports and down-pull branches
+### 06. Complete the readback and execute the review
 
-Read support details for each anchorage/saddle and both down-pull assemblies. Map actual restrained and free DOFs to T02. Map the two E_SEC1 down-pull elements, their fixed end nodes and their main-rope attachment nodes into T07. Record geometric control points separately from restraints.
-
-### 07. Read the rope inventory and properties
-
-Record 15 conventional bottom ropes, one smart-core bottom rope and six portal ropes with source-specific diameter, construction, metallic area, E, strength, unit mass and coordinates. Derive the physical bundle areas. Keep the exact INP equivalent areas and densities in separate T04 rows.
-
-### 08. Read the portal assemblies
-
-Read portal stations, height, physical sections, member arrangement, assembly quantity and attachment points. Map the assemblies to the 71 equivalent B31 members through connectivity. Record the current beam dimensions and orientation. Link ordinary/triangular portal mass entries to their physical assemblies.
-
-### 09. Read the remaining weight-carrying components
-
-Follow families D01-D09 and P01-P11 in reference 08. Read handrail ropes, timber treads, all mesh layers, small/large crossbeams, portal crossbeams, rollers, cross passages, restraints, displacement frames, guide wheels and electrical items. Enter quantity basis, spacing, dimensions, unit/piece mass, stations and recipients in T03/T04.
-
-### 10. Compute distributed permanent weights
-
-Build T05 from rope unit masses, mesh areal masses and covered widths, repeating members and longitudinal allowances. Preserve the actual load-length basis. Sum contributions for each system and interval; compare the bottom total with the printed Table 1-1 total and upper-rope weight with Table 1-3.
-
-### 11. Compute concentrated permanent weights
-
-Build T06 for each assembly location. Calculate piece mass times quantity times the documented walkway share. Treat half-cross-passage mass and full-assembly mass according to their explicit bases. Locate ordinary portals, triangular portals and guide-wheel sets using the drawing layout.
-
-### 12. Map weights to the input representation
-
-Link every physical weight row to a density/gravity group or nodal-load group in T07. Compare independent physical totals with rho*A*L*g plus CLOAD totals. Check force and moment conservation in any allocation. Preserve the existing densities and loads as executed-model values.
-
-### 13. Read construction actions and combinations
-
-Read Table 1-4, the upper-rope traction action, temperature definitions, wind definitions and Table 1-7. Record P1-P6 case/step identities, recipient systems, directions, application basis and final total loads in T08. Include the permanent component once in each final combination.
-
-### 14. Record initial stress and geometry states
-
-Reference all 8984 input stress records with element, integration point and source block identity. Record the initial geometry, declared temperature and stage relationship. Enter an explicit source reference for any association between a formed control target and a particular load state.
-
-### 15. Reconcile source and model values
-
-Compare all named coordinates, constraints, component counts, rope areas, equivalent portal properties and distributed/concentrated load totals in T07. Preserve source-specific rows for the lower-mesh opening difference, bottom midspan station and portal truss/B31 description. Record numerical residuals and their exact evidence.
-
-### 16. Complete the eight tables
-
-Verify stable IDs and all cross-references. Finish T01-T08, input_readback.md and the evidence directory. Check that physical and model entries have their units, state, quantity basis and source locators. Record each absent source field in its own row. Confirm the input hashes and prepare the separate empty solver output directory.
-
-### 17. Execute and validate the numerical review
-
-Follow Sections 1-4 below and references 01-05/07. Verify the locked assets, generate and compare the Gmsh representation, run the actual P1-P6 inputs with CalculiX, check final step/time and coverage, recover signed cable forces and evaluate the existing numerical and strength criteria.
-
-### 18. Generate and deliver the report
-
-Follow Sections 5-7 and reference 06. Generate the existing Chinese Word/PDF report from the executed results, include input summaries at the materials/loads/control-point/model sections and attach the complete readback tables. Deliver input hashes, solver records and result files with the same scope in all three versions.
+Finish T01-T08 and input_readback.md, attach evidence crops and verify the source/input hashes. Then follow Sections 1-7 below: verify assets, generate the equivalent Gmsh mesh, run the locked inputs with CalculiX, validate results, recover cable forces and generate the existing Chinese engineering report. Include the input-readback package in the final delivery. Output the same complete review as V2 and V3.
 
 ## 1. Read the execution references
 
 On the first execution, read these in order:
 
-1. [Installation, file contracts and execution](references/01-execution.md)
-2. [Materials, sections, initial stresses and units](references/02-materials-model.md)
-3. [Gmsh API, tag mapping and mesh refinement](references/03-gmsh.md)
-4. [Steps, loads, temperatures and supports](references/04-steps-loads-boundaries.md)
-5. [Result validation, force recovery and contours](references/05-postprocessing.md)
-6. [Engineering report typography and generation](references/06-report.md)
-7. [Troubleshooting and regression acceptance](references/07-troubleshooting.md)
+1. [Installation, file contracts and execution](../../references/01-execution.md)
+2. [Materials, sections, initial stresses and units](../../references/02-materials-model.md)
+3. [Gmsh API, tag mapping and mesh refinement](../../references/03-gmsh.md)
+4. [Steps, loads, temperatures and supports](../../references/04-steps-loads-boundaries.md)
+5. [Result validation, force recovery and contours](../../references/05-postprocessing.md)
+6. [Engineering report typography and generation](../../references/06-report.md)
+7. [Troubleshooting and regression acceptance](../../references/07-troubleshooting.md)
 
 Machine-readable input details are in `assets/reference/P1_input_audit.json` through `P6_input_audit.json`. Copy and parse the original files programmatically, including all 8,984 initial-stress records and nodal loads.
 

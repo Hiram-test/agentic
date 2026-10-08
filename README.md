@@ -12,6 +12,8 @@
 
 ## 英文 Skill 与 SCI 论文框架
 
-[英文 Skill v1.2.0](skills/catwalk-static-review/SKILL.md) 已包含完整英文执行说明；工程报告保留原定中文字体与版式。
+[英文 Skill v1.3.0](skills/catwalk-static-review/SKILL.md) 已包含完整英文执行说明；工程报告保留原定中文字体与版式。
 
 [论文工作目录](papers/agentic-fea-framework/README.md) 包含 FeaGPT 原文、五张图逐图学习、三张表与算法对应关系、英文 SCI 论文框架（Word/PDF/LaTeX），以及由六工况真实结果生成的四联对比图。
+
+[读图与输入核对的三个英文版本](skills/catwalk-static-review/README.md#drawing-to-model-input-readback-v130)：按 6 个阶段、18 个操作、36 个细步骤组织，使用相同构件范围及 8 张固定输入表。
