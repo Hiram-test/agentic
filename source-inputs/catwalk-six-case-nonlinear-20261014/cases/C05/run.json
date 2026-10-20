@@ -1,0 +1,23 @@
+{
+  "status": "finished",
+  "command": [
+    "D:\\ANSYS2026\\ANSYS Inc\\v261\\ansys\\bin\\winx64\\ANSYS261.exe",
+    "-b",
+    "-smp",
+    "-np",
+    "2",
+    "-j",
+    "model",
+    "-dir",
+    "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_coarse_truss_20261014_230914",
+    "-i",
+    "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_coarse_truss_20261014_230914\\model.inp",
+    "-o",
+    "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_coarse_truss_20261014_230914\\model.out"
+  ],
+  "returncode": 0,
+  "elapsed_s": 19.012981414794922,
+  "errors": [],
+  "warnings": [],
+  "history_exists": true
+}

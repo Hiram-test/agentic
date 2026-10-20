@@ -1,0 +1,9 @@
+{
+  "beam_coarse_source": "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_coarse_20261014_230843",
+  "physical_nodes": 1125,
+  "physical_elements": 1194,
+  "cables": "LINK180",
+  "posts": "LINK180",
+  "rotation_constraints": 0,
+  "translation_constraints": 54
+}

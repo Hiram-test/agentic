@@ -1,0 +1,352 @@
+{
+  "source_root": "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_six_safety_20261014_233159",
+  "checks": {
+    "C01": {
+      "source": "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_six_safety_20261014_233159\\C01",
+      "final_time": 1.0,
+      "max_free_residual_N": 0.9845039993524551,
+      "max_uy_m": 0.0,
+      "warnings": [],
+      "global_residual_force_N": [
+        0.00020909518934775218,
+        0.0,
+        -0.4534912838003038
+      ]
+    },
+    "C02": {
+      "source": "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_six_safety_20261014_233159\\C02",
+      "final_time": 2.0,
+      "max_free_residual_N": 0.9477578140795231,
+      "max_uy_m": 0.0,
+      "warnings": [],
+      "global_residual_force_N": [
+        -0.00018449872732170802,
+        0.0,
+        3.578486623314575
+      ]
+    },
+    "C03": {
+      "source": "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_six_safety_20261014_233159\\C03",
+      "final_time": 2.0,
+      "max_free_residual_N": 0.9870192240923643,
+      "max_uy_m": 0.0,
+      "warnings": [],
+      "global_residual_force_N": [
+        0.00222188630141322,
+        0.0,
+        3.5466258816443315
+      ]
+    },
+    "C04": {
+      "source": "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_six_safety_20261014_233159\\C04",
+      "final_time": 2.0,
+      "max_free_residual_N": 0.8156668543815611,
+      "max_uy_m": 22.1293565898529,
+      "warnings": [],
+      "global_residual_force_N": [
+        -0.00029994267970340216,
+        2.2335935704553833e-05,
+        2.6088927475866512
+      ]
+    },
+    "C05": {
+      "source": "D:\\ppt制作\\C05诊断\\粗网格四组最终对照\\桁架非线性",
+      "final_time": 2.0,
+      "max_free_residual_N": 0.89892578125,
+      "max_uy_m": 133.716604696877,
+      "warnings": [],
+      "global_residual_force_N": [
+        -0.0010010423138737956,
+        9.404559032333282e-05,
+        -0.5537453205014344
+      ]
+    },
+    "C06": {
+      "source": "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_six_safety_20261014_233159\\C06",
+      "final_time": 2.0,
+      "max_free_residual_N": 0.766701817512512,
+      "max_uy_m": 0.0,
+      "warnings": [],
+      "global_residual_force_N": [
+        -0.0016684795264154673,
+        0.0,
+        2.2394439069460077
+      ]
+    }
+  },
+  "cases": [
+    {
+      "case": "C01",
+      "catwalk": {
+        "case": "C01",
+        "group": "北边跨",
+        "critical_element": 153,
+        "force_kN": 11480.876,
+        "breaking_force_kN": 38080.0,
+        "safety_factor": 3.3168200754019117,
+        "required_factor": 3.2,
+        "factor_to_required": 1.0365062735630974,
+        "reference_force_kN": 11466,
+        "reference_factor": 3.3211233211233213,
+        "force_change_percent": 0.12974010116868495
+      },
+      "gantry": {
+        "case": "C01",
+        "group": "门架索北边跨",
+        "critical_element": 1062,
+        "force_kN": 3559.0955,
+        "breaking_force_kN": 14280.0,
+        "safety_factor": 4.012255360947747,
+        "required_factor": 3.2,
+        "factor_to_required": 1.2538298002961707,
+        "reference_force_kN": 3554,
+        "reference_factor": 4.01800787844682,
+        "force_change_percent": 0.1433736634777638
+      },
+      "verification": {
+        "source": "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_six_safety_20261014_233159\\C01",
+        "final_time": 1.0,
+        "max_free_residual_N": 0.9845039993524551,
+        "max_uy_m": 0.0,
+        "warnings": [],
+        "global_residual_force_N": [
+          0.00020909518934775218,
+          0.0,
+          -0.4534912838003038
+        ]
+      }
+    },
+    {
+      "case": "C02",
+      "catwalk": {
+        "case": "C02",
+        "group": "主跨",
+        "critical_element": 160,
+        "force_kN": 12647.662,
+        "breaking_force_kN": 38080.0,
+        "safety_factor": 3.010833148450678,
+        "required_factor": 2.7,
+        "factor_to_required": 1.1151233883150657,
+        "reference_force_kN": 12624,
+        "reference_factor": 3.016476552598226,
+        "force_change_percent": 0.18743662864384447
+      },
+      "gantry": {
+        "case": "C02",
+        "group": "门架索主跨",
+        "critical_element": 1066,
+        "force_kN": 3972.67725,
+        "breaking_force_kN": 14280.0,
+        "safety_factor": 3.5945532700900884,
+        "required_factor": 2.7,
+        "factor_to_required": 1.331316025959292,
+        "reference_force_kN": 3962,
+        "reference_factor": 3.604240282685512,
+        "force_change_percent": 0.2694914184755204
+      },
+      "verification": {
+        "source": "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_six_safety_20261014_233159\\C02",
+        "final_time": 2.0,
+        "max_free_residual_N": 0.9477578140795231,
+        "max_uy_m": 0.0,
+        "warnings": [],
+        "global_residual_force_N": [
+          -0.00018449872732170802,
+          0.0,
+          3.578486623314575
+        ]
+      }
+    },
+    {
+      "case": "C03",
+      "catwalk": {
+        "case": "C03",
+        "group": "主跨",
+        "critical_element": 160,
+        "force_kN": 12684.86,
+        "breaking_force_kN": 38080.0,
+        "safety_factor": 3.0020039637804437,
+        "required_factor": 2.7,
+        "factor_to_required": 1.1118533199186829,
+        "reference_force_kN": 12657,
+        "reference_factor": 3.0086118353480287,
+        "force_change_percent": 0.22011535118906522
+      },
+      "gantry": {
+        "case": "C03",
+        "group": "门架索主跨",
+        "critical_element": 1066,
+        "force_kN": 3986.14325,
+        "breaking_force_kN": 14280.0,
+        "safety_factor": 3.582410140428345,
+        "required_factor": 2.7,
+        "factor_to_required": 1.3268185705290165,
+        "reference_force_kN": 3974,
+        "reference_factor": 3.5933568193256167,
+        "force_change_percent": 0.3055674383492635
+      },
+      "verification": {
+        "source": "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_six_safety_20261014_233159\\C03",
+        "final_time": 2.0,
+        "max_free_residual_N": 0.9870192240923643,
+        "max_uy_m": 0.0,
+        "warnings": [],
+        "global_residual_force_N": [
+          0.00222188630141322,
+          0.0,
+          3.5466258816443315
+        ]
+      }
+    },
+    {
+      "case": "C04",
+      "catwalk": {
+        "case": "C04",
+        "group": "主跨",
+        "critical_element": 160,
+        "force_kN": 12802.898,
+        "breaking_force_kN": 38080.0,
+        "safety_factor": 2.974326593869607,
+        "required_factor": 2.7,
+        "factor_to_required": 1.1016024421739283,
+        "reference_force_kN": 12741,
+        "reference_factor": 2.9887763911780865,
+        "force_change_percent": 0.48581743976139347
+      },
+      "gantry": {
+        "case": "C04",
+        "group": "门架索主跨",
+        "critical_element": 1066,
+        "force_kN": 4047.99825,
+        "breaking_force_kN": 14280.0,
+        "safety_factor": 3.5276695092444763,
+        "required_factor": 2.7,
+        "factor_to_required": 1.3065442626831394,
+        "reference_force_kN": 4007,
+        "reference_factor": 3.5637634140254555,
+        "force_change_percent": 1.0231657100074898
+      },
+      "verification": {
+        "source": "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_six_safety_20261014_233159\\C04",
+        "final_time": 2.0,
+        "max_free_residual_N": 0.8156668543815611,
+        "max_uy_m": 22.1293565898529,
+        "warnings": [],
+        "global_residual_force_N": [
+          -0.00029994267970340216,
+          2.2335935704553833e-05,
+          2.6088927475866512
+        ]
+      }
+    },
+    {
+      "case": "C05",
+      "catwalk": {
+        "case": "C05",
+        "group": "主跨",
+        "critical_element": 160,
+        "force_kN": 14492.075,
+        "breaking_force_kN": 38080.0,
+        "safety_factor": 2.627643039385319,
+        "required_factor": 2.5,
+        "factor_to_required": 1.0510572157541276,
+        "reference_force_kN": 11802,
+        "reference_factor": 3.2265717674970342,
+        "force_change_percent": 22.79338247754619
+      },
+      "gantry": {
+        "case": "C05",
+        "group": "门架索主跨",
+        "critical_element": 1066,
+        "force_kN": 4220.738,
+        "breaking_force_kN": 14280.0,
+        "safety_factor": 3.3832945802369156,
+        "required_factor": 2.5,
+        "factor_to_required": 1.3533178320947663,
+        "reference_force_kN": 3650,
+        "reference_factor": 3.9123287671232876,
+        "force_change_percent": 15.63665753424659
+      },
+      "verification": {
+        "source": "D:\\ppt制作\\C05诊断\\粗网格四组最终对照\\桁架非线性",
+        "final_time": 2.0,
+        "max_free_residual_N": 0.89892578125,
+        "max_uy_m": 133.716604696877,
+        "warnings": [],
+        "global_residual_force_N": [
+          -0.0010010423138737956,
+          9.404559032333282e-05,
+          -0.5537453205014344
+        ]
+      }
+    },
+    {
+      "case": "C06",
+      "catwalk": {
+        "case": "C06",
+        "group": "北边跨",
+        "critical_element": 153,
+        "force_kN": 12917.028,
+        "breaking_force_kN": 38080.0,
+        "safety_factor": 2.9480465630329205,
+        "required_factor": 2.7,
+        "factor_to_required": 1.0918690974196001,
+        "reference_force_kN": 12906,
+        "reference_factor": 2.9505656283898962,
+        "force_change_percent": 0.08544862854487079
+      },
+      "gantry": {
+        "case": "C06",
+        "group": "门架索北边跨",
+        "critical_element": 1062,
+        "force_kN": 4106.55275,
+        "breaking_force_kN": 14280.0,
+        "safety_factor": 3.4773691875746637,
+        "required_factor": 2.7,
+        "factor_to_required": 1.287914513916542,
+        "reference_force_kN": 4102,
+        "reference_factor": 3.4812286689419794,
+        "force_change_percent": 0.11098854217455045
+      },
+      "verification": {
+        "source": "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_six_safety_20261014_233159\\C06",
+        "final_time": 2.0,
+        "max_free_residual_N": 0.766701817512512,
+        "max_uy_m": 0.0,
+        "warnings": [],
+        "global_residual_force_N": [
+          -0.0016684795264154673,
+          0.0,
+          2.2394439069460077
+        ]
+      }
+    }
+  ],
+  "minimum_factor": {
+    "case": "C05",
+    "group": "主跨",
+    "critical_element": 160,
+    "force_kN": 14492.075,
+    "breaking_force_kN": 38080.0,
+    "safety_factor": 2.627643039385319,
+    "required_factor": 2.5,
+    "factor_to_required": 1.0510572157541276,
+    "reference_force_kN": 11802,
+    "reference_factor": 3.2265717674970342,
+    "force_change_percent": 22.79338247754619
+  },
+  "minimum_factor_to_required": {
+    "case": "C01",
+    "group": "北边跨",
+    "critical_element": 153,
+    "force_kN": 11480.876,
+    "breaking_force_kN": 38080.0,
+    "safety_factor": 3.3168200754019117,
+    "required_factor": 3.2,
+    "factor_to_required": 1.0365062735630974,
+    "reference_force_kN": 11466,
+    "reference_factor": 3.3211233211233213,
+    "force_change_percent": 0.12974010116868495
+  },
+  "scope": "同原MCT固定外力的几何非线性分析；未新增随攻角更新气动力；使用原报告索组破断力与表1-7门槛"
+}

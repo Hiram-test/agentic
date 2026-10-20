@@ -1,0 +1,23 @@
+{
+  "status": "finished",
+  "command": [
+    "D:\\ANSYS2026\\ANSYS Inc\\v261\\ansys\\bin\\winx64\\ANSYS261.exe",
+    "-b",
+    "-smp",
+    "-np",
+    "2",
+    "-j",
+    "model",
+    "-dir",
+    "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_six_safety_20261014_233159\\C02",
+    "-i",
+    "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_six_safety_20261014_233159\\C02\\model.inp",
+    "-o",
+    "C:\\Users\\asus\\AppData\\Local\\Temp\\catwalk_six_safety_20261014_233159\\C02\\model.out"
+  ],
+  "returncode": 0,
+  "elapsed_s": 8.197912454605103,
+  "errors": [],
+  "warnings": [],
+  "history_exists": true
+}

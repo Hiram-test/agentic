@@ -1,0 +1,14 @@
+{
+  "case": "C02",
+  "source": "D:\\bridgemind\\BridgeMind_Simulation_Studio_1.5.2\\runs\\dsh-native\\workspaces\\17a00fbe85854e73896342299cbf53b4\\04_calculix\\base\\catwalk_base_C02.inp",
+  "template": "D:\\ppt制作\\C05诊断\\粗网格四组最终对照\\桁架非线性\\model.inp",
+  "sha256": "c6859b6d9c4ab372ec71065dff08a804c3cd53ec7ad120850e516a2b1cd14dfe",
+  "physical_nodes": 1125,
+  "physical_elements": 1194,
+  "fixed_translation_dofs": 54,
+  "geometric_nonlinearity": true,
+  "wind_force_update": false,
+  "final_temperature_C": 0.0,
+  "force_tolerance_N": 10,
+  "displacement_correction_m": 1e-05
+}
