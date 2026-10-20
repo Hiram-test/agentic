@@ -1,0 +1,455 @@
+{
+  "kind": "cases_vs_ansys_974211b2_deflection_compare",
+  "not_a_scientific_success_document": true,
+  "attachment_23_agreement_token_written": false,
+  "paper_written": false,
+  "main": {
+    "path": "catwalk-fem/artifacts/zjg_catwalk_migrate_main.inp",
+    "sha256": "974211b2ddfe2950548ee2455bc22e1e2e68d3e1f53df4c4e1eb71ece0267fd1",
+    "rewritten": false,
+    "present_in_this_workspace": false
+  },
+  "p1": {
+    "note": "P1 .dat not in given ccx_run/; lock 42.26@304 vs review 42.578@304. Step1 of P2-P6 reread identical.",
+    "lock_inp_sha256": "be533c5f3228aacf19aea4913b503c2c6fac6d6246f6e6ab7b1eba4720e630ae",
+    "ccx_Umax_mm": 42.25864819934656,
+    "ccx_Umax_nid": 304,
+    "ccx_uz_mm": -42.25829,
+    "review_shown_Umax_mm": 42.578,
+    "review_shown_nid": 304,
+    "review_extrema_Umax_mm": 42.57771305336941,
+    "review_extrema_nid": 304,
+    "dU_mm_vs_extrema": -0.319064854022848,
+    "Umax_rel_vs_extrema": -0.00749370577097256,
+    "peak_node_matched": true,
+    "this_turn_step1_from_P2P6_dat": {
+      "Umax_mm": 42.25864819934656,
+      "nid": 304,
+      "uz_mm": -42.25829,
+      "identical_across_P2P6": true
+    }
+  },
+  "authority": ".dat last step N_MCT",
+  "n_nodes_printed": 1125,
+  "uz_direction": "down",
+  "old_1621_2414_1424_3059_3422_at_302": {
+    "used_as_comparison": false,
+    "values": {
+      "P2": {
+        "Umax_mm": 1621.1710000071648,
+        "nid": 302
+      },
+      "P3": {
+        "Umax_mm": 2414.1200002000473,
+        "nid": 302
+      },
+      "P4": {
+        "Umax_mm": 1424.0670000002087,
+        "nid": 302
+      },
+      "P5": {
+        "Umax_mm": 3059.4520001666783,
+        "nid": 302
+      },
+      "P6": {
+        "Umax_mm": 3421.501000607643,
+        "nid": 302
+      },
+      "note": "00fc277e replace-card; Uz upward; GRAV/二期 dropped in step2; not a comparison object this turn"
+    }
+  },
+  "review_source": "本单给定复核下挠（ANSYS/复核表 USUM）；极值表精确位与本单圆整同数，本岗未重抽 CSV，也未重跑 MAPDL",
+  "rows": [
+    {
+      "id": "P2",
+      "mct_comb": "工况2 恒+施工",
+      "add": [
+        "施工荷载"
+      ],
+      "temp_c": null,
+      "inp_sha256": "441f12d3abda82ede3038abf23df8bf13802a908dd2b52802d6651c5773c1593",
+      "inp_bytes": 950621,
+      "dat_sha256": "4293d00bbb50d4c9a7ad6b6c3ad3579e6822dd5d2a9d0e5d0bd19758e9a78869",
+      "dat_bytes": 1898588,
+      "dat_path": "catwalk-fem/eval/cases_vs_ansys_974211b2/ccx_run/P2/migrate_P2.dat",
+      "n_disp": 1125,
+      "step1": {
+        "time": 1.0,
+        "Umax_mm": 42.25864819934656,
+        "nid": 304,
+        "uz_mm": -42.25829
+      },
+      "ccx_Umax_mm": 2662.041494459448,
+      "ccx_Umax_nid": 1176,
+      "ccx_ux_mm": 17.49577,
+      "ccx_uy_mm": 2.318758e-11,
+      "ccx_uz_mm": -2661.984,
+      "ccx_uz_sign": "down",
+      "ccx_peak_raw": "1176  1.749577E+01  2.318758E-11 -2.661984E+03",
+      "nid302": {
+        "nid": 302,
+        "ux": -0.05551758,
+        "uy": 3.0357e-11,
+        "uz": -2654.216,
+        "U": 2654.2160005806236,
+        "line": 10432,
+        "raw": "       302 -5.551758E-02  3.035700E-11 -2.654216E+03"
+      },
+      "review_shown_Umax_mm": 2684.84,
+      "review_shown_nid": 1176,
+      "review_extrema_Umax_mm": 2684.837902342347,
+      "review_extrema_nid": 1176,
+      "review_extrema_uz_mm": -2684.7788718179,
+      "dU_mm_vs_extrema": -22.796407882899075,
+      "Umax_rel_vs_extrema": -0.008490794868103838,
+      "Umax_rel_vs_shown": -0.00849156953135085,
+      "peak_node_matched": true,
+      "old_1621_group_used": false,
+      "table_5_4_used": false,
+      "files": {
+        "migrate_P2.inp": {
+          "sha256": "441f12d3abda82ede3038abf23df8bf13802a908dd2b52802d6651c5773c1593",
+          "bytes": 950621
+        },
+        "migrate_P2.dat": {
+          "sha256": "4293d00bbb50d4c9a7ad6b6c3ad3579e6822dd5d2a9d0e5d0bd19758e9a78869",
+          "bytes": 1898588
+        },
+        "migrate_P2.sta": {
+          "sha256": "00fe4e443d96ecd2567441bea4efe762470eb61c2ba035fc60c60473088de62a",
+          "bytes": 242
+        },
+        "migrate_P2.cvg": {
+          "sha256": "96d14598cb55b2963ca113bdfd4ff536fd20333536bdc2694938aa4a660ce936",
+          "bytes": 684
+        },
+        "migrate_P2.frd": {
+          "sha256": "706e0feeb323be8363e7713251774da9650b12fbc7af44d387bac3d1a81258f2",
+          "bytes": 4399019
+        },
+        "migrate_P2.12d": {
+          "sha256": "2c98cb4e045bfb9e8e78559bf21ccedf0fc9bae818694bb34180e9feb993aadd",
+          "bytes": 390039
+        }
+      },
+      "sta": {
+        "step1_itrs": 2,
+        "step2_itrs": 3,
+        "increments_written": 2
+      }
+    },
+    {
+      "id": "P3",
+      "mct_comb": "工可3恒+施工+温度",
+      "add": [
+        "施工荷载"
+      ],
+      "temp_c": -15.0,
+      "inp_sha256": "672749c99210c2ab3091651189d5c4cc2da7cc7066cd2aa29490c8e3c55a4050",
+      "inp_bytes": 950842,
+      "dat_sha256": "85bc0b05cd7f84bcbd909bb3ca1ef9a3a20f24dd9c03bcc78cddbfb0faeb9e28",
+      "dat_bytes": 1898588,
+      "dat_path": "catwalk-fem/eval/cases_vs_ansys_974211b2/ccx_run/P3/migrate_P3.dat",
+      "n_disp": 1125,
+      "step1": {
+        "time": 1.0,
+        "Umax_mm": 42.25864819934656,
+        "nid": 304,
+        "uz_mm": -42.25829
+      },
+      "ccx_Umax_mm": 1894.3707383953354,
+      "ccx_Umax_nid": 1176,
+      "ccx_ux_mm": 12.42359,
+      "ccx_uy_mm": -2.875159e-11,
+      "ccx_uz_mm": -1894.33,
+      "ccx_uz_sign": "down",
+      "ccx_peak_raw": "1176  1.242359E+01 -2.875159E-11 -1.894330E+03",
+      "nid302": {
+        "nid": 302,
+        "ux": -0.0300978,
+        "uy": -1.191924e-11,
+        "uz": -1882.987,
+        "U": 1882.9870002405428,
+        "line": 10432,
+        "raw": "       302 -3.009780E-02 -1.191924E-11 -1.882987E+03"
+      },
+      "review_shown_Umax_mm": 1910.0,
+      "review_shown_nid": 1176,
+      "review_extrema_Umax_mm": 1910.0116845522327,
+      "review_extrema_nid": 1176,
+      "review_extrema_uz_mm": -1909.9699348934,
+      "dU_mm_vs_extrema": -15.640946156897371,
+      "Umax_rel_vs_extrema": -0.008188926949189898,
+      "Umax_rel_vs_shown": -0.008182859478882008,
+      "peak_node_matched": true,
+      "old_1621_group_used": false,
+      "table_5_4_used": false,
+      "files": {
+        "migrate_P3.inp": {
+          "sha256": "672749c99210c2ab3091651189d5c4cc2da7cc7066cd2aa29490c8e3c55a4050",
+          "bytes": 950842
+        },
+        "migrate_P3.dat": {
+          "sha256": "85bc0b05cd7f84bcbd909bb3ca1ef9a3a20f24dd9c03bcc78cddbfb0faeb9e28",
+          "bytes": 1898588
+        },
+        "migrate_P3.sta": {
+          "sha256": "00fe4e443d96ecd2567441bea4efe762470eb61c2ba035fc60c60473088de62a",
+          "bytes": 242
+        },
+        "migrate_P3.cvg": {
+          "sha256": "4badb199dc4ca9e541d3a17f27c4b714e3312f240212000875bdaf1a342acf4f",
+          "bytes": 684
+        },
+        "migrate_P3.frd": {
+          "sha256": "c426c91695839dd3987d74fb6512facaf49bca077438472e4883ba33aa75a8ca",
+          "bytes": 4399019
+        },
+        "migrate_P3.12d": {
+          "sha256": "2c98cb4e045bfb9e8e78559bf21ccedf0fc9bae818694bb34180e9feb993aadd",
+          "bytes": 390039
+        }
+      },
+      "sta": {
+        "step1_itrs": 2,
+        "step2_itrs": 3,
+        "increments_written": 2
+      }
+    },
+    {
+      "id": "P4",
+      "mct_comb": "工可4恒+施工+施工风",
+      "add": [
+        "施工荷载",
+        "施工风荷载"
+      ],
+      "temp_c": null,
+      "inp_sha256": "f68ce772e4c9df5f98c8dc8a702a59b88a2bf244f46380f2c9a73d57d4131ceb",
+      "inp_bytes": 969581,
+      "dat_sha256": "6f2986ce1831681e0831f31b1a00fccab6dcb5825c2c864acd567ed560de35f6",
+      "dat_bytes": 1898588,
+      "dat_path": "catwalk-fem/eval/cases_vs_ansys_974211b2/ccx_run/P4/migrate_P4.dat",
+      "n_disp": 1125,
+      "step1": {
+        "time": 1.0,
+        "Umax_mm": 42.25864819934656,
+        "nid": 304,
+        "uz_mm": -42.25829
+      },
+      "ccx_Umax_mm": 2846.2795317248147,
+      "ccx_Umax_nid": 1176,
+      "ccx_ux_mm": 18.71548,
+      "ccx_uy_mm": 1.027778e-11,
+      "ccx_uz_mm": -2846.218,
+      "ccx_uz_sign": "down",
+      "ccx_peak_raw": "1176  1.871548E+01  1.027778E-11 -2.846218E+03",
+      "nid302": {
+        "nid": 302,
+        "ux": -0.0594631,
+        "uy": 7.193311e-12,
+        "uz": -2838.014,
+        "U": 2838.0140006229462,
+        "line": 10432,
+        "raw": "       302 -5.946310E-02  7.193311E-12 -2.838014E+03"
+      },
+      "review_shown_Umax_mm": 2871.0,
+      "review_shown_nid": 1176,
+      "review_extrema_Umax_mm": 2870.9665987120216,
+      "review_extrema_nid": 1176,
+      "review_extrema_uz_mm": -2870.9034216123,
+      "dU_mm_vs_extrema": -24.68706698720689,
+      "Umax_rel_vs_extrema": -0.008598869453333957,
+      "Umax_rel_vs_shown": -0.00861040343963265,
+      "peak_node_matched": true,
+      "old_1621_group_used": false,
+      "table_5_4_used": false,
+      "files": {
+        "migrate_P4.inp": {
+          "sha256": "f68ce772e4c9df5f98c8dc8a702a59b88a2bf244f46380f2c9a73d57d4131ceb",
+          "bytes": 969581
+        },
+        "migrate_P4.dat": {
+          "sha256": "6f2986ce1831681e0831f31b1a00fccab6dcb5825c2c864acd567ed560de35f6",
+          "bytes": 1898588
+        },
+        "migrate_P4.sta": {
+          "sha256": "00fe4e443d96ecd2567441bea4efe762470eb61c2ba035fc60c60473088de62a",
+          "bytes": 242
+        },
+        "migrate_P4.cvg": {
+          "sha256": "52db0524d6e22f75b3ef9e541801ef6b1e864e0aca39e873bcd83c50b026deff",
+          "bytes": 684
+        },
+        "migrate_P4.frd": {
+          "sha256": "8143bcd19d03c660f2d026717b23138b52dbcc00edad3979f3858e29489a82d0",
+          "bytes": 4399019
+        },
+        "migrate_P4.12d": {
+          "sha256": "2c98cb4e045bfb9e8e78559bf21ccedf0fc9bae818694bb34180e9feb993aadd",
+          "bytes": 390039
+        }
+      },
+      "sta": {
+        "step1_itrs": 2,
+        "step2_itrs": 3,
+        "increments_written": 2
+      }
+    },
+    {
+      "id": "P5",
+      "mct_comb": "工况5恒+最大阵风",
+      "add": [
+        "最大阵风"
+      ],
+      "temp_c": null,
+      "inp_sha256": "3ba72d5d9c50561f6cdde3b17930d4668151d66a0ef7f10540aa59091320fc1f",
+      "inp_bytes": 968629,
+      "dat_sha256": "08e56646d037b7f0954e93c6661f3ab9d12b54db2e5e318cac11fe9eb357facf",
+      "dat_bytes": 1898588,
+      "dat_path": "catwalk-fem/eval/cases_vs_ansys_974211b2/ccx_run/P5/migrate_P5.dat",
+      "n_disp": 1125,
+      "step1": {
+        "time": 1.0,
+        "Umax_mm": 42.25864819934656,
+        "nid": 304,
+        "uz_mm": -42.25829
+      },
+      "ccx_Umax_mm": 1325.3140931123403,
+      "ccx_Umax_nid": 306,
+      "ccx_ux_mm": 10.17938,
+      "ccx_uy_mm": 2.769832e-12,
+      "ccx_uz_mm": -1325.275,
+      "ccx_uz_sign": "down",
+      "ccx_peak_raw": "306  1.017938E+01  2.769832E-12 -1.325275E+03",
+      "nid302": {
+        "nid": 302,
+        "ux": -0.02874537,
+        "uy": 1.894878e-12,
+        "uz": -1320.197,
+        "U": 1320.1970003129443,
+        "line": 10432,
+        "raw": "       302 -2.874537E-02  1.894878E-12 -1.320197E+03"
+      },
+      "review_shown_Umax_mm": 1336.0,
+      "review_shown_nid": 306,
+      "review_extrema_Umax_mm": 1335.7734445522826,
+      "review_extrema_nid": 306,
+      "review_extrema_uz_mm": -1335.7343280312,
+      "dU_mm_vs_extrema": -10.459351439942338,
+      "Umax_rel_vs_extrema": -0.007830183690654255,
+      "Umax_rel_vs_shown": -0.007998433299146492,
+      "peak_node_matched": true,
+      "old_1621_group_used": false,
+      "table_5_4_used": false,
+      "files": {
+        "migrate_P5.inp": {
+          "sha256": "3ba72d5d9c50561f6cdde3b17930d4668151d66a0ef7f10540aa59091320fc1f",
+          "bytes": 968629
+        },
+        "migrate_P5.dat": {
+          "sha256": "08e56646d037b7f0954e93c6661f3ab9d12b54db2e5e318cac11fe9eb357facf",
+          "bytes": 1898588
+        },
+        "migrate_P5.sta": {
+          "sha256": "00fe4e443d96ecd2567441bea4efe762470eb61c2ba035fc60c60473088de62a",
+          "bytes": 242
+        },
+        "migrate_P5.cvg": {
+          "sha256": "51b175920b2b7636d966440893797073708090b3bac31bb0884a24bd418c1c63",
+          "bytes": 684
+        },
+        "migrate_P5.frd": {
+          "sha256": "fb3142f53fd6f7e76cb521a7e38ddb35baba6fbcccdaed5f257e2ecacd853525",
+          "bytes": 4399019
+        },
+        "migrate_P5.12d": {
+          "sha256": "2c98cb4e045bfb9e8e78559bf21ccedf0fc9bae818694bb34180e9feb993aadd",
+          "bytes": 390039
+        }
+      },
+      "sta": {
+        "step1_itrs": 2,
+        "step2_itrs": 3,
+        "increments_written": 2
+      }
+    },
+    {
+      "id": "P6",
+      "mct_comb": "工况6恒+施工+温34",
+      "add": [
+        "施工荷载"
+      ],
+      "temp_c": -34.0,
+      "inp_sha256": "177650a7fb09bcfe7a7f21d9336600b9c5156ebfd93ebbb22899a93e7af4fc67",
+      "inp_bytes": 950840,
+      "dat_sha256": "e6204633603875f692f408e4fe9421a2e1d53a33a9e01dbaae6571af1488c205",
+      "dat_bytes": 1898588,
+      "dat_path": "catwalk-fem/eval/cases_vs_ansys_974211b2/ccx_run/P6/migrate_P6.dat",
+      "n_disp": 1125,
+      "step1": {
+        "time": 1.0,
+        "Umax_mm": 42.25864819934656,
+        "nid": 304,
+        "uz_mm": -42.25829
+      },
+      "ccx_Umax_mm": 920.7935050973209,
+      "ccx_Umax_nid": 1166,
+      "ccx_ux_mm": -13.3654,
+      "ccx_uy_mm": -2.935804e-12,
+      "ccx_uz_mm": -920.6965,
+      "ccx_uz_sign": "down",
+      "ccx_peak_raw": "1166 -1.336540E+01 -2.935804E-12 -9.206965E+02",
+      "nid302": {
+        "nid": 302,
+        "ux": 0.002224619,
+        "uy": -3.717796e-13,
+        "uz": -903.4752,
+        "U": 903.4752000027388,
+        "line": 10432,
+        "raw": "       302  2.224619E-03 -3.717796E-13 -9.034752E+02"
+      },
+      "review_shown_Umax_mm": 927.0,
+      "review_shown_nid": 1166,
+      "review_extrema_Umax_mm": 927.4138039940444,
+      "review_extrema_nid": 1166,
+      "review_extrema_uz_mm": -927.31479952577,
+      "dU_mm_vs_extrema": -6.6202988967235115,
+      "Umax_rel_vs_extrema": -0.0071384519706437595,
+      "Umax_rel_vs_shown": -0.006695248007205052,
+      "peak_node_matched": true,
+      "old_1621_group_used": false,
+      "table_5_4_used": false,
+      "files": {
+        "migrate_P6.inp": {
+          "sha256": "177650a7fb09bcfe7a7f21d9336600b9c5156ebfd93ebbb22899a93e7af4fc67",
+          "bytes": 950840
+        },
+        "migrate_P6.dat": {
+          "sha256": "e6204633603875f692f408e4fe9421a2e1d53a33a9e01dbaae6571af1488c205",
+          "bytes": 1898588
+        },
+        "migrate_P6.sta": {
+          "sha256": "00fe4e443d96ecd2567441bea4efe762470eb61c2ba035fc60c60473088de62a",
+          "bytes": 242
+        },
+        "migrate_P6.cvg": {
+          "sha256": "96aef4e244417a0289bf2ce33d5ac7705f940a0f05be7e045d827d79ba559cbb",
+          "bytes": 684
+        },
+        "migrate_P6.frd": {
+          "sha256": "22b4369402c7f1d9ee1f72f2ba234e941798fe638959fd8f7068d367a9544dbe",
+          "bytes": 4399019
+        },
+        "migrate_P6.12d": {
+          "sha256": "2c98cb4e045bfb9e8e78559bf21ccedf0fc9bae818694bb34180e9feb993aadd",
+          "bytes": 390039
+        }
+      },
+      "sta": {
+        "step1_itrs": 2,
+        "step2_itrs": 3,
+        "increments_written": 2
+      }
+    }
+  ]
+}

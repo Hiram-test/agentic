@@ -1,0 +1,136 @@
+{
+  "repository": "Hiram-test/model",
+  "commit": "ebd0e3d8eea740de6d2d4539feda51885d80e3f8",
+  "rows": [
+    {
+      "case": "P2",
+      "all_three_hashes_match": true,
+      "Umax_mm": 2662.041494459448,
+      "peak_node": 1176,
+      "max_abs_UY_mm": 6.424472e-09,
+      "reference_Umax_mm": 2684.837902342347,
+      "relative_error_percent": -0.849079486810389,
+      "UY_restrained_nodes": 1125,
+      "element_types": [
+        "B31",
+        "T3D2"
+      ],
+      "written_CLOAD_N_per_step": {
+        "1": [
+          0.0,
+          0.0,
+          -4725567.874000048
+        ],
+        "2": [
+          0.0,
+          0.0,
+          -8069828.486000001
+        ]
+      }
+    },
+    {
+      "case": "P3",
+      "all_three_hashes_match": true,
+      "Umax_mm": 1894.3707383953354,
+      "peak_node": 1176,
+      "max_abs_UY_mm": 2.356976e-09,
+      "reference_Umax_mm": 1910.0116845522327,
+      "relative_error_percent": -0.8188926949189934,
+      "UY_restrained_nodes": 1125,
+      "element_types": [
+        "B31",
+        "T3D2"
+      ],
+      "written_CLOAD_N_per_step": {
+        "1": [
+          0.0,
+          0.0,
+          -4725567.874000048
+        ],
+        "2": [
+          0.0,
+          0.0,
+          -8069828.486000001
+        ]
+      }
+    },
+    {
+      "case": "P4",
+      "all_three_hashes_match": true,
+      "Umax_mm": 2846.2795317248147,
+      "peak_node": 1176,
+      "max_abs_UY_mm": 6.32276e-09,
+      "reference_Umax_mm": 2870.9665987120216,
+      "relative_error_percent": -0.859886945333399,
+      "UY_restrained_nodes": 1125,
+      "element_types": [
+        "B31",
+        "T3D2"
+      ],
+      "written_CLOAD_N_per_step": {
+        "1": [
+          0.0,
+          0.0,
+          -4725567.874000048
+        ],
+        "2": [
+          0.0,
+          2246926.0479999967,
+          -8312299.455300001
+        ]
+      }
+    },
+    {
+      "case": "P5",
+      "all_three_hashes_match": true,
+      "Umax_mm": 1325.3140931123403,
+      "peak_node": 306,
+      "max_abs_UY_mm": 7.367934e-10,
+      "reference_Umax_mm": 1335.7734445522826,
+      "relative_error_percent": -0.7830183690654247,
+      "UY_restrained_nodes": 1125,
+      "element_types": [
+        "B31",
+        "T3D2"
+      ],
+      "written_CLOAD_N_per_step": {
+        "1": [
+          0.0,
+          0.0,
+          -4725567.874000048
+        ],
+        "2": [
+          0.0,
+          15303735.373,
+          -6377029.291000003
+        ]
+      }
+    },
+    {
+      "case": "P6",
+      "all_three_hashes_match": true,
+      "Umax_mm": 920.7935050973209,
+      "peak_node": 1166,
+      "max_abs_UY_mm": 3.061973e-10,
+      "reference_Umax_mm": 927.4138039940444,
+      "relative_error_percent": -0.7138451970643778,
+      "UY_restrained_nodes": 1125,
+      "element_types": [
+        "B31",
+        "T3D2"
+      ],
+      "written_CLOAD_N_per_step": {
+        "1": [
+          0.0,
+          0.0,
+          -4725567.874000048
+        ],
+        "2": [
+          0.0,
+          0.0,
+          -8069828.486000001
+        ]
+      }
+    }
+  ]
+}
